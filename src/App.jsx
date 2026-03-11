@@ -6,11 +6,8 @@ import {
   Hammer, 
   Trees, 
   Camera, 
-  ArrowUpRight, 
-  Github, 
   Mail,
-  ExternalLink,
-  ChevronRight
+  ExternalLink
 } from 'lucide-react';
 
 const fadeInUp = {
@@ -29,13 +26,16 @@ const staggerContainer = {
 
 const products = [
   { name: 'Obsidian', desc: 'A note-taking tool for networked thought.', link: 'https://obsidian.md/' },
-  { name: 'Snipd', desc: 'AI-powered podcast player for deep learning.', link: 'https://www.snipd.com/' },
-  { name: 'b.bulb', desc: 'Inspirational light by Ingo Maurer.', link: 'https://www.ingo-maurer.com/en/products/bbulb/' },
-  { name: 'Notion', desc: 'Versatile workspace for projects and life.', link: 'https://www.notion.so/' },
-  { name: 'Raindrop', desc: 'The best-in-class bookmarking service.', link: 'https://raindrop.io/' },
-  { name: 'Contour Mouse', desc: 'Ergonomic precision for daily surfing.', link: 'https://www.contourdesign.com/collection/contour-rollermouse' },
-  { name: 'Readwise', desc: 'Managing highlights and remembering what you read.', link: 'https://readwise.io/' },
-  { name: 'Arc', desc: 'A browser focused on the user experience.', link: 'https://arc.net' },
+  { name: 'Snipd', desc: 'A podcast player that uses AI to create transcripts.', link: 'https://www.snipd.com/' },
+  { name: 'b.bulb', desc: 'Portable light fixture by Ingo Maurer.', link: 'https://www.ingo-maurer.com/en/products/bbulb/' },
+  { name: 'Notion', desc: 'Note-taking and collaboration tool.', link: 'https://www.notion.so/' },
+  { name: 'Raindrop', desc: 'Bookmarking service.', link: 'https://raindrop.io/' },
+  { name: 'Contour Mouse', desc: 'RollerMouse for ergonomic surfing.', link: 'https://www.contourdesign.com/collection/contour-rollermouse' },
+  { name: 'Readwise', desc: 'Highlight management tool.', link: 'https://readwise.io/' },
+  { name: 'SFPL', desc: 'San Francisco Public Library.', link: 'https://sfpl.org/' },
+  { name: '3M', desc: 'Innovative products.', link: 'https://www.3m.com/' },
+  { name: 'Tomito', desc: 'Pomodoro timer.', link: 'https://tomito.app/' },
+  { name: 'Arc', desc: 'Browser (appearing to be on its way out).', link: 'https://arc.net' },
 ];
 
 const books = [
@@ -80,7 +80,7 @@ function App() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5, duration: 1 }}
         >
-          An intersection of nature, craftsmanship, and the exploration of thought.
+          Living in the Presidio. Building with light and wood. Searching for clear thinking in the noise.
         </motion.p>
       </motion.header>
 
@@ -99,7 +99,7 @@ function App() {
               <h3>{p.name}</h3>
               <p>{p.desc}</p>
               <a href={p.link} target="_blank" rel="noopener noreferrer" className="card-link">
-                Explore <ArrowUpRight size={16} />
+                <ExternalLink size={16} />
               </a>
             </motion.div>
           ))}
@@ -109,6 +109,15 @@ function App() {
       {/* Reading */}
       <section>
         <SectionHeader icon={BookOpen} title="Reading" id="reading" />
+        <motion.p 
+          variants={fadeInUp}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          style={{ marginBottom: '3rem', fontSize: '1.2rem', color: 'var(--text-muted)', maxWidth: '800px' }}
+        >
+          I am an avid reader, primarily focused on philosophy, psychology, research, and articles.
+        </motion.p>
         <motion.div 
           className="grid"
           variants={staggerContainer}
@@ -120,7 +129,6 @@ function App() {
             <motion.div key={b.title} variants={fadeInUp} className="glass card">
               <h3>{b.title}</h3>
               <p>By {b.author}</p>
-              <div className="card-link">Recommended</div>
             </motion.div>
           ))}
         </motion.div>
@@ -139,7 +147,7 @@ function App() {
         >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '400px' }}>
             <div style={{ padding: '4rem' }}>
-              <h3 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>The Workshop</h3>
+              <h3 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>Crafting</h3>
               <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)' }}>
                 I grew up working with my hands, a craft and skill I've come to appreciate more as time goes on. 
                 Most weekends, you'll find me in the workshop, away from screens, building something new or repairing something old.
@@ -154,7 +162,7 @@ function App() {
 
       {/* Nature */}
       <section>
-        <SectionHeader icon={Trees} title="Nature & Life" id="nature" />
+        <SectionHeader icon={Trees} title="Nature" id="nature" />
         <motion.p 
           variants={fadeInUp}
           initial="initial"
@@ -162,8 +170,7 @@ function App() {
           viewport={{ once: true }}
           style={{ marginBottom: '3rem', fontSize: '1.2rem', color: 'var(--text-muted)', maxWidth: '800px' }}
         >
-          Home is about being surrounded by nature. Living in the Presidio of San Francisco (Fort Scott) 
-          allows me to be within a fifteen-minute walk of these serene landscapes.
+          The title of this section could have easily been Home, but for me, home is about being surrounded by nature. That’s why I live in the Presidio of San Francisco.
         </motion.p>
         <motion.div 
           className="image-grid"
@@ -190,6 +197,9 @@ function App() {
           viewport={{ once: true }}
           style={{ marginBottom: '4rem' }}
         >
+          <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', marginBottom: '2rem' }}>
+            My first real hobby was photography. I’ve always been drawn to light and its changing qualities.
+          </p>
           <blockquote style={{ fontSize: '1.8rem', borderLeft: '4px solid var(--accent-photo)', paddingLeft: '2rem', fontStyle: 'italic', marginBottom: '1rem' }}>
             "The camera is an instrument that teaches people how to see without a camera."
           </blockquote>
@@ -218,12 +228,10 @@ function App() {
       </section>
 
       {/* Footer */}
-      <footer style={{ padding: '6rem 0', borderTop: '1px solid var(--panel-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <p style={{ color: var(--text-muted) }}>© {new Date().getFullYear()} Boden Holland</p>
-        <div style={{ display: 'flex', gap: '2rem' }}>
-          <a href="mailto:hello@bodenholland.com" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}><Mail size={20} /></a>
-          <a href="https://github.com/bodenh" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}><Github size={20} /></a>
-        </div>
+      <footer style={{ padding: '6rem 0', borderTop: '1px solid var(--panel-border)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <a href="mailto:hello@bodenholland.com" style={{ color: 'var(--text-muted)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Mail size={20} /> hello@bodenholland.com
+        </a>
       </footer>
     </div>
   );

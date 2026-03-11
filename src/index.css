@@ -65,6 +65,7 @@ h1, h2, h3, h4 {
   font-size: clamp(3rem, 10vw, 6rem);
   background: linear-gradient(to bottom right, #fff, #94a3b8);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 1rem;
 }
