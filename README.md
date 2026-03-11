@@ -1,27 +1,14 @@
-# Professional Website - Boden Holland
+# Professional Website
 
-This project is a modern, premium professional website for Boden Holland, built using React, Vite, and Framer Motion.
-
-## Features
-- **Modern Design**: Dark mode aesthetic with glassmorphism and subtle gradients.
-- **Dynamic Animations**: Smooth entry animations using Framer Motion.
-- **Responsive Layout**: Optimized for all screen sizes.
-- **Content Sections**:
-  - Favorite Products
-  - Reading List
-  - Craftsmanship (Workshop)
-  - Nature (Presidio of SF)
-  - Photography
+This project is a React-based website for Boden Holland, with content sourced from bodenholland.com.
 
 ## Tech Stack
 - React (Vite)
-- Framer Motion (Animations)
-- Lucide React (Icons)
-- Vanilla CSS (Custom Design System)
+- Framer Motion
+- Lucide React
+- CSS
 
-## Local Development
-1. Install dependencies: `npm install`
-2. Start dev server: `npm run dev`
-
-## Deployment
-Push this repository to GitHub and connect it to Vercel, Netlify, or GitHub Pages for hosting.
+## Structure
+- `public/downloaded_data/`: Contains images from the original site.
+- `src/App.jsx`: Main application with content sections.
+- `src/index.css`: Global styles.
