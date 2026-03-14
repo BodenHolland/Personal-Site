@@ -8,9 +8,14 @@ import {
   Camera, 
   Mail,
   ExternalLink,
-  ChevronLeft,
   X,
-  Send
+  Send,
+  HeartPulse,
+  Smartphone,
+  Lightbulb,
+  ChevronLeft,
+  ChevronRight,
+  Scale
 } from 'lucide-react';
 
 const booksData = [
@@ -170,6 +175,58 @@ const booksData = [
   }
 ];
 
+const lightFixturesData = [
+  {
+    title: "Flexible Lamp",
+    description: "I set out to create a sculptural light that invites user interaction, allowing people to shape the piece themselves. The true design challenge lay in the engineering: ensuring perfectly even light dispersion throughout the fixture while preventing light bleed through the walls. Although the R&D process was extensive, it was incredibly rewarding to work with the new materials and 3D printing techniques along the way.",
+    images: [
+      "/light_projects/Flexible Lamp/unnamed.jpg",
+      "/light_projects/Flexible Lamp/unnamed-1.png",
+      "/light_projects/Flexible Lamp/unnamed.png"
+    ]
+  },
+  {
+    title: "Experiments in Gradient Diffraction",
+    description: "A cool material to experiment with, especially when combined with high density LEDs and custom controllers.",
+    images: [
+      "/light_projects/experiments in gradient difraction/unnamed.jpg",
+      "/light_projects/experiments in gradient difraction/unnamed-1.jpg",
+      "/light_projects/experiments in gradient difraction/unnamed-2.jpg",
+      "/light_projects/experiments in gradient difraction/unnamed-2.png",
+      "/light_projects/experiments in gradient difraction/unnamed.png"
+    ]
+  },
+  {
+    title: "Fire Extinguisher Light",
+    description: "A fully functional fire extinguisher light fixture. I worked with a specially painter down in LA after diving way too deep into the world of Lumilor. A conductive paint capable of producing light.",
+    images: [
+      "/light_projects/fire extinguisher light/unnamed.jpg",
+      "/light_projects/fire extinguisher light/unnamed.png"
+    ]
+  },
+  {
+    title: "Ode to Dan Flavin",
+    description: "I used these fabric screens to soften the setting sun’s warmth, blending it with the lights. As evening progresses, the colors become increasingly vivid, turning the windows into a public light art display. Dan Flavin was the first artist I came to love.",
+    images: [
+      "/light_projects/light instalation - ode to Dan Flavin/unnamed.jpg",
+      "/light_projects/light instalation - ode to Dan Flavin/unnamed-1.jpg",
+      "/light_projects/light instalation - ode to Dan Flavin/unnamed-2.jpg",
+      "/light_projects/light instalation - ode to Dan Flavin/unnamed-3.jpg",
+      "/light_projects/light instalation - ode to Dan Flavin/unnamed-4.jpg",
+      "/light_projects/light instalation - ode to Dan Flavin/unnamed-5.jpg"
+    ]
+  },
+  {
+    title: "Ode to Robert Irwin",
+    description: "A Robert Irwin-Inspired Light Wall Installation\n\nThis piece is intended to induce a state of wide-angle vision, where the viewer's focus shifts to the periphery, spreading perception outward. This way of seeing significantly expands our capacity to perceive and respond. By focusing on nothing, we see everything.",
+    images: [
+      "/light_projects/ode to robert irwin/unnamed.jpg",
+      "/light_projects/ode to robert irwin/unnamed-1.jpg",
+      "/light_projects/ode to robert irwin/unnamed-2.jpg"
+    ]
+  }
+];
+
 const products = [
   { name: 'Obsidian', desc: 'A note-taking tool for networked thought.', link: 'https://obsidian.md/', iconUrl: '/product_icons/obsidian.jpg' },
   { name: 'Snipd', desc: 'A podcast player that uses AI to create transcripts for podcast episodes that you can follow along as you listen.', link: 'https://www.snipd.com/', iconUrl: '/product_icons/Snipd App Icon.jpg' },
@@ -179,9 +236,55 @@ const products = [
   { name: 'Contour Mouse', desc: 'Really feels like you are surfing the web.', link: 'https://www.contourdesign.com/collection/contour-rollermouse', iconUrl: '/product_icons/Coutour Mouse Roller Image.jpg' },
   { name: 'Readwise', desc: 'Helps you get the most out of what you read by making it easy to revisit your highlights from all your favorite reading platforms.', link: 'https://readwise.io/', iconUrl: '/product_icons/Readwise Icon.jpg' },
   { name: 'SFPL', desc: 'As an avid reader I enjoy accessing and supporting public services such as the San Francisco Public Library.', link: 'https://sfpl.org/', iconUrl: '/product_icons/SFPL Icon.jpg' },
-  { name: '3M', desc: 'One of the best at iterative development, have yet to disappoint. You have certainly used some of their products.', link: 'https://www.3m.com/', iconUrl: '/product_icons/3M Icon.jpg' },
+  { name: '3M', desc: 'One of the best at iterative development, have yet to disappoint. You have certainly used some of their products.', link: 'https://www.3m.com/', iconUrl: '/product_icons/3m_v3.png' },
   { name: 'Tomito', desc: 'My favorite Pomodoro timer so far.', link: 'https://tomito.app/', iconUrl: '/product_icons/Tomito Icon App.jpg' },
   { name: 'Arc', desc: 'sad to see this one on its way out. Fingers crossed they keep it around & working.', link: 'https://arc.net', iconUrl: '/product_icons/Arc App Icon.jpg' },
+];
+
+const projectsData = [
+  {
+    id: 'kindshare',
+    title: 'KindShare',
+    subtitle: 'Equitable Cost-Sharing App',
+    description: 'Designed, developed, and launched an equitable cost-sharing app on iOS and Google Play. The platform supports users by providing the information and tools needed to navigate complex financial dynamics and facilitate fair cost-sharing.',
+    icon: <Scale size={32} />,
+    color: '#3b82f6',
+    image: '/projects/kindshare_hero.png',
+    links: [
+      { label: 'iOS Store', url: 'https://apps.apple.com/us/app/kindshare-app/id6752961693' },
+      { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=com.kindshare.app' }
+    ]
+  },
+  {
+    id: 'ambulancecost',
+    title: 'AmbulanceCost.com',
+    subtitle: 'Medical Billing Transparency',
+    description: 'A site dedicated to making it easy for people to search and see the estimated cost of calling 911 and receiving care via an ambulance. Shedding light on the surprising bills that often come after emergency care—inspired by a close friend\'s experience with a multi-thousand dollar bill from an accident that was no fault of their own.',
+    icon: <HeartPulse size={32} />,
+    color: '#ef4444',
+    image: '/projects/ambulance_hero.png',
+    links: [
+      { label: 'Visit Site', url: 'https://ambulancecost.com' }
+    ]
+  },
+  {
+    id: 'lightfixtures',
+    title: 'Light Fixtures',
+    subtitle: 'Art of Light & Space',
+    description: 'The art of light and space is my favorite medium. I spend much of my time experimenting and having fun building objects in our workshop. Having a workshop behind our house is a luxury of space that is rare and much appreciated in the city.',
+    icon: <Lightbulb size={32} />,
+    color: '#eab308',
+    image: '/downloaded_data/crafting/workshop.jpg',
+    links: [],
+    ctaLabel: 'See more fixtures'
+  }
+];
+
+const photographyData = [
+  ...[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(i => ({ src: `/photos/${i}.jpg`, alt: "" })),
+  { src: "/photos/16_bad_design.jpg", alt: "Bad design" },
+  { src: "/photos/18_not_my_photo.jpg", alt: "Marfa, Texas. Robert Irwin. The best of design." },
+  ...[1,2,3,4,5,6].map(i => ({ src: `/downloaded_data/nature/nature_${i}.jpg`, alt: "" }))
 ];
 
 const sections = [
@@ -189,6 +292,7 @@ const sections = [
   { id: 'products', label: 'Favorite Products' },
   { id: 'reading', label: 'Reading' },
   { id: 'projects', label: 'Projects' },
+  { id: 'light-fixtures', label: 'Light Fixtures', hidden: true },
   { id: 'photography', label: 'Photography' },
   { id: 'contact', label: 'Contact' }
 ];
@@ -196,7 +300,39 @@ const sections = [
 function App() {
   const [activeTab, setActiveTab] = useState('intro');
   const [openedBook, setOpenedBook] = useState(null);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [selectedFixture, setSelectedFixture] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+
+  React.useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 850;
+
+  // Keyboard navigation for lightbox
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setSelectedPhoto(null);
+      if (!selectedPhoto) return;
+
+      const currentIndex = photographyData.findIndex(p => p.src === selectedPhoto.src);
+      if (currentIndex === -1) return;
+
+      if (e.key === 'ArrowRight') {
+        const nextIndex = (currentIndex + 1) % photographyData.length;
+        setSelectedPhoto(photographyData[nextIndex]);
+      } else if (e.key === 'ArrowLeft') {
+        const prevIndex = (currentIndex - 1 + photographyData.length) % photographyData.length;
+        setSelectedPhoto(photographyData[prevIndex]);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedPhoto]);
 
   const [submitted, setSubmitted] = useState(false);
 
@@ -245,7 +381,7 @@ function App() {
             className="section-content"
           >
             <p className="intro-text">
-              Hi, I’m Boden 👋. Welcome to my personal website. I hope you find something you enjoy. Feel free to reach out anytime via the contact page!
+              Hi, I’m Boden 👋. Welcome to my personal website. This is where I share what I’m working on outside of my life as a PM. If you’re looking for the professional side of things, feel free to head over to my <a href="https://www.linkedin.com/in/boden-holland/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textDecorationThickness: '0.5px', textUnderlineOffset: '4px', fontWeight: 300 }}>LinkedIn</a>. I hope you find something you enjoy here, and please don’t hesitate to reach out!
             </p>
           </motion.div>
         );
@@ -397,14 +533,135 @@ function App() {
             <div className="section-head">
               <h2>Projects</h2>
               <p className="section-description">
-                I grew up working with my hands, a craft and skill I’ve come to appreciate more as time goes on. Most weekends, you’ll find me in the workshop, away from screens, building something new or repairing something old.
+                A collection of tools and platforms I've built to solve real-world problems and bring more transparency to complex systems.
               </p>
             </div>
-            <img 
-              src="/downloaded_data/crafting/workshop.jpg" 
-              alt="Workshop" 
-              style={{ width: '100%', borderRadius: '8px', marginTop: '2rem' }}
-            />
+            <div className="projects-grid">
+              {projectsData.map(project => (
+                <div key={project.id} className="project-card">
+                  {project.image && (
+                    <div className="project-card-image">
+                      <img src={project.image} alt={project.title} />
+                      <div className="project-card-overlay" style={{ '--project-color': project.color }}></div>
+                    </div>
+                  )}
+                  <div className="project-card-content">
+                    <div className="project-card-header">
+                      <div className={`project-icon-wrapper project-icon-${project.id}`} style={{ '--project-color': project.color }}>
+                        {project.icon}
+                      </div>
+                      <div className="project-meta">
+                        <h3>{project.title}</h3>
+                        <span className="project-subtitle">{project.subtitle}</span>
+                      </div>
+                    </div>
+                    <div className="project-card-body">
+                      <p>{project.description}</p>
+                    </div>
+                    <div className="project-card-footer">
+                      {project.ctaLabel && (
+                        <button 
+                          className="project-cta-btn" 
+                          style={{ '--project-color': project.color }}
+                          onClick={() => {
+                            if (project.id === 'lightfixtures') {
+                              navigate('light-fixtures');
+                            }
+                          }}
+                        >
+                          {project.ctaLabel}
+                        </button>
+                      )}
+                      {project.links.map(link => (
+                        <a 
+                          key={link.label} 
+                          href={link.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="project-link"
+                        >
+                          {link.label} <ExternalLink size={14} />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case 'light-fixtures':
+        return (
+          <div className="section-content">
+            <div className="section-head" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '1rem' }}>
+              <button 
+                onClick={() => navigate('projects')} 
+                className="back-btn"
+                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1rem', padding: 0 }}
+              >
+                <ChevronLeft size={20} /> Back to Projects
+              </button>
+              <h2>Light Fixtures Portfolio</h2>
+              <p className="section-description">
+                A deeper look into the custom light fixtures and installations I've designed and built.
+              </p>
+            </div>
+            
+            <div className="light-fixtures-grid">
+              {lightFixturesData.map((fixture, idx) => (
+                <div key={idx} className="fixture-hero-card" onClick={() => setSelectedFixture(fixture)}>
+                  <div className="fixture-hero-image">
+                    <img src={fixture.images[0]} alt={fixture.title} loading="lazy" />
+                  </div>
+                  <div className="fixture-hero-content">
+                    <h3>{fixture.title}</h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <AnimatePresence>
+              {selectedFixture && (
+                <div className={`fixture-overlay-container ${isMobile ? 'mobile-view' : 'desktop-view'}`}>
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="fixture-overlay-backdrop"
+                    onClick={() => setSelectedFixture(null)}
+                  />
+                  <motion.div 
+                    initial={isMobile ? { y: '100%' } : { opacity: 0, scale: 0.95, y: 20 }}
+                    animate={isMobile ? { y: 0 } : { opacity: 1, scale: 1, y: 0 }}
+                    exit={isMobile ? { y: '100%' } : { opacity: 0, scale: 0.95, y: 20 }}
+                    transition={isMobile ? { type: "tween", duration: 0.4, ease: [0.32, 0.72, 0, 1] } : { type: "spring", damping: 25, stiffness: 300 }}
+                    className="fixture-overlay-content"
+                  >
+                    <div className="fixture-overlay-nav">
+                      <button className="back-btn-overlay" onClick={() => setSelectedFixture(null)}>
+                        {isMobile ? <ChevronLeft size={24} /> : <X size={24} />}
+                        {isMobile && <span>Back</span>}
+                      </button>
+                    </div>
+                    
+                    <div className="fixture-overlay-header">
+                      <h3>{selectedFixture.title}</h3>
+                    </div>
+                    <div className="fixture-overlay-body">
+                      <p className="fixture-description">{selectedFixture.description}</p>
+                      <div className="fixture-gallery">
+                        {selectedFixture.images.map((img, imgIdx) => (
+                          <div key={imgIdx} className="fixture-image-container">
+                            <img src={img} alt={`${selectedFixture.title} ${imgIdx + 1}`} loading="lazy" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+            </AnimatePresence>
           </div>
         );
       case 'photography':
@@ -421,30 +678,30 @@ function App() {
               <footer style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>— Dorothea Lange</footer>
             </blockquote>
             <div className="photography-stack">
-              {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(i => (
-                <div key={i} className="full-image-container">
-                  <img src={`/photos/${i}.jpg`} alt="" />
+              {photographyData.slice(0, 15).map((photo, i) => (
+                <div key={i} className="photo-item-container" onClick={() => setSelectedPhoto(photo)}>
+                  <img src={photo.src} alt={photo.alt} />
                 </div>
               ))}
-              <div className="full-image-container">
-                <img src="/photos/16_bad_design.jpg" alt="" />
+              <div className="photo-item-container" onClick={() => setSelectedPhoto(photographyData[15])}>
+                <img src={photographyData[15].src} alt={photographyData[15].alt} />
               </div>
-              <div className="full-image-container">
-                <img src="/photos/18_not_my_photo.jpg" alt="" />
+              <div className="photo-item-container" onClick={() => setSelectedPhoto(photographyData[16])}>
+                <img src={photographyData[16].src} alt={photographyData[16].alt} />
                 <div className="image-caption">
                   Last photograph, not mine. Marfa, Texas. Robert Irwin. The best of design.
                 </div>
               </div>
 
-              <div style={{ marginTop: '6rem', marginBottom: '4rem' }}>
-                <p className="section-description" style={{ maxWidth: '900px' }}>
-                The title of this section could have easily been Home, but for me, home is about being surrounded by nature. That’s why I live in the Presidio of San Francisco. Most days begin and end with a walk here. Our neighborhood in Fort Scott is quiet, with only a few homes. Sometimes I cross paths with a neighbor and we stop to chat; other times, there’s no one at all.
+              <div style={{ marginTop: '8rem', marginBottom: '2rem' }}>
+                <p className="section-description">
+                The following images were taken within a 15min walk from home. Most days begin and end with a walk here. Our neighborhood in Fort Scott is quiet, with only a few houses on the street. Sometimes I cross paths with a neighbor, and we stop to chat; other times, there’s no one at all.
                 </p>
               </div>
 
-              {[1,2,3,4,5,6].map(i => (
-                <div key={`nature-${i}`} className="full-image-container">
-                  <img src={`/downloaded_data/nature/nature_${i}.jpg`} alt="" />
+              {photographyData.slice(17).map((photo, i) => (
+                <div key={`nature-${i}`} className="photo-item-container" onClick={() => setSelectedPhoto(photo)}>
+                  <img src={photo.src} alt={photo.alt} />
                 </div>
               ))}
             </div>
@@ -505,7 +762,7 @@ function App() {
     <div className="container">
       {/* Desktop sidebar — left */}
       <nav className="navbar">
-        {sections.map(s => (
+        {sections.filter(s => !s.hidden).map(s => (
           <button 
             key={s.id} 
             className={`nav-link ${activeTab === s.id ? 'active' : ''}`}
@@ -515,11 +772,6 @@ function App() {
           </button>
         ))}
       </nav>
-
-      {/* Mobile hamburger */}
-      <button className="hamburger" onClick={() => setMobileOpen(o => !o)} aria-label="Menu">
-        <span /><span /><span />
-      </button>
 
       {/* Mobile drawer */}
       <AnimatePresence>
@@ -531,7 +783,7 @@ function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
           >
-            {sections.map(s => (
+            {sections.filter(s => !s.hidden).map(s => (
               <button
                 key={s.id}
                 className={`nav-link ${activeTab === s.id ? 'active' : ''}`}
@@ -553,10 +805,74 @@ function App() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6 }}
           >
+            {/* Mobile hamburger - inside section to scroll away */}
+            <button className="hamburger" onClick={() => setMobileOpen(o => !o)} aria-label="Menu">
+              <span /><span /><span />
+            </button>
             {renderSection()}
           </motion.section>
         </AnimatePresence>
       </div>
+
+      {/* Photography Lightbox */}
+      <AnimatePresence>
+        {selectedPhoto && (
+          <motion.div 
+            className="lightbox-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedPhoto(null)}
+          >
+            <motion.button 
+              className="lightbox-close"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setSelectedPhoto(null)}
+            >
+              <X size={32} />
+            </motion.button>
+            <motion.div 
+              className="lightbox-content"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                className="lightbox-nav-btn prev" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const currentIndex = photographyData.findIndex(p => p.src === selectedPhoto.src);
+                  const prevIndex = (currentIndex - 1 + photographyData.length) % photographyData.length;
+                  setSelectedPhoto(photographyData[prevIndex]);
+                }}
+              >
+                <ChevronLeft size={48} strokeWidth={1} />
+              </button>
+              
+              <img src={selectedPhoto.src} alt={selectedPhoto.alt} />
+              
+              <button 
+                className="lightbox-nav-btn next" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const currentIndex = photographyData.findIndex(p => p.src === selectedPhoto.src);
+                  const nextIndex = (currentIndex + 1) % photographyData.length;
+                  setSelectedPhoto(photographyData[nextIndex]);
+                }}
+              >
+                <ChevronRight size={48} strokeWidth={1} />
+              </button>
+              
+              {selectedPhoto.alt && (
+                <div className="lightbox-caption">{selectedPhoto.alt}</div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
