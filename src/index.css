@@ -1074,6 +1074,10 @@ section {
   transform: scale(1.05);
 }
 
+.fixture-card-fire-extinguisher-light .fixture-hero-image img {
+  object-position: top;
+}
+
 .fixture-hero-content {
   padding: 1.5rem;
 }

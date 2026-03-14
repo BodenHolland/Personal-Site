@@ -609,7 +609,7 @@ function App() {
             
             <div className="light-fixtures-grid">
               {lightFixturesData.map((fixture, idx) => (
-                <div key={idx} className="fixture-hero-card" onClick={() => setSelectedFixture(fixture)}>
+                <div key={idx} className={`fixture-hero-card fixture-card-${fixture.title.toLowerCase().replace(/\s+/g, '-')}`} onClick={() => setSelectedFixture(fixture)}>
                   <div className="fixture-hero-image">
                     <img src={fixture.images[0]} alt={fixture.title} loading="lazy" />
                   </div>
