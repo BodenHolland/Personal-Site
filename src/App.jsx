@@ -394,13 +394,20 @@ function App() {
             </div>
             <div className="grid">
               {products.map(p => (
-                <a key={p.name} href={p.link} target="_blank" rel="noopener noreferrer" className="card product-card">
+                <motion.a 
+                  key={p.name} 
+                  href={p.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="card product-card"
+                  whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
+                >
                   {p.iconUrl && (
                     <img src={p.iconUrl} alt={`${p.name} icon`} className="product-icon" />
                   )}
                   <h3 style={{ marginBottom: '1rem' }}>{p.name}</h3>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{p.desc}</p>
-                </a>
+                </motion.a>
               ))}
             </div>
           </div>
@@ -425,6 +432,7 @@ function App() {
                     className="book-container"
                     onClick={() => setOpenedBook(book)}
                     style={{ opacity: isOpened ? 0 : 1 }} // Hide original when opened to preserve space
+                    whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
                   >
                     <div className="book-3d-wrapper">
                       {/* Book Body (Pages) */}
@@ -688,19 +696,32 @@ function App() {
             </blockquote>
             <div className="photography-stack">
               {photographyData.slice(0, 15).map((photo, i) => (
-                <div key={i} className="photo-item-container" onClick={() => setSelectedPhoto(photo)}>
+                <motion.div 
+                  key={i} 
+                  className="photo-item-container" 
+                  onClick={() => setSelectedPhoto(photo)}
+                  whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
+                >
                   <img src={photo.src} alt={photo.alt} />
-                </div>
+                </motion.div>
               ))}
-              <div className="photo-item-container" onClick={() => setSelectedPhoto(photographyData[15])}>
+              <motion.div 
+                className="photo-item-container" 
+                onClick={() => setSelectedPhoto(photographyData[15])}
+                whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
+              >
                 <img src={photographyData[15].src} alt={photographyData[15].alt} />
-              </div>
-              <div className="photo-item-container" onClick={() => setSelectedPhoto(photographyData[16])}>
+              </motion.div>
+              <motion.div 
+                className="photo-item-container" 
+                onClick={() => setSelectedPhoto(photographyData[16])}
+                whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
+              >
                 <img src={photographyData[16].src} alt={photographyData[16].alt} />
                 <div className="image-caption">
                   Last photograph, not mine. Marfa, Texas. Robert Irwin. The best of design.
                 </div>
-              </div>
+              </motion.div>
 
               <div style={{ marginTop: '8rem', marginBottom: '2rem' }}>
                 <p className="section-description">
@@ -709,9 +730,14 @@ function App() {
               </div>
 
               {photographyData.slice(17).map((photo, i) => (
-                <div key={`nature-${i}`} className="photo-item-container" onClick={() => setSelectedPhoto(photo)}>
+                <motion.div 
+                  key={`nature-${i}`} 
+                  className="photo-item-container" 
+                  onClick={() => setSelectedPhoto(photo)}
+                  whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
+                >
                   <img src={photo.src} alt={photo.alt} />
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -736,9 +762,14 @@ function App() {
                 >
                   <h3>Thank you!</h3>
                   <p>Your message has been sent successfully. I'll get back to you soon.</p>
-                  <button onClick={() => setSubmitted(false)} className="submit-btn" style={{ marginTop: '2rem' }}>
+                  <motion.button 
+                    onClick={() => setSubmitted(false)} 
+                    className="submit-btn" 
+                    style={{ marginTop: '2rem' }}
+                    whileTap={{ scale: 0.97, transition: { duration: 0.1 } }}
+                  >
                     Send another message
-                  </button>
+                  </motion.button>
                 </motion.div>
               ) : (
                 <form className="contact-form" onSubmit={handleSubmit}>
@@ -754,9 +785,13 @@ function App() {
                     <label htmlFor="message">Message</label>
                     <textarea name="message" id="message" rows="5" placeholder="What's on your mind?" required></textarea>
                   </div>
-                  <button type="submit" className="submit-btn">
+                  <motion.button 
+                    type="submit" 
+                    className="submit-btn"
+                    whileTap={{ scale: 0.97, transition: { duration: 0.1 } }}
+                  >
                     Send Message <Send size={18} />
-                  </button>
+                  </motion.button>
                 </form>
               )}
             </div>
@@ -772,13 +807,14 @@ function App() {
       {/* Desktop sidebar — left */}
       <nav className="navbar">
         {sections.filter(s => !s.hidden).map(s => (
-          <button 
+          <motion.button 
             key={s.id} 
             className={`nav-link ${activeTab === s.id ? 'active' : ''}`}
             onClick={() => navigate(s.id)}
+            whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
           >
             {s.label}
-          </button>
+          </motion.button>
         ))}
       </nav>
 
@@ -793,13 +829,14 @@ function App() {
             transition={{ duration: 0.25 }}
           >
             {sections.filter(s => !s.hidden).map(s => (
-              <button
+              <motion.button
                 key={s.id}
                 className={`nav-link ${activeTab === s.id ? 'active' : ''}`}
                 onClick={() => navigate(s.id)}
+                whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
               >
                 {s.label}
-              </button>
+              </motion.button>
             ))}
           </motion.div>
         )}
@@ -815,9 +852,14 @@ function App() {
             transition={{ duration: 0.6 }}
           >
             {/* Mobile hamburger - inside section to scroll away */}
-            <button className="hamburger" onClick={() => setMobileOpen(o => !o)} aria-label="Menu">
+            <motion.button 
+              className="hamburger" 
+              onClick={() => setMobileOpen(o => !o)} 
+              aria-label="Menu"
+              whileTap={{ scale: 0.9, transition: { duration: 0.1 } }}
+            >
               <span /><span /><span />
-            </button>
+            </motion.button>
             {renderSection()}
           </motion.section>
         </AnimatePresence>
@@ -849,7 +891,7 @@ function App() {
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <button 
+              <motion.button 
                 className="lightbox-nav-btn prev" 
                 onClick={(e) => {
                   e.stopPropagation();
@@ -857,13 +899,14 @@ function App() {
                   const prevIndex = (currentIndex - 1 + photographyData.length) % photographyData.length;
                   setSelectedPhoto(photographyData[prevIndex]);
                 }}
+                whileTap={{ scale: 0.9, x: -5, transition: { duration: 0.1 } }}
               >
                 <ChevronLeft size={48} strokeWidth={1} />
-              </button>
+              </motion.button>
               
               <img src={selectedPhoto.src} alt={selectedPhoto.alt} />
               
-              <button 
+              <motion.button 
                 className="lightbox-nav-btn next" 
                 onClick={(e) => {
                   e.stopPropagation();
@@ -871,9 +914,10 @@ function App() {
                   const nextIndex = (currentIndex + 1) % photographyData.length;
                   setSelectedPhoto(photographyData[nextIndex]);
                 }}
+                whileTap={{ scale: 0.9, x: 5, transition: { duration: 0.1 } }}
               >
                 <ChevronRight size={48} strokeWidth={1} />
-              </button>
+              </motion.button>
               
               {selectedPhoto.alt && (
                 <div className="lightbox-caption">{selectedPhoto.alt}</div>
