@@ -759,6 +759,27 @@ section {
     max-width: 100%;
     width: 100%;
   }
+
+  /* Favorite Products Mobile Refinement */
+  .grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .product-card {
+    width: 100%;
+    max-width: 320px; /* Constrain width on mobile */
+    text-align: center; /* Center text content */
+    align-items: center; /* Center flex items (icon) */
+    padding: 2rem 1.5rem;
+  }
+
+  .product-icon {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 /* Projects Section Enhancement */
