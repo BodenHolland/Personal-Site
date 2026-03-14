@@ -422,7 +422,7 @@ section {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: clamp(2rem, 4vw, 4rem) clamp(1rem, 2vw, 2rem);
-  padding-bottom: 10rem;
+  padding-bottom: 4rem;
   justify-items: center;
 }
 
@@ -707,13 +707,6 @@ section {
   }
 }
 
-.book-title-small {
-  margin-top: 1rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-main);
-  text-align: center;
-}
 
 .close-btn:hover {
   background: var(--accent-primary);

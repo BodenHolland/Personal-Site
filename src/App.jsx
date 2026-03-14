@@ -455,7 +455,6 @@ function App() {
                         <div className="book-cover-back"></div>
                       </motion.div>
                     </div>
-                    <p className="book-title-small">{book.title}</p>
                   </motion.div>
                 );
               })}
