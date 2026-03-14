@@ -765,12 +765,6 @@ section {
   position: relative;
 }
 
-.project-card:hover {
-  transform: translateY(-12px);
-  box-shadow: 0 40px 80px rgba(0,0,0,0.1);
-  border-color: #cbd5e1;
-}
-
 .project-card-image {
   width: 100%;
   aspect-ratio: 21/9;
@@ -786,20 +780,12 @@ section {
   transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.project-card:hover .project-card-image img {
-  transform: scale(1.1);
-}
-
 .project-card-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom, transparent 40%, var(--project-color));
   opacity: 0.15;
   transition: opacity 0.6s ease;
-}
-
-.project-card:hover .project-card-overlay {
-  opacity: 0.3;
 }
 
 .project-card-content {
@@ -827,9 +813,25 @@ section {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.project-card:hover .project-icon-wrapper {
-  background: var(--project-color);
-  color: white;
+@media (hover: hover) {
+  .project-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.1);
+    border-color: #cbd5e1;
+  }
+
+  .project-card:hover .project-card-image img {
+    transform: scale(1.1);
+  }
+
+  .project-card:hover .project-card-overlay {
+    opacity: 0.3;
+  }
+
+  .project-card:hover .project-icon-wrapper {
+    background: var(--project-color);
+    color: white;
+  }
 }
 
 .project-meta h3 {
@@ -1052,26 +1054,21 @@ section {
   flex-direction: column;
 }
 
-.fixture-hero-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+@media (hover: hover) {
+  .fixture-hero-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  }
+
+  .fixture-hero-card:hover .fixture-hero-image img {
+    transform: scale(1.05);
+  }
 }
 
 .fixture-hero-image {
   width: 100%;
   aspect-ratio: 4/3;
   overflow: hidden;
-}
-
-.fixture-hero-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.fixture-hero-card:hover .fixture-hero-image img {
-  transform: scale(1.05);
 }
 
 .fixture-card-fire-extinguisher-light .fixture-hero-image img {

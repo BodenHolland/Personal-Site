@@ -538,7 +538,11 @@ function App() {
             </div>
             <div className="projects-grid">
               {projectsData.map(project => (
-                <div key={project.id} className="project-card">
+                <motion.div 
+                  key={project.id} 
+                  className="project-card"
+                  whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
+                >
                   {project.image && (
                     <div className="project-card-image">
                       <img src={project.image} alt={project.title} />
@@ -585,7 +589,7 @@ function App() {
                       ))}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -609,14 +613,19 @@ function App() {
             
             <div className="light-fixtures-grid">
               {lightFixturesData.map((fixture, idx) => (
-                <div key={idx} className={`fixture-hero-card fixture-card-${fixture.title.toLowerCase().replace(/\s+/g, '-')}`} onClick={() => setSelectedFixture(fixture)}>
+                <motion.div 
+                  key={idx} 
+                  className={`fixture-hero-card fixture-card-${fixture.title.toLowerCase().replace(/\s+/g, '-')}`} 
+                  onClick={() => setSelectedFixture(fixture)}
+                  whileTap={{ scale: 0.97, transition: { duration: 0.1 } }}
+                >
                   <div className="fixture-hero-image">
                     <img src={fixture.images[0]} alt={fixture.title} loading="lazy" />
                   </div>
                   <div className="fixture-hero-content">
                     <h3>{fixture.title}</h3>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
 
