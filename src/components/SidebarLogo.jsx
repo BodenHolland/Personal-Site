@@ -7,7 +7,7 @@ const SidebarLogo = () => {
         src="/logo.png" 
         alt="Boden Logo" 
         className="sidebar-logo-img"
-        style={{ width: '45px', height: 'auto', opacity: 0.9 }}
+        style={{ width: '90px', height: 'auto', opacity: 0.9 }}
       />
     </div>
   );
