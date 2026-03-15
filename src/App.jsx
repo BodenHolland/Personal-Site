@@ -791,12 +791,7 @@ function App() {
                       layoutId={`screen-container-${openedBook.title}`}
                       className="cinema-layout"
                     >
-                      <button className="overlay-close-btn" onClick={(e) => {
-                        e.stopPropagation();
-                        setOpenedBook(null);
-                      }}>
-                        <X size={24} />
-                      </button>
+
                       <div className="cinema-stage">
                         <iframe
                           width="100%"
@@ -829,12 +824,7 @@ function App() {
                       layoutId={`book-container-${openedBook.title}`}
                       className="book-container expanded-overlay-3d"
                     >
-                      <button className="overlay-close-btn" onClick={(e) => {
-                        e.stopPropagation();
-                        setOpenedBook(null);
-                      }}>
-                        <X size={24} />
-                      </button>
+
                       <div className="book-3d-wrapper">
                         {/* 1. Book Body (Pages) */}
                         <div className="book-pages"></div>

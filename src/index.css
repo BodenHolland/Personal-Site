@@ -469,7 +469,7 @@ section {
 /* Global Mobile Padding Refinement */
 @media (max-width: 768px) {
   section {
-    padding: 2rem 1.5rem;
+    padding: 5rem 1.5rem 2rem;
   }
   .section-head h2 {
     font-size: 2.5rem;
