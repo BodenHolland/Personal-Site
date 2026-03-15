@@ -185,28 +185,60 @@ const booksData = [
 
 const screensData = [
   {
-    title: "Succession",
-    subtitle: "TV Show",
-    coverImageUrl: "/screens/succession.jpg",
-    description: "A powerhouse of writing and acting, exploring the dysfunctional power dynamics within a global media empire. It’s a tragicomedy about family, greed, and legacy.",
-    link: "https://www.hbo.com/succession",
-    trailerId: "OzY2IW1mE9M"
+    title: "The Tale of Tales",
+    subtitle: "Movie (Short)",
+    coverImageUrl: "/screens/tale_of_tales.jpg",
+    description: "A poetic and soulful Russian animation masterpiece by Yuriy Norshteyn. It is widely considered one of the greatest animated films of all time, weaving together memory, war, and the passing of time.",
+    link: "https://www.imdb.com/title/tt0079986/",
+    trailerId: "nfNVGhkgf6I"
   },
   {
-    title: "The Bear",
-    subtitle: "TV Show",
-    coverImageUrl: "/screens/the_bear.jpg",
-    description: "An intense, fast-paced dive into the culinary world. It captures the stress, passion, and found-family dynamics of a chaotic kitchen with incredible authenticity.",
-    link: "https://www.fxnetworks.com/shows/the-bear",
-    trailerId: "y-c7dyXShyA"
-  },
-  {
-    title: "Inception",
+    title: "My Dinner with Andre",
     subtitle: "Movie",
-    coverImageUrl: "/screens/inception.jpg",
-    description: "Christopher Nolan's masterpiece on the architecture of dreams. A heist thriller that challenges the perception of reality through multiple layers of subconsciousness.",
-    link: "https://www.warnerbros.com/movies/inception",
-    trailerId: "YoHD9XEInc0"
+    coverImageUrl: "/screens/my_dinner_with_andre.jpg",
+    description: "A fascinating, feature-length conversation between two friends in a New York restaurant. Wallace Shawn and Andre Gregory discuss life, art, and the nature of reality in this intimate cinematic experiment.",
+    link: "https://www.imdb.com/title/tt0082783/",
+    trailerId: "nC2c1sfFHEg"
+  },
+  {
+    title: "Paprika",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/paprika.jpg",
+    description: "Satoshi Kon's mind-bending journey into the world of dreams. When a device that allows therapists to enter patients' dreams is stolen, a young therapist must hunt down the thief through a psychedelic dreamscape.",
+    link: "https://www.imdb.com/title/tt0851578/",
+    trailerId: "anu2IrsUlVs"
+  },
+  {
+    title: "Eat Drink Man Woman",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/eat_drink_man_woman.jpg",
+    description: "Ang Lee's beautiful exploration of family, tradition, and change in Taipei. A master chef and his three rebellious daughters navigate life's complexities around the Sunday dinner table.",
+    link: "https://www.imdb.com/title/tt0111797/",
+    trailerId: "l7pKpO8NErU"
+  },
+  {
+    title: "Atlanta",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/atlanta.jpg",
+    description: "Donald Glover's surreal and genre-bending series following Earn and his cousin Paper Boi through the Atlanta rap scene. A poignant, hilarious, and often dreamlike reflection on modern life.",
+    link: "https://www.imdb.com/title/tt4288182/",
+    trailerId: "CetGXHU5aOA"
+  },
+  {
+    title: "The Act of Killing",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/act_of_killing.jpg",
+    description: "A chilling and groundbreaking documentary where former Indonesian death squad leaders reenact their mass killings in the style of their favorite cinematic genres.",
+    link: "https://www.imdb.com/title/tt2375605/",
+    trailerId: "6GiqYLrJBG0"
+  },
+  {
+    title: "Spirited Away",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/spirited_away.jpg",
+    description: "Hayao Miyazaki's enchanting masterpiece about a young girl who becomes trapped in a magical world of spirits and bathhouses. A summit of animated storytelling and visual imagination.",
+    link: "https://www.imdb.com/title/tt0245429/",
+    trailerId: "ByXuk9QqQkk"
   },
   {
     title: "The Holy Mountain",
@@ -217,65 +249,9 @@ const screensData = [
     trailerId: "DSON8vHpxzY"
   },
   {
-    title: "The Tale of Tales",
-    subtitle: "Movie (Short)",
-    coverImageUrl: "/screens/tale_of_tales.png",
-    description: "A poetic and soulful Russian animation masterpiece by Yuriy Norshteyn. It is widely considered one of the greatest animated films of all time, weaving together memory, war, and the passing of time.",
-    link: "https://www.imdb.com/title/tt0079986/",
-    trailerId: "nfNVGhkgf6I"
-  },
-  {
-    title: "My Dinner with Andre",
-    subtitle: "Movie",
-    coverImageUrl: "/screens/my_dinner_with_andre.png",
-    description: "A fascinating, feature-length conversation between two friends in a New York restaurant. Wallace Shawn and Andre Gregory discuss life, art, and the nature of reality in this intimate cinematic experiment.",
-    link: "https://www.imdb.com/title/tt0082783/",
-    trailerId: "nC2c1sfFHEg"
-  },
-  {
-    title: "Paprika",
-    subtitle: "Movie",
-    coverImageUrl: "/screens/paprika.png",
-    description: "Satoshi Kon's mind-bending journey into the world of dreams. When a device that allows therapists to enter patients' dreams is stolen, a young therapist must hunt down the thief through a psychedelic dreamscape.",
-    link: "https://www.imdb.com/title/tt0851578/",
-    trailerId: "anu2IrsUlVs"
-  },
-  {
-    title: "Eat Drink Man Woman",
-    subtitle: "Movie",
-    coverImageUrl: "/screens/eat_drink_man_woman.png",
-    description: "Ang Lee's beautiful exploration of family, tradition, and change in Taipei. A master chef and his three rebellious daughters navigate life's complexities around the Sunday dinner table.",
-    link: "https://www.imdb.com/title/tt0111797/",
-    trailerId: "l7pKpO8NErU"
-  },
-  {
-    title: "Atlanta",
-    subtitle: "TV Series",
-    coverImageUrl: "/screens/atlanta.png",
-    description: "Donald Glover's surreal and genre-bending series following Earn and his cousin Paper Boi through the Atlanta rap scene. A poignant, hilarious, and often dreamlike reflection on modern life.",
-    link: "https://www.imdb.com/title/tt4288182/",
-    trailerId: "CetGXHU5aOA"
-  },
-  {
-    title: "The Act of Killing",
-    subtitle: "Movie",
-    coverImageUrl: "/screens/act_of_killing.png",
-    description: "A chilling and groundbreaking documentary where former Indonesian death squad leaders reenact their mass killings in the style of their favorite cinematic genres.",
-    link: "https://www.imdb.com/title/tt2375605/",
-    trailerId: "6GiqYLrJBG0"
-  },
-  {
-    title: "Spirited Away",
-    subtitle: "Movie",
-    coverImageUrl: "/screens/spirited_away.png",
-    description: "Hayao Miyazaki's enchanting masterpiece about a young girl who becomes trapped in a magical world of spirits and bathhouses. A summit of animated storytelling and visual imagination.",
-    link: "https://www.imdb.com/title/tt0245429/",
-    trailerId: "ByXuk9QqQkk"
-  },
-  {
     title: "Seven Samurai",
     subtitle: "Movie",
-    coverImageUrl: "/screens/seven_samurai.png",
+    coverImageUrl: "/screens/seven_samurai.jpg",
     description: "Akira Kurosawa's epic masterpiece about seven Ronin hired to protect a small village from bandits. The definitive action-drama that changed cinema forever.",
     link: "https://www.imdb.com/title/tt0047478/",
     trailerId: "wJ1TOratCTo"
@@ -283,7 +259,7 @@ const screensData = [
   {
     title: "Jujutsu Kaisen",
     subtitle: "TV Series",
-    coverImageUrl: "/screens/jujutsu_kaisen.png",
+    coverImageUrl: "/screens/jujutsu_kaisen.jpg",
     description: "A high-octane dark fantasy series where high schooler Yuji Itadori enters a world of Curses and Sorcerers. A masterclass in modern shonen animation and choreography.",
     link: "https://www.imdb.com/title/tt12343534/",
     trailerId: "pkKu9hLT-t8"
@@ -291,7 +267,7 @@ const screensData = [
   {
     title: "Oldboy",
     subtitle: "Movie",
-    coverImageUrl: "/screens/oldboy.png",
+    coverImageUrl: "/screens/oldboy.jpg",
     description: "Park Chan-wook's visceral and stylistic revenge thriller. After being imprisoned for 15 years without explanation, a man is suddenly released and given five days to find his captor.",
     link: "https://www.imdb.com/title/tt0364569/",
     trailerId: "tAaBkFChaRg"
@@ -299,7 +275,7 @@ const screensData = [
   {
     title: "The Firemen's Ball",
     subtitle: "Movie",
-    coverImageUrl: "/screens/firemens_ball.png",
+    coverImageUrl: "/screens/firemens_ball.jpg",
     description: "Miloš Forman's sharp satirical comedy of the Czech New Wave. A simple party thrown by a small-town fire department descends into hilariously chaotic bureaucracy and theft.",
     link: "https://www.imdb.com/title/tt0061781/",
     trailerId: "kGMakTwMRoY"
@@ -307,7 +283,7 @@ const screensData = [
   {
     title: "In the Mood for Love",
     subtitle: "Movie",
-    coverImageUrl: "/screens/mood_for_love.png",
+    coverImageUrl: "/screens/mood_for_love.jpg",
     description: "Wong Kar-wai's lush and melancholic romance set in 1960s Hong Kong. Two neighbors form a delicate bond after discovering their spouses are having an affair.",
     link: "https://www.imdb.com/title/tt0118694/",
     trailerId: "m8GuedsQnWQ"
@@ -315,7 +291,7 @@ const screensData = [
   {
     title: "Black Mirror",
     subtitle: "TV Series",
-    coverImageUrl: "/screens/black_mirror.png",
+    coverImageUrl: "/screens/black_mirror.jpg",
     description: "An anthology series exploring a twisted, high-tech multiverse where humanity's greatest innovations and darkest instincts collide. Each episode is a sharp, suspenseful tale exploring themes of contemporary techno-paranoia.",
     link: "https://www.imdb.com/title/tt2085059/",
     trailerId: "zLZHdK6l55I"
@@ -323,7 +299,7 @@ const screensData = [
   {
     title: "The Office",
     subtitle: "TV Series",
-    coverImageUrl: "/screens/the_office.png",
+    coverImageUrl: "/screens/the_office.jpg",
     description: "The definitive mockumentary following the daily lives of office employees at the Dunder Mifflin Scranton branch. A masterclass in cringe comedy, character development, and heart.",
     link: "https://www.imdb.com/title/tt0386676/",
     trailerId: "-C2z-nshFts"
@@ -332,53 +308,111 @@ const screensData = [
 
 const audioData = [
   {
-    embedUrl: "https://open.spotify.com/embed/track/1gE46nqci9O4oN9teSjP0b?utm_source=generator",
-    description: "Music and audio that I'm currently enjoying or find inspiring."
+    title: "Come True",
+    artist: "Discovery Zone",
+    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e027507a5adb06f2936b86b0e20",
+    previewUrl: "https://p.scdn.co/mp3-preview/23a3c0d4e948176e5dbff092229ca01b526e2433",
+    spotifyUrl: "https://open.spotify.com/track/1gE46nqci9O4oN9teSjP0b"
   },
-  { embedUrl: "https://open.spotify.com/embed/track/4Y2rMjoYvgcICDes0FGThm?utm_source=generator" },
-  { embedUrl: "https://open.spotify.com/embed/track/2Xn7NadvZ56D0B2D7x2CSL?utm_source=generator" },
-  { embedUrl: "https://open.spotify.com/embed/track/0sMWdvSFBg1bVkzyszM819?utm_source=generator" },
-  { embedUrl: "https://open.spotify.com/embed/track/5MRH2b0hfxZJLliGzYDVF3?utm_source=generator" },
-  { embedUrl: "https://open.spotify.com/embed/track/185EiYT58r61hdnHxjKVzT?utm_source=generator" },
-  { embedUrl: "https://open.spotify.com/embed/track/0oGMCVv5C1ekUYrITfMoO5?utm_source=generator" },
-  { embedUrl: "https://open.spotify.com/embed/track/5DebUsH4CN4ByTe0xF0KPJ?utm_source=generator" },
-  { embedUrl: "https://open.spotify.com/embed/track/5GZupy8zByqFmXvpwZ4JOC?utm_source=generator&theme=0" },
-  { embedUrl: "https://open.spotify.com/embed/track/7042gwq346mwkEoU5q3bbT?utm_source=generator" },
-  { embedUrl: "https://open.spotify.com/embed/track/6RDiDCAraT3tr31FtWi3C7?utm_source=generator" },
-  { embedUrl: "https://open.spotify.com/embed/track/1gcBvM73U5k2t75JXfcrkf?utm_source=generator" }
+  {
+    title: "Ebb Tide",
+    artist: "Houston & Dorsey",
+    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e0219785e19807ee4b3b16d787e",
+    previewUrl: "https://p.scdn.co/mp3-preview/5ea952771615233e1b7a6571e3194b3b50dfca93",
+    spotifyUrl: "https://open.spotify.com/track/4Y2rMjoYvgcICDes0FGThm"
+  },
+  {
+    title: "Crucify Your Mind",
+    artist: "Rodríguez",
+    coverUrl: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e02e7e1b574a9e6b9f26c7c3f49",
+    previewUrl: "https://p.scdn.co/mp3-preview/ff014d1b28d5357b3518a3e329855f0f45a25a0b",
+    spotifyUrl: "https://open.spotify.com/track/2Xn7NadvZ56D0B2D7x2CSL"
+  },
+  {
+    title: "Summertime Blues",
+    artist: "The Flying Lizards",
+    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e024371d8e74bb30b536dfe8e61",
+    previewUrl: "https://p.scdn.co/mp3-preview/0adcb33da7c5dc9445cea5d31b2edc3ad42c45a7",
+    spotifyUrl: "https://open.spotify.com/track/0sMWdvSFBg1bVkzyszM819"
+  },
+  {
+    title: "Paperhouse",
+    artist: "Can",
+    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e023087cd31f21fc4aa4a2aa22e",
+    previewUrl: "https://p.scdn.co/mp3-preview/427425c5f8ade3e1e8acf58a1ecf94c849ca306c",
+    spotifyUrl: "https://open.spotify.com/track/5MRH2b0hfxZJLliGzYDVF3"
+  },
+  {
+    title: "Falling Rain",
+    artist: "Link Wray",
+    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e0253d13c60cbf8496025e414e8",
+    previewUrl: "https://p.scdn.co/mp3-preview/a0d9ce04a77b36cec31ff9c97869103c255a7ee5",
+    spotifyUrl: "https://open.spotify.com/track/185EiYT58r61hdnHxjKVzT"
+  },
+  {
+    title: "I'm Set Free",
+    artist: "The Velvet Underground",
+    coverUrl: "https://i.scdn.co/image/ab67616d00001e02203033e6119382dfb439dba4",
+    previewUrl: "https://cdnt-preview.dzcdn.net/api/1/1/6/0/d/0/60de96d9961363935b381b91ddbea028.mp3",
+    spotifyUrl: "https://open.spotify.com/track/0oGMCVv5C1ekUYrITfMoO5"
+  },
+  {
+    title: "Tous les garçons et les filles",
+    artist: "Francoise Hardy",
+    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02fd4c94a03dcec8f7dc03b41f",
+    previewUrl: "https://cdnt-preview.dzcdn.net/api/1/1/d/5/e/0/d5e2c95bf833c67cfd1f69acad3219a1.mp3",
+    spotifyUrl: "https://open.spotify.com/track/5DebUsH4CN4ByTe0xF0KPJ"
+  },
+  {
+    title: "Soul Vibrations",
+    artist: "Dorothy Ashby",
+    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02b9e2109bbe77afec0e7af667",
+    previewUrl: "https://cdnt-preview.dzcdn.net/api/1/1/6/0/8/0/608c8c5b12c6a665cbe8689f0ec34fdd.mp3",
+    spotifyUrl: "https://open.spotify.com/track/5GZupy8zByqFmXvpwZ4JOC"
+  },
+  {
+    title: "God Only Knows",
+    artist: "The Beach Boys",
+    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e021ec905c832508bbf5b1dd00d",
+    previewUrl: "https://cdnt-preview.dzcdn.net/api/1/1/b/c/c/0/bcc1966a8c9d0a70e378fc122eccd285.mp3",
+    spotifyUrl: "https://open.spotify.com/track/7042gwq346mwkEoU5q3bbT"
+  },
+  {
+    title: "Plantasia",
+    artist: "Mort Garson",
+    coverUrl: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e02f679c91273efb30ce1c3b00d",
+    previewUrl: "https://cdnt-preview.dzcdn.net/api/1/1/3/a/8/7/3a8716b5fc91276023cc98622c191a34.mp3",
+    spotifyUrl: "https://open.spotify.com/track/6RDiDCAraT3tr31FtWi3C7"
+  },
+  {
+    title: "Spotify Selection",
+    artist: "Various",
+    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02c3d6121c7cff1060cda6da05",
+    previewUrl: null,
+    spotifyUrl: "https://open.spotify.com/track/1gcBvM73U5k2t75JXfcrkf"
+  }
 ];
 
-const AudioCard = ({ item, index }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  // Appending autoplay=1 on hover. Note: Spotify's iframe response to this depends on browser autoplay policies.
-  const baseUrl = item.embedUrl;
-  const embedUrl = isHovered ? `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}autoplay=1` : baseUrl;
-
+const AudioCard = ({ item, index, onPlay, onStop }) => {
   return (
     <motion.div 
-      className="audio-card"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="audio-card cover-art-style"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: index * 0.05 }}
+      onMouseEnter={() => item.previewUrl && onPlay(item.previewUrl)}
+      onMouseLeave={() => onStop()}
+      onClick={() => window.open(item.spotifyUrl, '_blank')}
     >
-      <div className="audio-embed-wrapper">
-        <iframe 
-          style={{ borderRadius: '12px' }} 
-          src={embedUrl} 
-          width="100%" 
-          height="352" 
-          frameBorder="0" 
-          allowFullScreen="" 
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-          loading="lazy"
-        ></iframe>
+      <div className="audio-cover-wrapper">
+        <img src={item.coverUrl} alt={`${item.title} by ${item.artist}`} className="audio-cover-img" />
+        <div className="audio-overlay">
+          <div className="audio-info-mini">
+            <span className="audio-title-mini">{item.title}</span>
+            <span className="audio-artist-mini">{item.artist}</span>
+          </div>
+        </div>
       </div>
-      {item.description && (
-        <p className="audio-description">{item.description}</p>
-      )}
     </motion.div>
   );
 };
@@ -514,6 +548,8 @@ function App() {
   const [selectedFixture, setSelectedFixture] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const [currentAudio, setCurrentAudio] = useState(null);
+  const audioRef = React.useRef(null);
 
   React.useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -649,7 +685,7 @@ function App() {
               <p className="section-description">
                 {libraryTab === 'pages' && "I am an avid reader, primarily focused on philosophy, psychology, research, and articles. Luckily, I have people in my life who balance this dense materials with the enjoyable art of fiction and poetry."}
                 {libraryTab === 'screens' && "A curated collection of movies and shows that have left a lasting impression on my perspective of storytelling, cinematography, and human nature."}
-                {libraryTab === 'audio' && "A space where I share music, podcasts, and other sounds that resonate with me."}
+                {libraryTab === 'audio' && "Just some tracks I’ve probably played one too many times lately. Hover for audio."}
               </p>
             </div>
             
@@ -713,10 +749,27 @@ function App() {
                 })}
               </div>
             ) : (
-              <div className="audio-grid">
+              <div className="audio-grid discover-style">
                 {audioData.map((item, idx) => (
-                  <AudioCard key={idx} item={item} index={idx} />
+                  <AudioCard 
+                    key={idx} 
+                    item={item} 
+                    index={idx} 
+                    onPlay={(url) => {
+                      if (audioRef.current) {
+                        audioRef.current.src = url;
+                        audioRef.current.play().catch(e => console.log("Autoplay blocked", e));
+                      }
+                    }}
+                    onStop={() => {
+                      if (audioRef.current) {
+                        audioRef.current.pause();
+                        audioRef.current.currentTime = 0;
+                      }
+                    }}
+                  />
                 ))}
+                <audio ref={audioRef} style={{ display: 'none' }} />
               </div>
             )}
 
@@ -730,14 +783,7 @@ function App() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={() => setOpenedBook(null)}
-                  >
-                    <button className="overlay-close-btn" onClick={(e) => {
-                      e.stopPropagation();
-                      setOpenedBook(null);
-                    }}>
-                      <X size={32} />
-                    </button>
-                  </motion.div>
+                  />
                   
                   {openedBook.trailerId ? (
                     /* Cinema Layout for Screens */
@@ -745,6 +791,12 @@ function App() {
                       layoutId={`screen-container-${openedBook.title}`}
                       className="cinema-layout"
                     >
+                      <button className="overlay-close-btn" onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenedBook(null);
+                      }}>
+                        <X size={24} />
+                      </button>
                       <div className="cinema-stage">
                         <iframe
                           width="100%"
@@ -766,7 +818,7 @@ function App() {
                         </div>
                         <div className="cinema-actions">
                           <a href={openedBook.link} target="_blank" rel="noopener noreferrer" className="read-more-btn" style={{ fontSize: '0.9rem' }}>
-                            View Official Site <ExternalLink size={16} style={{ marginLeft: '0.6rem' }}/>
+                            IMDb <ExternalLink size={16} style={{ marginLeft: '0.6rem' }}/>
                           </a>
                         </div>
                       </div>
@@ -777,6 +829,12 @@ function App() {
                       layoutId={`book-container-${openedBook.title}`}
                       className="book-container expanded-overlay-3d"
                     >
+                      <button className="overlay-close-btn" onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenedBook(null);
+                      }}>
+                        <X size={24} />
+                      </button>
                       <div className="book-3d-wrapper">
                         {/* 1. Book Body (Pages) */}
                         <div className="book-pages"></div>
