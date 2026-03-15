@@ -278,7 +278,7 @@ const screensData = [
     title: "The Firemen's Ball",
     subtitle: "Movie",
     coverImageUrl: "/screens/firemens_ball.jpg",
-    description: "Miloš Forman's sharp satirical comedy of the Czech New Wave. A simple party thrown by a small-town fire department descends into hilariously chaotic bureaucracy and theft.",
+    description: "A foundational work of the Czech New Wave that functions as a surgical autopsy of ideology. Under the guise of a small-town social, Forman depicts a bureaucracy so obsessed with the ritual of authority that it becomes blind to its own total collapse. It’s a hilarious, bitter look at how we maintain social illusions even while we’re the ones busy dismantling them.",
     link: "https://www.imdb.com/title/tt0061781/",
     trailerId: "kGMakTwMRoY"
   },
@@ -305,6 +305,30 @@ const screensData = [
     description: "The definitive mockumentary following the daily lives of office employees at the Dunder Mifflin Scranton branch. A masterclass in cringe comedy, character development, and heart.",
     link: "https://www.imdb.com/title/tt0386676/",
     trailerId: "-C2z-nshFts"
+  },
+  {
+    title: "Brazil",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/brazil.jpg",
+    description: "Terry Gilliam's surrealist masterpiece about a low-level bureaucrat who becomes an enemy of the state while pursuing the woman of his dreams in a dystopian, retro-future world.",
+    link: "https://www.imdb.com/title/tt0088846/",
+    trailerId: "ZKPFC8DA9_8"
+  },
+  {
+    title: "Attack on Titan",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/attack_on_titan.jpg",
+    description: "In a world where humanity lives behind massive walls to protect themselves from man-eating Titans, young Eren Jaeger vows to eliminate the giants after they destroy his home and kill his mother.",
+    link: "https://www.imdb.com/title/tt2560140/",
+    trailerId: "MGRm4IzK1SQ"
+  },
+  {
+    title: "Fleabag",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/fleabag.jpg",
+    description: "A dry-witted, unfiltered woman navigates life and love in London while trying to cope with tragedy. A brilliant, fourth-wall-breaking exploration of grief, family, and modern life.",
+    link: "https://www.imdb.com/title/tt5687612/",
+    trailerId: "I5Uv6cb9YRs"
   }
 ];
 
@@ -483,6 +507,41 @@ const audioData = [
     coverUrl: "https://i.scdn.co/image/ab67616d0000b2732bd47f21d91171bced3f5583",
     previewUrl: "https://p.scdn.co/mp3-preview/6293b8d9a62ea9c5f40427047aab18fb0b88d69d",
     spotifyUrl: "https://open.spotify.com/track/4fietail9G4hkNU15kjDG9"
+  },
+  {
+    "title": "The Heavenly Music Corporation IV",
+    "artist": "Robert Fripp, Brian Eno",
+    "coverUrl": "https://i.scdn.co/image/ab67616d0000b273ac934ad19223b329edc11fba",
+    "previewUrl": "https://p.scdn.co/mp3-preview/433c7bbed796772a6891891bb670ebcf57ceff0c",
+    "spotifyUrl": "https://open.spotify.com/track/4wqRKK4NoDtdXn7kD4H0k2"
+  },
+  {
+    "title": "The Homeless Wanderer",
+    "artist": "Emahoy Tsege Mariam Gebru",
+    "coverUrl": "https://i.scdn.co/image/ab67616d0000b273d047aa54661bfc5ed8e4d216",
+    "previewUrl": "https://p.scdn.co/mp3-preview/1434b77089e25f8dd6cafbb9821ef8d459a3d0f3",
+    "spotifyUrl": "https://open.spotify.com/track/5P8UnnGI08TcPqxAD2T84C"
+  },
+  {
+    "title": "Ternura",
+    "artist": "Los Indios Tabajaras",
+    "coverUrl": "https://i.scdn.co/image/ab67616d0000b27331b74a601a5a723002b2c57b",
+    "previewUrl": "https://p.scdn.co/mp3-preview/3059457e416136bfb74b233c5037097825c0be8d",
+    "spotifyUrl": "https://open.spotify.com/track/5J4g0vXPYsylkVWOcRjE7Q"
+  },
+  {
+    "title": "Jesus Going to Clean House",
+    "artist": "Lee Tracy, Isaac Manning",
+    "coverUrl": "https://i.scdn.co/image/ab67616d0000b273db4a8eba2f6dddf79cb655dd",
+    "previewUrl": "https://p.scdn.co/mp3-preview/71d05819ecac5b54d7d63e525420a9b8d7eaf26b",
+    "spotifyUrl": "https://open.spotify.com/track/7ktUeo5nKHg9YNyxKInNc5"
+  },
+  {
+    "title": "Empty Beach",
+    "artist": "Coco",
+    "coverUrl": "https://i.scdn.co/image/ab67616d0000b2737ef4d77e3ff43bd72639fcbb",
+    "previewUrl": "https://p.scdn.co/mp3-preview/582e505c5f33296b9885bddd42298a6e4a34527a",
+    "spotifyUrl": "https://open.spotify.com/track/7JEc8f5JbYdK5aourq93s5"
   }
 ];
 
