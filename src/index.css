@@ -53,6 +53,25 @@ h1, h2, h3 {
   gap: 1.2rem;
   background: var(--bg-color);
   z-index: 100;
+  padding-top: 1.5rem; /* Space for logo at top */
+}
+
+.sidebar-logo-container {
+  padding: 0 0 1rem 1.7rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.sidebar-logo-svg {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-logo-container:hover .sidebar-logo-svg {
+  opacity: 1;
 }
 
 .nav-link {
