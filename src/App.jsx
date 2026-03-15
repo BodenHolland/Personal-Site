@@ -16,7 +16,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Scale,
-  Music
+  Music,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 
 const booksData = [
@@ -308,13 +310,6 @@ const screensData = [
 
 const audioData = [
   {
-    title: "Come True",
-    artist: "Discovery Zone",
-    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e027507a5adb06f2936b86b0e20",
-    previewUrl: "https://p.scdn.co/mp3-preview/23a3c0d4e948176e5dbff092229ca01b526e2433",
-    spotifyUrl: "https://open.spotify.com/track/1gE46nqci9O4oN9teSjP0b"
-  },
-  {
     title: "Ebb Tide",
     artist: "Houston & Dorsey",
     coverUrl: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0219785e19807ee4b3b16d787e",
@@ -488,6 +483,13 @@ const audioData = [
     coverUrl: "https://i.scdn.co/image/ab67616d0000b2732bd47f21d91171bced3f5583",
     previewUrl: "https://p.scdn.co/mp3-preview/6293b8d9a62ea9c5f40427047aab18fb0b88d69d",
     spotifyUrl: "https://open.spotify.com/track/4fietail9G4hkNU15kjDG9"
+  },
+  {
+    title: "Come True",
+    artist: "Discovery Zone",
+    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e027507a5adb06f2936b86b0e20",
+    previewUrl: "https://p.scdn.co/mp3-preview/23a3c0d4e948176e5dbff092229ca01b526e2433",
+    spotifyUrl: "https://open.spotify.com/track/1gE46nqci9O4oN9teSjP0b"
   }
 ];
 
@@ -647,6 +649,7 @@ function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const [currentAudio, setCurrentAudio] = useState(null);
+  const [isAudioMuted, setIsAudioMuted] = useState(true);
   const audioRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -783,8 +786,24 @@ function App() {
               <p className="section-description">
                 {libraryTab === 'pages' && "I am an avid reader, primarily focused on philosophy, psychology, research, and articles. Luckily, I have people in my life who balance this dense materials with the enjoyable art of fiction and poetry."}
                 {libraryTab === 'screens' && "A curated collection of movies and shows that have left a lasting impression."}
-                {libraryTab === 'audio' && "Just some tracks I’ve probably played one too many times lately. Hover for audio."}
+                {libraryTab === 'audio' && (
+                  <>
+                    Just some tracks I’ve probably played one too many times lately. If you are on desktop, you can preview the track by simply hovering over the album art.
+                    <br /><br />
+                    Note: Make sure to click the unmute icon beforehand. This is just to prevent a jarring audio experience for desktop and mobile users alike : )
+                  </>
+                )}
               </p>
+              {libraryTab === 'audio' && (
+                <button 
+                  className={`audio-mute-toggle ${!isAudioMuted ? 'unmuted' : ''}`}
+                  onClick={() => setIsAudioMuted(!isAudioMuted)}
+                  title={isAudioMuted ? "Unmute Previews" : "Mute Previews"}
+                >
+                  {isAudioMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                  <span>{isAudioMuted ? "Muted" : "Unmuted"}</span>
+                </button>
+              )}
             </div>
             
             {libraryTab === 'pages' ? (
@@ -854,7 +873,7 @@ function App() {
                     item={item} 
                     index={idx} 
                     onPlay={(url) => {
-                      if (audioRef.current) {
+                      if (audioRef.current && !isAudioMuted) {
                         audioRef.current.src = url;
                         audioRef.current.play().catch(e => console.log("Autoplay blocked", e));
                       }

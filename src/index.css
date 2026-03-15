@@ -212,6 +212,40 @@ section {
   transform: scaleX(1);
 }
 
+/* Audio Mute Toggle */
+.audio-mute-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  padding: 0.6rem 1.2rem;
+  border-radius: 99px;
+  color: var(--text-main);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 1rem;
+  width: fit-content;
+}
+
+.audio-mute-toggle:hover {
+  background: #f1f5f9;
+  border-color: var(--text-muted);
+  transform: translateY(-2px);
+}
+
+.audio-mute-toggle.unmuted {
+  background: rgba(34, 197, 94, 0.05);
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #16a34a;
+}
+
+.audio-mute-toggle:active {
+  transform: scale(0.95);
+}
+
 .library-tab-btn:hover:not(.active) {
   color: #94a3b8;
 }
