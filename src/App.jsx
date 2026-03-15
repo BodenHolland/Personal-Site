@@ -17,7 +17,6 @@ import {
   ChevronRight,
   Scale
 } from 'lucide-react';
-import SidebarLogo from './components/SidebarLogo';
 
 const booksData = [
   {
@@ -806,7 +805,6 @@ function App() {
     <div className="container">
       {/* Desktop sidebar — left */}
       <nav className="navbar">
-        <SidebarLogo />
         {sections.filter(s => !s.hidden).map(s => (
           <motion.button 
             key={s.id} 
