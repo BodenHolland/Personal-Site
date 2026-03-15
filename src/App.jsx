@@ -20,6 +20,13 @@ import {
 
 const booksData = [
   {
+    title: "Vestoj",
+    author: "Anja Aronowsky Cronberg",
+    coverImageUrl: "/book_covers/vestoj.jpg",
+    description: "A research platform and journal that examines the relationship between fashion, culture, and identity, providing a critical and intellectual perspective on why we wear what we wear.",
+    link: "https://vestoj.com/about/"
+  },
+  {
     title: "Seeing Is Forgetting the Name of the Thing One Sees",
     author: "Lawrence Weschler",
     coverImageUrl: "/book_covers/book1.jpg",
@@ -288,13 +295,13 @@ const photographyData = [
 ];
 
 const sections = [
-  { id: 'intro', label: 'Home' },
-  { id: 'products', label: 'Favorite Products' },
-  { id: 'reading', label: 'Reading' },
-  { id: 'projects', label: 'Projects' },
+  { id: 'intro', label: 'Welcome' },
+  { id: 'products', label: 'Essentials' },
+  { id: 'reading', label: 'Library' },
+  { id: 'projects', label: 'Experiments' },
   { id: 'light-fixtures', label: 'Light Fixtures', hidden: true },
   { id: 'photography', label: 'Photography' },
-  { id: 'contact', label: 'Contact' }
+  { id: 'contact', label: 'Reach Out' }
 ];
 
 function App() {
