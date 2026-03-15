@@ -157,6 +157,52 @@ section {
   margin-bottom: 1rem;
 }
 
+/* Library Sub-Tabs */
+.library-tabs {
+  display: flex;
+  gap: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.library-tab-btn {
+  background: none;
+  border: none;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition: var(--transition);
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+.library-tab-btn.active {
+  color: var(--text-main);
+}
+
+.library-tab-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--text-main);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.library-tab-btn.active::after {
+  transform: scaleX(1);
+}
+
+.library-tab-btn:hover:not(.active) {
+  color: #94a3b8;
+}
+
 .intro-text {
   font-size: clamp(1.2rem, 2.5vw, 2.5rem);
   max-width: 1200px;

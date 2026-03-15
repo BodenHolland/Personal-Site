@@ -182,6 +182,30 @@ const booksData = [
   }
 ];
 
+const screensData = [
+  {
+    title: "Succession",
+    subtitle: "TV Show",
+    coverImageUrl: "/screens/succession.jpg",
+    description: "A powerhouse of writing and acting, exploring the dysfunctional power dynamics within a global media empire. It’s a tragicomedy about family, greed, and legacy.",
+    link: "https://www.hbo.com/succession"
+  },
+  {
+    title: "The Bear",
+    subtitle: "TV Show",
+    coverImageUrl: "/screens/the_bear.jpg",
+    description: "An intense, fast-paced dive into the culinary world. It captures the stress, passion, and found-family dynamics of a chaotic kitchen with incredible authenticity.",
+    link: "https://www.fxnetworks.com/shows/the-bear"
+  },
+  {
+    title: "Inception",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/inception.jpg",
+    description: "Christopher Nolan's masterpiece on the architecture of dreams. A heist thriller that challenges the perception of reality through multiple layers of subconsciousness.",
+    link: "https://www.warnerbros.com/movies/inception"
+  }
+];
+
 const lightFixturesData = [
   {
     title: "Flexible Lamp",
@@ -306,6 +330,7 @@ const sections = [
 
 function App() {
   const [activeTab, setActiveTab] = useState('intro');
+  const [libraryTab, setLibraryTab] = useState('pages'); // 'pages' or 'screens'
   const [openedBook, setOpenedBook] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedFixture, setSelectedFixture] = useState(null);
@@ -423,29 +448,42 @@ function App() {
         return (
           <div className="section-content">
             <div className="section-head">
-              <h2>Reading</h2>
+              <div className="library-tabs">
+                <button 
+                  className={`library-tab-btn ${libraryTab === 'pages' ? 'active' : ''}`}
+                  onClick={() => setLibraryTab('pages')}
+                >
+                  Pages
+                </button>
+                <button 
+                  className={`library-tab-btn ${libraryTab === 'screens' ? 'active' : ''}`}
+                  onClick={() => setLibraryTab('screens')}
+                >
+                  Screens
+                </button>
+              </div>
               <p className="section-description">
-                I am an avid reader, primarily focused on philosophy, psychology, research, and articles. 
-                Luckily, I have people in my life who balance this dense materials with the enjoyable art of fiction and poetry.
+                {libraryTab === 'pages' 
+                  ? "I am an avid reader, primarily focused on philosophy, psychology, research, and articles. Luckily, I have people in my life who balance this dense materials with the enjoyable art of fiction and poetry."
+                  : "A curated collection of movies and shows that have left a lasting impression on my perspective of storytelling, cinematography, and human nature."
+                }
               </p>
             </div>
+            
             <div className="books-shelf">
-              {booksData.map(book => {
-                const isOpened = openedBook?.title === book.title;
+              {(libraryTab === 'pages' ? booksData : screensData).map(item => {
+                const isOpened = openedBook?.title === item.title;
                 return (
                   <motion.div 
-                    layoutId={`book-container-${book.title}`}
-                    key={book.title} 
+                    layoutId={`book-container-${item.title}`}
+                    key={item.title} 
                     className="book-container"
-                    onClick={() => setOpenedBook(book)}
-                    style={{ opacity: isOpened ? 0 : 1 }} // Hide original when opened to preserve space
+                    onClick={() => setOpenedBook(item)}
+                    style={{ opacity: isOpened ? 0 : 1 }} 
                     whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
                   >
                     <div className="book-3d-wrapper">
-                      {/* Book Body (Pages) */}
                       <div className="book-pages"></div>
-
-                      {/* Front Cover (Hinge) */}
                       <motion.div 
                         className="book-hinge"
                         style={{ originX: 0 }}
@@ -453,7 +491,7 @@ function App() {
                         <div 
                           className="book-cover-front" 
                           style={{ 
-                            backgroundImage: `url(${book.coverImageUrl})`,
+                            backgroundImage: `url(${item.coverImageUrl})`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             backgroundColor: '#e2e8f0',
@@ -525,7 +563,7 @@ function App() {
                           className="inside-content"
                         >
                           <h3>{openedBook.title}</h3>
-                          <p className="author">by {openedBook.author}</p>
+                          <p className="author">{openedBook.subtitle ? openedBook.subtitle : `by ${openedBook.author}`}</p>
                           <p className="desc">{openedBook.description}</p>
                           <div className="read-more-container">
                             <a href={openedBook.link} target="_blank" rel="noopener noreferrer" className="read-more-btn">
