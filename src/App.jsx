@@ -483,13 +483,6 @@ const audioData = [
     coverUrl: "https://i.scdn.co/image/ab67616d0000b2732bd47f21d91171bced3f5583",
     previewUrl: "https://p.scdn.co/mp3-preview/6293b8d9a62ea9c5f40427047aab18fb0b88d69d",
     spotifyUrl: "https://open.spotify.com/track/4fietail9G4hkNU15kjDG9"
-  },
-  {
-    title: "Come True",
-    artist: "Discovery Zone",
-    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e027507a5adb06f2936b86b0e20",
-    previewUrl: "https://p.scdn.co/mp3-preview/23a3c0d4e948176e5dbff092229ca01b526e2433",
-    spotifyUrl: "https://open.spotify.com/track/1gE46nqci9O4oN9teSjP0b"
   }
 ];
 
@@ -769,18 +762,39 @@ function App() {
                   onClick={() => setLibraryTab('pages')}
                 >
                   Pages
+                  {libraryTab === 'pages' && (
+                    <motion.div 
+                      layoutId="library-underline"
+                      className="library-tab-underline"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
                 </button>
                 <button 
                   className={`library-tab-btn ${libraryTab === 'screens' ? 'active' : ''}`}
                   onClick={() => setLibraryTab('screens')}
                 >
                   Screens
+                  {libraryTab === 'screens' && (
+                    <motion.div 
+                      layoutId="library-underline"
+                      className="library-tab-underline"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
                 </button>
                 <button 
                   className={`library-tab-btn ${libraryTab === 'audio' ? 'active' : ''}`}
                   onClick={() => setLibraryTab('audio')}
                 >
                   Audio
+                  {libraryTab === 'audio' && (
+                    <motion.div 
+                      layoutId="library-underline"
+                      className="library-tab-underline"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
                 </button>
               </div>
               <p className="section-description">
