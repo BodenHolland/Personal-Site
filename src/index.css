@@ -482,7 +482,7 @@ section {
 }
 
 .book-container.expanded-overlay-3d {
-  width: clamp(320px, min(90vw, 115vh), 1300px); /* FULL spread width, height-aware */
+  width: clamp(320px, min(90vw, 110vh), 1050px); /* Refined max size for better focus */
   max-width: none;
   cursor: default;
   position: relative;
