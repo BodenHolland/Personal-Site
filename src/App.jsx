@@ -329,6 +329,54 @@ const screensData = [
     description: "A dry-witted, unfiltered woman navigates life and love in London while trying to cope with tragedy. A brilliant, fourth-wall-breaking exploration of grief, family, and modern life.",
     link: "https://www.imdb.com/title/tt5687612/",
     trailerId: "I5Uv6cb9YRs"
+  },
+  {
+    title: "Waking Life",
+    subtitle: "Movie",
+    coverImageUrl: "/screen_covers/waking_life.jpg",
+    description: "A man shuffles through a dream meeting various people and discussing the meanings and purposes of the universe.",
+    link: "https://www.imdb.com/title/tt0243017/",
+    trailerId: "O1_p2882m4k"
+  },
+  {
+    title: "Rear Window",
+    subtitle: "Movie",
+    coverImageUrl: "/screen_covers/rear_window.jpg",
+    description: "A bored photographer recovering from a broken leg passes the time by watching his neighbors and begins to suspect one of them of murder.",
+    link: "https://www.imdb.com/title/tt0047396/",
+    trailerId: "6kCcZelM9a4"
+  },
+  {
+    title: "HyperNormalisation",
+    subtitle: "Documentary",
+    coverImageUrl: "/screen_covers/hypernormalisation.jpg",
+    description: "Adam Curtis explains how, at a time of confusing and inexplicable world events, politicians and the people they represent have retreated in to a damaging over-simplified version of what is happening.",
+    link: "https://www.imdb.com/title/tt6156350/",
+    trailerId: "y-y2oA_Gg1U"
+  },
+  {
+    title: "Network",
+    subtitle: "Movie",
+    coverImageUrl: "/screen_covers/network.jpg",
+    description: "A television network cynically exploits a deranged former anchor's ravings and revelations about mass media for its own profit, but finds that his message may be difficult to control.",
+    link: "https://www.imdb.com/title/tt0074958/",
+    trailerId: "N_I_G_mHw_0"
+  },
+  {
+    title: "Freaks and Geeks",
+    subtitle: "TV Series",
+    coverImageUrl: "/screen_covers/freaks_and_geeks.jpg",
+    description: "A high school mathlete starts hanging out with a group of burnouts while her younger brother navigates his freshman year.",
+    link: "https://www.imdb.com/title/tt0193676/",
+    trailerId: "R9_C-V-8nI8"
+  },
+  {
+    title: "Breaking Bad",
+    subtitle: "TV Series",
+    coverImageUrl: "/screen_covers/breaking_bad.jpg",
+    description: "A chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine with a former student to secure his family's future.",
+    link: "https://www.imdb.com/title/tt0903747/",
+    trailerId: "2r1o_3L-Q0U"
   }
 ];
 
@@ -635,6 +683,7 @@ const products = [
   { name: 'Arc', desc: 'sad to see this one on its way out. Fingers crossed they keep it around & working.', link: 'https://arc.net', iconUrl: '/product_icons/Arc App Icon.jpg' },
   { name: 'Discover Quickly', desc: 'A powerful interface for music discovery, powered by Spotify.', link: 'https://discoverquickly.com/', iconUrl: '/product_icons/discover_quickly.png' },
   { name: 'Video Speed Controller', desc: 'Speed up, slow down, advance and rewind HTML5 audio/video with shortcuts.', link: 'https://chromewebstore.google.com/detail/video-speed-controller/nffaoalbilbmmfgbnbgppjihopabppdk', iconUrl: '/product_icons/video_speed_controller.png' },
+  { name: 'eBay', desc: "The place I go to find stuff you can't get anywhere else on the Internet!", link: 'https://www.ebay.com', iconUrl: '/product_icons/ebay.png' },
 ];
 
 const projectsData = [
