@@ -390,6 +390,104 @@ const audioData = [
     coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02c3d6121c7cff1060cda6da05",
     previewUrl: "https://p.scdn.co/mp3-preview/885bb7e07c5620487f8fd55d8c9420244e9d4204",
     spotifyUrl: "https://open.spotify.com/track/1gcBvM73U5k2t75JXfcrkf"
+  },
+  {
+    title: "Solo? Repeat!",
+    artist: "Anne Müller",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b273bddc6ec4f4f4644e6fd78815",
+    previewUrl: "https://p.scdn.co/mp3-preview/ab40f39f9e4e66e67a43fe407b9c3e77779b30ac",
+    spotifyUrl: "https://open.spotify.com/track/4rpuwusdTpMytfW6lbeqHe"
+  },
+  {
+    title: "O Superman",
+    artist: "Laurie Anderson",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b273588b07fde7427a6b8e2614fe",
+    previewUrl: "https://p.scdn.co/mp3-preview/b4f545b91656bed8b2259fc374d74d7edddf8c15",
+    spotifyUrl: "https://open.spotify.com/track/421Gp1eSmOIcD6alTWowFR"
+  },
+  {
+    title: "Danza del altiplano",
+    artist: "Tom Kerstens",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b273c7f2f30e9ceee4abc6b102e8",
+    previewUrl: "https://p.scdn.co/mp3-preview/3daee45651f587db82549e18e69de45baf02c74d",
+    spotifyUrl: "https://open.spotify.com/track/0Wbwtdm59r22Zj0hDI9VYk"
+  },
+  {
+    title: "Again",
+    artist: "The George Kaplan Conspiracy, Gabriel Afathi",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b2733b97dab73b877a71fcb0359b",
+    previewUrl: "https://p.scdn.co/mp3-preview/2cbb3321c5d29deef8c47143c6e53696e2062932",
+    spotifyUrl: "https://open.spotify.com/track/6LekvuF7dU7BZWJLqpLoS2"
+  },
+  {
+    title: "Virtual Origami",
+    artist: "Japanese Telecom",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b273fcd5ccebb48683856aaa5c8b",
+    previewUrl: "https://p.scdn.co/mp3-preview/f70d6b0121049cbfe04f0098af7b62db3c7ad633",
+    spotifyUrl: "https://open.spotify.com/track/4m1AkuqvH4mIs9jfvtGisH"
+  },
+  {
+    title: "Dangay Kotyo",
+    artist: "Mamman Sani",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b2739a3ac8bb5fda504baa4c3914",
+    previewUrl: "https://p.scdn.co/mp3-preview/89ecef4a193f6c70bfb722be39e83db829e58304",
+    spotifyUrl: "https://open.spotify.com/track/4z1QuVmIXQviAfroX2p4Ye"
+  },
+  {
+    title: "Écoute-moi camarade",
+    artist: "Mazouni",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b2732aa507603f602ce47f545555",
+    previewUrl: "https://p.scdn.co/mp3-preview/cb6ebddc4d0ecc3aa2a75cab27c207c37971f136",
+    spotifyUrl: "https://open.spotify.com/track/4kckMTfGW38On1wcgSP11A"
+  },
+  {
+    title: "I'll Be Good",
+    artist: "Rene & Angela",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b273800774df7bd240a3f0937092",
+    previewUrl: "https://p.scdn.co/mp3-preview/1d283939a0455dd34f8087acd0023a62b22636da",
+    spotifyUrl: "https://open.spotify.com/track/2SPNs07BKygbkbf48KNFEQ"
+  },
+  {
+    title: "Mountain Time",
+    artist: "Molly Nilsson",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b273947b612d0e6889a040029feb",
+    previewUrl: "https://p.scdn.co/mp3-preview/090506c1ff8e4d02029ed2b0cbd99e1250c26613",
+    spotifyUrl: "https://open.spotify.com/track/6YmwZSqj8zbBabaTmYGLPu"
+  },
+  {
+    title: "It Was A Good Day",
+    artist: "Ice Cube",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b273994c319841a923465d62e271",
+    previewUrl: "https://p.scdn.co/mp3-preview/ea4eb0210dd50f7b3e1c43136adab0afc86e418f",
+    spotifyUrl: "https://open.spotify.com/track/2qOm7ukLyHUXWyR4ZWLwxA"
+  },
+  {
+    title: "Take Me To Beijing (一起回北京)",
+    artist: "Chinese American Bear",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b273e4a138c09307a4692bd38ee2",
+    previewUrl: "https://p.scdn.co/mp3-preview/dc5fa69ff9ab736fc3762bfc068df6fada491ea4",
+    spotifyUrl: "https://open.spotify.com/track/2vRjsevHyCwch58NZYHCR7"
+  },
+  {
+    title: "Yawn",
+    artist: "Bullion",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b2738d899255064890b8bfe8763c",
+    previewUrl: "https://p.scdn.co/mp3-preview/d19a1b62ad9c0b95dba5ce8e65adf419b290ad4a",
+    spotifyUrl: "https://open.spotify.com/track/2eLFER6tM2IjnWVJaB3V8C"
+  },
+  {
+    title: "Wishy Washy",
+    artist: "Coco & Clair Clair",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b27320dac1058d2fbc47ebeaceaf",
+    previewUrl: "https://p.scdn.co/mp3-preview/3d37001d438a6a76afc792f232db882d8fe66255",
+    spotifyUrl: "https://open.spotify.com/track/7CvYNbLwC3Zn96l2fbryv8"
+  },
+  {
+    title: "Hot Sun (Demo)",
+    artist: "Cleveland Francis",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b2732bd47f21d91171bced3f5583",
+    previewUrl: "https://p.scdn.co/mp3-preview/6293b8d9a62ea9c5f40427047aab18fb0b88d69d",
+    spotifyUrl: "https://open.spotify.com/track/4fietail9G4hkNU15kjDG9"
   }
 ];
 
