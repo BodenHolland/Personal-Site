@@ -482,12 +482,20 @@ section {
 }
 
 .book-container.expanded-overlay-3d {
-  width: clamp(240px, 30vw, 360px); /* Constrain the size in the modal */
+  width: clamp(320px, min(90vw, 115vh), 1300px); /* FULL spread width, height-aware */
+  max-width: none;
   cursor: default;
-  position: relative; /* Elevated above background */
+  position: relative;
   z-index: 1001;
-  /* Shift slightly right so the opened book is visually centered */
-  transform: translateX(20%);
+  transform: none !important;
+}
+
+/* Spread logic: Right page is the base, Cover flips left */
+@media (min-width: 769px) {
+  .expanded-overlay-3d .book-3d-wrapper {
+    width: 50%; /* Half the spread */
+    margin-left: 50%; /* Position the base as the right page */
+  }
 }
 
 /* 3D Wrapper */
@@ -599,7 +607,7 @@ section {
     linear-gradient(to bottom, #fdfcf9, #fbfaf6);
   border-radius: 0 3px 3px 0;
   box-shadow: inset 12px 0 20px rgba(0,0,0,0.08), 5px 10px 20px rgba(0,0,0,0.1);
-  padding: 2.5rem 2rem;
+  padding: 3rem 2.5rem;
   overflow-y: auto;
   opacity: 0;
   pointer-events: none;
@@ -651,7 +659,7 @@ section {
 
 .inside-content .desc {
   font-family: 'Georgia', serif;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   line-height: 1.7;
   text-align: left;
   text-indent: 1.5rem;
@@ -740,8 +748,19 @@ section {
     padding: 4rem 1.5rem 2rem 1.5rem;
   }
   .book-container.expanded-overlay-3d {
-    width: 80vw;
-    transform: translateX(10%);
+    width: clamp(280px, 85vw, 400px);
+    height: auto;
+    max-height: 85vh;
+    transform: none !important;
+  }
+  .expanded-overlay-3d .book-3d-wrapper {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+  /* Hide hamburger when book is open */
+  body:has(.book-overlay-container) .hamburger {
+    display: none !important;
   }
   .expanded-overlay-3d .book-inside-page {
     padding: 1.5rem;
@@ -788,7 +807,9 @@ section {
   flex-direction: column;
   gap: clamp(3rem, 6vh, 5rem);
   margin-top: 3rem;
-  max-width: 1400px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .project-card {
@@ -805,7 +826,7 @@ section {
 
 .project-card-image {
   width: 100%;
-  aspect-ratio: 21/9;
+  aspect-ratio: 16/9;
   position: relative;
   overflow: hidden;
   background: var(--panel-bg);
