@@ -190,7 +190,7 @@ const screensData = [
     coverImageUrl: "/screens/tale_of_tales.jpg",
     description: "A poetic and soulful Russian animation masterpiece by Yuriy Norshteyn. It is widely considered one of the greatest animated films of all time, weaving together memory, war, and the passing of time.",
     link: "https://www.imdb.com/title/tt0079986/",
-    trailerId: "nfNVGhkgf6I"
+    trailerId: "wAw6r9-BIt8"
   },
   {
     title: "My Dinner with Andre",
@@ -317,7 +317,7 @@ const audioData = [
   {
     title: "Ebb Tide",
     artist: "Houston & Dorsey",
-    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e0219785e19807ee4b3b16d787e",
+    coverUrl: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0219785e19807ee4b3b16d787e",
     previewUrl: "https://p.scdn.co/mp3-preview/5ea952771615233e1b7a6571e3194b3b50dfca93",
     spotifyUrl: "https://open.spotify.com/track/4Y2rMjoYvgcICDes0FGThm"
   },
@@ -329,66 +329,66 @@ const audioData = [
     spotifyUrl: "https://open.spotify.com/track/2Xn7NadvZ56D0B2D7x2CSL"
   },
   {
-    title: "Summertime Blues",
-    artist: "The Flying Lizards",
+    title: "More Pressure",
+    artist: "Kae Tempest, Kevin Abstract",
     coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e024371d8e74bb30b536dfe8e61",
     previewUrl: "https://p.scdn.co/mp3-preview/0adcb33da7c5dc9445cea5d31b2edc3ad42c45a7",
     spotifyUrl: "https://open.spotify.com/track/0sMWdvSFBg1bVkzyszM819"
   },
   {
-    title: "Paperhouse",
-    artist: "Can",
+    title: "Thirty Two",
+    artist: "Bullion",
     coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e023087cd31f21fc4aa4a2aa22e",
     previewUrl: "https://p.scdn.co/mp3-preview/427425c5f8ade3e1e8acf58a1ecf94c849ca306c",
     spotifyUrl: "https://open.spotify.com/track/5MRH2b0hfxZJLliGzYDVF3"
   },
   {
-    title: "Falling Rain",
-    artist: "Link Wray",
-    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e0253d13c60cbf8496025e414e8",
+    title: "Song of Abayi",
+    artist: "Emahoy Tsege Mariam Gebru",
+    coverUrl: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0253d13c60cbf8496025e414e8",
     previewUrl: "https://p.scdn.co/mp3-preview/a0d9ce04a77b36cec31ff9c97869103c255a7ee5",
     spotifyUrl: "https://open.spotify.com/track/185EiYT58r61hdnHxjKVzT"
   },
   {
-    title: "I'm Set Free",
-    artist: "The Velvet Underground",
-    coverUrl: "https://i.scdn.co/image/ab67616d00001e02203033e6119382dfb439dba4",
-    previewUrl: "https://cdnt-preview.dzcdn.net/api/1/1/6/0/d/0/60de96d9961363935b381b91ddbea028.mp3",
+    title: "Real",
+    artist: "Il Quadro di Troisi",
+    coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02203033e6119382dfb439dba4",
+    previewUrl: "https://p.scdn.co/mp3-preview/d6b6c3add8935ba6fac1704679fdbfaabcf90d55",
     spotifyUrl: "https://open.spotify.com/track/0oGMCVv5C1ekUYrITfMoO5"
   },
   {
-    title: "Tous les garçons et les filles",
-    artist: "Francoise Hardy",
+    title: "In Manhattan",
+    artist: "Nation of Language",
     coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02fd4c94a03dcec8f7dc03b41f",
-    previewUrl: "https://cdnt-preview.dzcdn.net/api/1/1/d/5/e/0/d5e2c95bf833c67cfd1f69acad3219a1.mp3",
+    previewUrl: "https://p.scdn.co/mp3-preview/411c8a142bc9817a4131c43ae6bfa476ba9d7671",
     spotifyUrl: "https://open.spotify.com/track/5DebUsH4CN4ByTe0xF0KPJ"
   },
   {
-    title: "Soul Vibrations",
-    artist: "Dorothy Ashby",
+    title: "STORIE BREVI",
+    artist: "Tananai, Annalisa",
     coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02b9e2109bbe77afec0e7af667",
-    previewUrl: "https://cdnt-preview.dzcdn.net/api/1/1/6/0/8/0/608c8c5b12c6a665cbe8689f0ec34fdd.mp3",
+    previewUrl: "https://p.scdn.co/mp3-preview/9f1912bae6034598a64f672b32464fe2e1eaa165",
     spotifyUrl: "https://open.spotify.com/track/5GZupy8zByqFmXvpwZ4JOC"
   },
   {
-    title: "God Only Knows",
-    artist: "The Beach Boys",
+    title: "Mia Fora Thymamai",
+    artist: "Stereomatic, Arleta",
     coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e021ec905c832508bbf5b1dd00d",
-    previewUrl: "https://cdnt-preview.dzcdn.net/api/1/1/b/c/c/0/bcc1966a8c9d0a70e378fc122eccd285.mp3",
+    previewUrl: "https://p.scdn.co/mp3-preview/3e58562f8e348479f333ca2b5b410b21272eaa40",
     spotifyUrl: "https://open.spotify.com/track/7042gwq346mwkEoU5q3bbT"
   },
   {
-    title: "Plantasia",
-    artist: "Mort Garson",
+    title: "Turned Out I Was Everyone",
+    artist: "SASAMI",
     coverUrl: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e02f679c91273efb30ce1c3b00d",
-    previewUrl: "https://cdnt-preview.dzcdn.net/api/1/1/3/a/8/7/3a8716b5fc91276023cc98622c191a34.mp3",
+    previewUrl: "https://p.scdn.co/mp3-preview/12e7a959a54e8636bda1dd8609df5741587474cf",
     spotifyUrl: "https://open.spotify.com/track/6RDiDCAraT3tr31FtWi3C7"
   },
   {
-    title: "Spotify Selection",
-    artist: "Various",
+    title: "Mad Rush",
+    artist: "Philip Glass, Mark Steinbach",
     coverUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02c3d6121c7cff1060cda6da05",
-    previewUrl: null,
+    previewUrl: "https://p.scdn.co/mp3-preview/885bb7e07c5620487f8fd55d8c9420244e9d4204",
     spotifyUrl: "https://open.spotify.com/track/1gcBvM73U5k2t75JXfcrkf"
   }
 ];
@@ -684,7 +684,7 @@ function App() {
               </div>
               <p className="section-description">
                 {libraryTab === 'pages' && "I am an avid reader, primarily focused on philosophy, psychology, research, and articles. Luckily, I have people in my life who balance this dense materials with the enjoyable art of fiction and poetry."}
-                {libraryTab === 'screens' && "A curated collection of movies and shows that have left a lasting impression on my perspective of storytelling, cinematography, and human nature."}
+                {libraryTab === 'screens' && "A curated collection of movies and shows that have left a lasting impression."}
                 {libraryTab === 'audio' && "Just some tracks I’ve probably played one too many times lately. Hover for audio."}
               </p>
             </div>
