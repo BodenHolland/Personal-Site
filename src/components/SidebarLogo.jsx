@@ -64,48 +64,48 @@ const SidebarLogo = () => {
           </linearGradient>
         </defs>
 
-        {/* Base Logo Shapes */}
-        <path d={topPath} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
-        <path d={bottomPath} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+        {/* Base Logo Shapes - Dark for visibility on white */}
+        <path d={topPath} fill="rgba(30, 41, 59, 0.05)" stroke="rgba(30, 41, 59, 0.2)" strokeWidth="1.5" />
+        <path d={bottomPath} fill="rgba(30, 41, 59, 0.05)" stroke="rgba(30, 41, 59, 0.2)" strokeWidth="1.5" />
 
-        {/* Animated Tracing Lights */}
+        {/* Animated Tracing Lights - Vibrant Blue */}
         {/* Top Path Trace */}
         <motion.path
           d={topPath}
-          stroke="#fff"
-          strokeWidth="1.5"
+          stroke="#4f46e5"
+          strokeWidth="2"
           strokeLinecap="round"
-          initial={{ pathLength: 0.1, pathOffset: 0, opacity: 0 }}
+          initial={{ pathLength: 0.2, pathOffset: 0, opacity: 0 }}
           animate={{ 
             pathOffset: [0, 1],
             opacity: [0, 1, 1, 0]
           }}
           transition={{
-            duration: 3,
+            duration: 4,
             repeat: Infinity,
-            ease: "linear"
+            ease: "easeInOut"
           }}
-          style={{ filter: 'drop-shadow(0 0 3px rgba(255,255,255,0.8))' }}
+          style={{ filter: 'drop-shadow(0 0 4px rgba(79, 70, 229, 0.6))' }}
         />
 
-        {/* Bottom Path Trace (Delayed/Staggered) */}
+        {/* Bottom Path Trace (Staggered) */}
         <motion.path
           d={bottomPath}
-          stroke="#fff"
-          strokeWidth="1.5"
+          stroke="#4f46e5"
+          strokeWidth="2"
           strokeLinecap="round"
-          initial={{ pathLength: 0.1, pathOffset: 0, opacity: 0 }}
+          initial={{ pathLength: 0.2, pathOffset: 0, opacity: 0 }}
           animate={{ 
             pathOffset: [0, 1],
             opacity: [0, 1, 1, 0]
           }}
           transition={{
-            duration: 3,
+            duration: 4,
             repeat: Infinity,
-            ease: "linear",
-            delay: 1.5
+            ease: "easeInOut",
+            delay: 2
           }}
-          style={{ filter: 'drop-shadow(0 0 3px rgba(255,255,255,0.8))' }}
+          style={{ filter: 'drop-shadow(0 0 4px rgba(79, 70, 229, 0.6))' }}
         />
       </svg>
     </div>
