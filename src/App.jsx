@@ -20,13 +20,6 @@ import {
 
 const booksData = [
   {
-    title: "Vestoj",
-    author: "Anja Aronowsky Cronberg",
-    coverImageUrl: "/book_covers/vestoj.jpg",
-    description: "A research platform and journal that examines the relationship between fashion, culture, and identity, providing a critical and intellectual perspective on why we wear what we wear.",
-    link: "https://vestoj.com/about/"
-  },
-  {
     title: "Seeing Is Forgetting the Name of the Thing One Sees",
     author: "Lawrence Weschler",
     coverImageUrl: "/book_covers/book1.jpg",
@@ -179,6 +172,13 @@ const booksData = [
     coverImageUrl: "/book_covers/momo.jpg",
     description: "A timeless fantasy about a girl who fights to save her community from the 'Men in Grey'—time thieves who rob people of their joy and leisure.",
     link: "https://www.goodreads.com/book/show/68811.Momo"
+  },
+  {
+    title: "Vestoj",
+    author: "Anja Aronowsky Cronberg",
+    coverImageUrl: "/book_covers/vestoj.jpg",
+    description: "A research platform and journal that examines the relationship between fashion, culture, and identity, providing a critical and intellectual perspective on why we wear what we wear.",
+    link: "https://vestoj.com/about/"
   }
 ];
 
