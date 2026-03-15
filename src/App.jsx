@@ -278,7 +278,7 @@ const screensData = [
     title: "The Firemen's Ball",
     subtitle: "Movie",
     coverImageUrl: "/screens/firemens_ball.jpg",
-    description: "A foundational work of the Czech New Wave that functions as a surgical autopsy of ideology. Under the guise of a small-town social, Forman depicts a bureaucracy so obsessed with the ritual of authority that it becomes blind to its own total collapse. It’s a hilarious, bitter look at how we maintain social illusions even while we’re the ones busy dismantling them.",
+    description: "Miloš Forman’s sharp satirical comedy of the Czech New Wave. A party thrown by a small-town fire department descends into chaotic bureaucracy and theft—a beautiful example of the functioning of ideology, where the ritual of the system is desperately maintained even as it's being dismantled from within.",
     link: "https://www.imdb.com/title/tt0061781/",
     trailerId: "kGMakTwMRoY"
   },
@@ -634,6 +634,7 @@ const products = [
   { name: 'Tomito', desc: 'My favorite Pomodoro timer so far.', link: 'https://tomito.app/', iconUrl: '/product_icons/Tomito Icon App.jpg' },
   { name: 'Arc', desc: 'sad to see this one on its way out. Fingers crossed they keep it around & working.', link: 'https://arc.net', iconUrl: '/product_icons/Arc App Icon.jpg' },
   { name: 'Discover Quickly', desc: 'A powerful interface for music discovery, powered by Spotify.', link: 'https://discoverquickly.com/', iconUrl: '/product_icons/discover_quickly.png' },
+  { name: 'Video Speed Controller', desc: 'Speed up, slow down, advance and rewind HTML5 audio/video with shortcuts.', link: 'https://chromewebstore.google.com/detail/video-speed-controller/nffaoalbilbmmfgbnbgppjihopabppdk', iconUrl: '/product_icons/video_speed_controller.png' },
 ];
 
 const projectsData = [
@@ -859,13 +860,7 @@ function App() {
               <p className="section-description">
                 {libraryTab === 'pages' && "I am an avid reader, primarily focused on philosophy, psychology, research, and articles. Luckily, I have people in my life who balance this dense materials with the enjoyable art of fiction and poetry."}
                 {libraryTab === 'screens' && "A curated collection of movies and shows that have left a lasting impression."}
-                {libraryTab === 'audio' && (
-                  <>
-                    Just some tracks I’ve probably played one too many times lately. If you are on desktop, you can preview the track by simply hovering over the album art.
-                    <br /><br />
-                    Note: Make sure to click the unmute icon beforehand. This is just to prevent a jarring audio experience for desktop and mobile users alike : )
-                  </>
-                )}
+                {libraryTab === 'audio' && "Just some tracks I’ve probably played one too many times lately. If you are on desktop, you can preview a track by hovering over the album art. Make sure to unmute the page first to hear the audio; I've kept it muted by default to prevent a jarring experience :)"}
               </p>
               {libraryTab === 'audio' && (
                 <button 
