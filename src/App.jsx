@@ -15,7 +15,8 @@ import {
   Lightbulb,
   ChevronLeft,
   ChevronRight,
-  Scale
+  Scale,
+  Music
 } from 'lucide-react';
 
 const booksData = [
@@ -188,23 +189,199 @@ const screensData = [
     subtitle: "TV Show",
     coverImageUrl: "/screens/succession.jpg",
     description: "A powerhouse of writing and acting, exploring the dysfunctional power dynamics within a global media empire. It’s a tragicomedy about family, greed, and legacy.",
-    link: "https://www.hbo.com/succession"
+    link: "https://www.hbo.com/succession",
+    trailerId: "OzY2IW1mE9M"
   },
   {
     title: "The Bear",
     subtitle: "TV Show",
     coverImageUrl: "/screens/the_bear.jpg",
     description: "An intense, fast-paced dive into the culinary world. It captures the stress, passion, and found-family dynamics of a chaotic kitchen with incredible authenticity.",
-    link: "https://www.fxnetworks.com/shows/the-bear"
+    link: "https://www.fxnetworks.com/shows/the-bear",
+    trailerId: "y-c7dyXShyA"
   },
   {
     title: "Inception",
     subtitle: "Movie",
     coverImageUrl: "/screens/inception.jpg",
     description: "Christopher Nolan's masterpiece on the architecture of dreams. A heist thriller that challenges the perception of reality through multiple layers of subconsciousness.",
-    link: "https://www.warnerbros.com/movies/inception"
+    link: "https://www.warnerbros.com/movies/inception",
+    trailerId: "YoHD9XEInc0"
+  },
+  {
+    title: "The Holy Mountain",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/the_holy_mountain.jpg",
+    description: "A surrealist masterpiece by Alejandro Jodorowsky. The Alchemist assembles a group of people from all walks of life to represent the planets in the solar system. The intent is to put them through strange mystical rites and divest them of their worldly baggage before embarking on a journey to Lotus Island to ascend the Holy Mountain and displace the immortal gods who secretly rule the universe.",
+    link: "https://www.imdb.com/title/tt0071615/",
+    trailerId: "DSON8vHpxzY"
+  },
+  {
+    title: "The Tale of Tales",
+    subtitle: "Movie (Short)",
+    coverImageUrl: "/screens/tale_of_tales.png",
+    description: "A poetic and soulful Russian animation masterpiece by Yuriy Norshteyn. It is widely considered one of the greatest animated films of all time, weaving together memory, war, and the passing of time.",
+    link: "https://www.imdb.com/title/tt0079986/",
+    trailerId: "nfNVGhkgf6I"
+  },
+  {
+    title: "My Dinner with Andre",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/my_dinner_with_andre.png",
+    description: "A fascinating, feature-length conversation between two friends in a New York restaurant. Wallace Shawn and Andre Gregory discuss life, art, and the nature of reality in this intimate cinematic experiment.",
+    link: "https://www.imdb.com/title/tt0082783/",
+    trailerId: "nC2c1sfFHEg"
+  },
+  {
+    title: "Paprika",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/paprika.png",
+    description: "Satoshi Kon's mind-bending journey into the world of dreams. When a device that allows therapists to enter patients' dreams is stolen, a young therapist must hunt down the thief through a psychedelic dreamscape.",
+    link: "https://www.imdb.com/title/tt0851578/",
+    trailerId: "anu2IrsUlVs"
+  },
+  {
+    title: "Eat Drink Man Woman",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/eat_drink_man_woman.png",
+    description: "Ang Lee's beautiful exploration of family, tradition, and change in Taipei. A master chef and his three rebellious daughters navigate life's complexities around the Sunday dinner table.",
+    link: "https://www.imdb.com/title/tt0111797/",
+    trailerId: "l7pKpO8NErU"
+  },
+  {
+    title: "Atlanta",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/atlanta.png",
+    description: "Donald Glover's surreal and genre-bending series following Earn and his cousin Paper Boi through the Atlanta rap scene. A poignant, hilarious, and often dreamlike reflection on modern life.",
+    link: "https://www.imdb.com/title/tt4288182/",
+    trailerId: "CetGXHU5aOA"
+  },
+  {
+    title: "The Act of Killing",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/act_of_killing.png",
+    description: "A chilling and groundbreaking documentary where former Indonesian death squad leaders reenact their mass killings in the style of their favorite cinematic genres.",
+    link: "https://www.imdb.com/title/tt2375605/",
+    trailerId: "6GiqYLrJBG0"
+  },
+  {
+    title: "Spirited Away",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/spirited_away.png",
+    description: "Hayao Miyazaki's enchanting masterpiece about a young girl who becomes trapped in a magical world of spirits and bathhouses. A summit of animated storytelling and visual imagination.",
+    link: "https://www.imdb.com/title/tt0245429/",
+    trailerId: "ByXuk9QqQkk"
+  },
+  {
+    title: "Seven Samurai",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/seven_samurai.png",
+    description: "Akira Kurosawa's epic masterpiece about seven Ronin hired to protect a small village from bandits. The definitive action-drama that changed cinema forever.",
+    link: "https://www.imdb.com/title/tt0047478/",
+    trailerId: "wJ1TOratCTo"
+  },
+  {
+    title: "Jujutsu Kaisen",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/jujutsu_kaisen.png",
+    description: "A high-octane dark fantasy series where high schooler Yuji Itadori enters a world of Curses and Sorcerers. A masterclass in modern shonen animation and choreography.",
+    link: "https://www.imdb.com/title/tt12343534/",
+    trailerId: "pkKu9hLT-t8"
+  },
+  {
+    title: "Oldboy",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/oldboy.png",
+    description: "Park Chan-wook's visceral and stylistic revenge thriller. After being imprisoned for 15 years without explanation, a man is suddenly released and given five days to find his captor.",
+    link: "https://www.imdb.com/title/tt0364569/",
+    trailerId: "tAaBkFChaRg"
+  },
+  {
+    title: "The Firemen's Ball",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/firemens_ball.png",
+    description: "Miloš Forman's sharp satirical comedy of the Czech New Wave. A simple party thrown by a small-town fire department descends into hilariously chaotic bureaucracy and theft.",
+    link: "https://www.imdb.com/title/tt0061781/",
+    trailerId: "kGMakTwMRoY"
+  },
+  {
+    title: "In the Mood for Love",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/mood_for_love.png",
+    description: "Wong Kar-wai's lush and melancholic romance set in 1960s Hong Kong. Two neighbors form a delicate bond after discovering their spouses are having an affair.",
+    link: "https://www.imdb.com/title/tt0118694/",
+    trailerId: "m8GuedsQnWQ"
+  },
+  {
+    title: "Black Mirror",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/black_mirror.png",
+    description: "An anthology series exploring a twisted, high-tech multiverse where humanity's greatest innovations and darkest instincts collide. Each episode is a sharp, suspenseful tale exploring themes of contemporary techno-paranoia.",
+    link: "https://www.imdb.com/title/tt2085059/",
+    trailerId: "zLZHdK6l55I"
+  },
+  {
+    title: "The Office",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/the_office.png",
+    description: "The definitive mockumentary following the daily lives of office employees at the Dunder Mifflin Scranton branch. A masterclass in cringe comedy, character development, and heart.",
+    link: "https://www.imdb.com/title/tt0386676/",
+    trailerId: "-C2z-nshFts"
   }
 ];
+
+const audioData = [
+  {
+    embedUrl: "https://open.spotify.com/embed/track/1gE46nqci9O4oN9teSjP0b?utm_source=generator",
+    description: "Music and audio that I'm currently enjoying or find inspiring."
+  },
+  { embedUrl: "https://open.spotify.com/embed/track/4Y2rMjoYvgcICDes0FGThm?utm_source=generator" },
+  { embedUrl: "https://open.spotify.com/embed/track/2Xn7NadvZ56D0B2D7x2CSL?utm_source=generator" },
+  { embedUrl: "https://open.spotify.com/embed/track/0sMWdvSFBg1bVkzyszM819?utm_source=generator" },
+  { embedUrl: "https://open.spotify.com/embed/track/5MRH2b0hfxZJLliGzYDVF3?utm_source=generator" },
+  { embedUrl: "https://open.spotify.com/embed/track/185EiYT58r61hdnHxjKVzT?utm_source=generator" },
+  { embedUrl: "https://open.spotify.com/embed/track/0oGMCVv5C1ekUYrITfMoO5?utm_source=generator" },
+  { embedUrl: "https://open.spotify.com/embed/track/5DebUsH4CN4ByTe0xF0KPJ?utm_source=generator" },
+  { embedUrl: "https://open.spotify.com/embed/track/5GZupy8zByqFmXvpwZ4JOC?utm_source=generator&theme=0" },
+  { embedUrl: "https://open.spotify.com/embed/track/7042gwq346mwkEoU5q3bbT?utm_source=generator" },
+  { embedUrl: "https://open.spotify.com/embed/track/6RDiDCAraT3tr31FtWi3C7?utm_source=generator" },
+  { embedUrl: "https://open.spotify.com/embed/track/1gcBvM73U5k2t75JXfcrkf?utm_source=generator" }
+];
+
+const AudioCard = ({ item, index }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  // Appending autoplay=1 on hover. Note: Spotify's iframe response to this depends on browser autoplay policies.
+  const baseUrl = item.embedUrl;
+  const embedUrl = isHovered ? `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}autoplay=1` : baseUrl;
+
+  return (
+    <motion.div 
+      className="audio-card"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1 }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="audio-embed-wrapper">
+        <iframe 
+          style={{ borderRadius: '12px' }} 
+          src={embedUrl} 
+          width="100%" 
+          height="352" 
+          frameBorder="0" 
+          allowFullScreen="" 
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+          loading="lazy"
+        ></iframe>
+      </div>
+      {item.description && (
+        <p className="audio-description">{item.description}</p>
+      )}
+    </motion.div>
+  );
+};
 
 const lightFixturesData = [
   {
@@ -270,6 +447,7 @@ const products = [
   { name: '3M', desc: 'One of the best at iterative development, have yet to disappoint. You have certainly used some of their products.', link: 'https://www.3m.com/', iconUrl: '/product_icons/3m_v3.png' },
   { name: 'Tomito', desc: 'My favorite Pomodoro timer so far.', link: 'https://tomito.app/', iconUrl: '/product_icons/Tomito Icon App.jpg' },
   { name: 'Arc', desc: 'sad to see this one on its way out. Fingers crossed they keep it around & working.', link: 'https://arc.net', iconUrl: '/product_icons/Arc App Icon.jpg' },
+  { name: 'Discover Quickly', desc: 'A powerful interface for music discovery, powered by Spotify.', link: 'https://discoverquickly.com/', iconUrl: '/product_icons/discover_quickly.png' },
 ];
 
 const projectsData = [
@@ -330,7 +508,7 @@ const sections = [
 
 function App() {
   const [activeTab, setActiveTab] = useState('intro');
-  const [libraryTab, setLibraryTab] = useState('pages'); // 'pages' or 'screens'
+  const [libraryTab, setLibraryTab] = useState('pages'); // 'pages', 'screens', or 'audio'
   const [openedBook, setOpenedBook] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedFixture, setSelectedFixture] = useState(null);
@@ -461,49 +639,86 @@ function App() {
                 >
                   Screens
                 </button>
+                <button 
+                  className={`library-tab-btn ${libraryTab === 'audio' ? 'active' : ''}`}
+                  onClick={() => setLibraryTab('audio')}
+                >
+                  Audio
+                </button>
               </div>
               <p className="section-description">
-                {libraryTab === 'pages' 
-                  ? "I am an avid reader, primarily focused on philosophy, psychology, research, and articles. Luckily, I have people in my life who balance this dense materials with the enjoyable art of fiction and poetry."
-                  : "A curated collection of movies and shows that have left a lasting impression on my perspective of storytelling, cinematography, and human nature."
-                }
+                {libraryTab === 'pages' && "I am an avid reader, primarily focused on philosophy, psychology, research, and articles. Luckily, I have people in my life who balance this dense materials with the enjoyable art of fiction and poetry."}
+                {libraryTab === 'screens' && "A curated collection of movies and shows that have left a lasting impression on my perspective of storytelling, cinematography, and human nature."}
+                {libraryTab === 'audio' && "A space where I share music, podcasts, and other sounds that resonate with me."}
               </p>
             </div>
             
-            <div className="books-shelf">
-              {(libraryTab === 'pages' ? booksData : screensData).map(item => {
-                const isOpened = openedBook?.title === item.title;
-                return (
-                  <motion.div 
-                    layoutId={`book-container-${item.title}`}
-                    key={item.title} 
-                    className="book-container"
-                    onClick={() => setOpenedBook(item)}
-                    style={{ opacity: isOpened ? 0 : 1 }} 
-                    whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
-                  >
-                    <div className="book-3d-wrapper">
-                      <div className="book-pages"></div>
-                      <motion.div 
-                        className="book-hinge"
-                        style={{ originX: 0 }}
-                      >
-                        <div 
-                          className="book-cover-front" 
-                          style={{ 
-                            backgroundImage: `url(${item.coverImageUrl})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundColor: '#e2e8f0',
-                          }}
-                        ></div>
-                        <div className="book-cover-back"></div>
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
+            {libraryTab === 'pages' ? (
+              <div className="books-shelf">
+                {booksData.map(item => {
+                  const isOpened = openedBook?.title === item.title;
+                  return (
+                    <motion.div 
+                      layoutId={`book-container-${item.title}`}
+                      key={item.title} 
+                      className="book-container"
+                      onClick={() => setOpenedBook(item)}
+                      style={{ opacity: isOpened ? 0 : 1 }} 
+                      whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
+                    >
+                      <div className="book-3d-wrapper">
+                        <div className="book-pages"></div>
+                        <motion.div 
+                          className="book-hinge"
+                          style={{ originX: 0 }}
+                        >
+                          <div 
+                            className="book-cover-front" 
+                            style={{ 
+                              backgroundImage: `url(${item.coverImageUrl})`,
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              backgroundColor: '#e2e8f0',
+                            }}
+                          ></div>
+                          <div className="book-cover-back"></div>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            ) : libraryTab === 'screens' ? (
+              <div className="screens-grid">
+                {screensData.map(item => {
+                  const isOpened = openedBook?.title === item.title;
+                  return (
+                    <motion.div 
+                      layoutId={`screen-container-${item.title}`}
+                      key={item.title} 
+                      className="poster-card"
+                      onClick={() => setOpenedBook(item)}
+                      style={{ opacity: isOpened ? 0 : 1 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="poster-wrapper">
+                        <img src={item.coverImageUrl} alt={item.title} className="poster-img" />
+                        <div className="poster-overlay">
+                          <h4>{item.title}</h4>
+                          <span>{item.subtitle}</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="audio-grid">
+                {audioData.map((item, idx) => (
+                  <AudioCard key={idx} item={item} index={idx} />
+                ))}
+              </div>
+            )}
 
             {/* Overlay for opened book */}
             <AnimatePresence>
@@ -524,56 +739,91 @@ function App() {
                     </button>
                   </motion.div>
                   
-                  <motion.div 
-                    layoutId={`book-container-${openedBook.title}`}
-                    className="book-container expanded-overlay-3d"
-                  >
-                    <div className="book-3d-wrapper">
-                      {/* 1. Book Body (Pages) */}
-                      <div className="book-pages"></div>
-
-                      {/* 2. Hinged Front Cover */}
-                      <motion.div 
-                        className="book-hinge"
-                        style={{ originX: 0 }}
-                        initial={{ rotateY: 0 }}
-                        animate={{ rotateY: -160 }}
-                        exit={{ rotateY: 0 }}
-                        transition={{ type: 'spring', stiffness: 100, damping: 20, mass: 1 }}
-                      >
-                        <div 
-                          className="book-cover-front" 
-                          style={{ 
-                            backgroundImage: `url(${openedBook.coverImageUrl})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundColor: '#e2e8f0',
-                          }}
-                        ></div>
-                        <div className="book-cover-back"></div>
-                      </motion.div>
-
-                      {/* 3. Inside Content - RENDERED LAST TO ENSURE CLICKABILITY */}
-                      <div className="book-inside-page">
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ delay: 0.3, duration: 0.3 }}
-                          className="inside-content"
-                        >
-                          <h3>{openedBook.title}</h3>
-                          <p className="author">{openedBook.subtitle ? openedBook.subtitle : `by ${openedBook.author}`}</p>
-                          <p className="desc">{openedBook.description}</p>
-                          <div className="read-more-container">
-                            <a href={openedBook.link} target="_blank" rel="noopener noreferrer" className="read-more-btn">
-                              Read More <ExternalLink size={14} style={{ marginLeft: '0.4rem' }}/>
-                            </a>
-                          </div>
-                        </motion.div>
+                  {openedBook.trailerId ? (
+                    /* Cinema Layout for Screens */
+                    <motion.div 
+                      layoutId={`screen-container-${openedBook.title}`}
+                      className="cinema-layout"
+                    >
+                      <div className="cinema-stage">
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          src={`https://www.youtube.com/embed/${openedBook.trailerId}`}
+                          title="YouTube video player"
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        ></iframe>
                       </div>
-                    </div>
-                  </motion.div>
+                      <div className="cinema-info">
+                        <div className="cinema-text">
+                          <h3>{openedBook.title}</h3>
+                          <div className="cinema-meta">
+                            <span>{openedBook.subtitle}</span>
+                          </div>
+                          <p className="cinema-desc">{openedBook.description}</p>
+                        </div>
+                        <div className="cinema-actions">
+                          <a href={openedBook.link} target="_blank" rel="noopener noreferrer" className="read-more-btn" style={{ fontSize: '0.9rem' }}>
+                            View Official Site <ExternalLink size={16} style={{ marginLeft: '0.6rem' }}/>
+                          </a>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    /* 3D Book Layout for Pages */
+                    <motion.div 
+                      layoutId={`book-container-${openedBook.title}`}
+                      className="book-container expanded-overlay-3d"
+                    >
+                      <div className="book-3d-wrapper">
+                        {/* 1. Book Body (Pages) */}
+                        <div className="book-pages"></div>
+
+                        {/* 2. Hinged Front Cover */}
+                        <motion.div 
+                          className="book-hinge"
+                          style={{ originX: 0 }}
+                          initial={{ rotateY: 0 }}
+                          animate={{ rotateY: -160 }}
+                          exit={{ rotateY: 0 }}
+                          transition={{ type: 'spring', stiffness: 100, damping: 20, mass: 1 }}
+                        >
+                          <div 
+                            className="book-cover-front" 
+                            style={{ 
+                              backgroundImage: `url(${openedBook.coverImageUrl})`,
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              backgroundColor: '#e2e8f0',
+                            }}
+                          ></div>
+                          <div className="book-cover-back"></div>
+                        </motion.div>
+
+                        {/* 3. Inside Content */}
+                        <div className="book-inside-page">
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ delay: 0.3, duration: 0.3 }}
+                            className="inside-content"
+                          >
+                            <h3>{openedBook.title}</h3>
+                            <p className="author">{`by ${openedBook.author}`}</p>
+                            <p className="desc">{openedBook.description}</p>
+                            <div className="read-more-container">
+                              <a href={openedBook.link} target="_blank" rel="noopener noreferrer" className="read-more-btn">
+                                Read More <ExternalLink size={14} style={{ marginLeft: '0.4rem' }}/>
+                              </a>
+                            </div>
+                          </motion.div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
                 </div>
               )}
             </AnimatePresence>

@@ -464,6 +464,159 @@ section {
 }
 
 /* 3D Book Component - Hinged Opening */
+/* Screens Specific Grid */
+.screens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Larger tiles than books */
+  gap: 3rem;
+  padding-bottom: 4rem;
+}
+
+.poster-card {
+  width: 100%;
+  aspect-ratio: 2/3;
+  cursor: pointer;
+  position: relative;
+  perspective: 1000px;
+}
+
+.poster-wrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.1);
+  transform-style: preserve-3d;
+}
+
+.poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.poster-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 40%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.poster-overlay h4 {
+  color: white;
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.poster-overlay span {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+@media (hover: hover) {
+  .poster-card:hover .poster-wrapper {
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.2), 0 0 40px rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.3);
+  }
+  
+  .poster-card:hover .poster-overlay {
+    opacity: 1;
+  }
+  
+  .poster-card:hover .poster-img {
+    transform: scale(1.05);
+  }
+}
+
+/* Cinematic Expanded Layout */
+.cinema-layout {
+  width: clamp(320px, 92vw, 1100px);
+  max-height: 92vh;
+  background: white;
+  border-radius: 16px;
+  overflow-y: auto;
+  box-shadow: 0 50px 100px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1001;
+  scrollbar-width: thin;
+}
+
+.cinema-stage {
+  width: 100%;
+  background: #000;
+  aspect-ratio: 16/9;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.cinema-info {
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: white;
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: clamp(1.5rem, 5vw, 4rem);
+}
+
+.cinema-text h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: var(--text-main);
+}
+
+.cinema-meta {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cinema-desc {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.7;
+  color: #475569;
+}
+
+.cinema-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  justify-content: flex-start;
+  padding-top: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .cinema-info {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 1.5rem;
+  }
+  
+  .cinema-actions {
+    border-top: 1px solid var(--panel-border);
+    padding-top: 2rem;
+  }
+}
+
 .books-shelf {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -681,13 +834,23 @@ section {
   height: 100%;
 }
 
+.video-container {
+  width: 100%;
+  margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background: #000;
+  aspect-ratio: 16/9;
+}
+
 .inside-content h3 {
   font-family: 'Georgia', serif;
   font-size: clamp(1.1rem, 1.5vw, 1.4rem);
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.4rem;
   color: #000;
   line-height: 1.4;
   text-align: center;
@@ -698,9 +861,8 @@ section {
   font-style: italic;
   font-size: 1rem;
   color: #555;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
   text-align: center;
-  /* Removed border for more traditional page look */
 }
 
 .inside-content .desc {
@@ -1344,3 +1506,47 @@ section {
     padding: 1rem 1rem 0;
   }
 }
+
+/* Audio Section Styles */
+.audio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 3rem;
+  padding-bottom: 4rem;
+}
+
+.audio-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.audio-embed-wrapper {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: var(--panel-bg);
+}
+
+.audio-card:hover .audio-embed-wrapper {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.audio-description {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 90%;
+}
+
+@media (max-width: 450px) {
+  .audio-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
