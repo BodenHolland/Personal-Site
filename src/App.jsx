@@ -739,13 +739,60 @@ const sections = [
 ];
 
 const retroGames = [
-  { id: 'spyro', name: 'Spyro the Dragon', icon: <Camera size={20} />, archiveId: 'psx_spyro' },
-  { id: 'crash', name: 'Crash Bandicoot', icon: <Package size={20} />, archiveId: 'crashbandicootflash' },
-  { id: 'rct', name: 'RollerCoaster Tycoon', icon: <Hammer size={20} />, archiveId: 'rctycoon_202002' },
-  { id: 'thps2', name: 'Tony Hawk\'s PS2', icon: <Music size={20} />, archiveId: 'psx_thps2' },
-  { id: 'gta2', name: 'Grand Theft Auto 2', icon: <Smartphone size={20} />, archiveId: 'psx_gta2' },
-  { id: 'oregon-trail', name: 'Oregon Trail', icon: <Trees size={20} />, archiveId: 'msdos_Oregon_Trail_The_1990' },
-  { id: 'simcity', name: 'SimCity', icon: <Package size={20} />, archiveId: 'msdos_SimCity_1989' },
+  { 
+    id: 'minesweeper', 
+    name: 'Minesweeper', 
+    coverArtUrl: 'https://archive.org/services/img/win3_Mineswee', 
+    archiveId: 'win3_Mineswee', 
+    aspectRatio: '4/3', 
+    controls: 'Mouse',
+    instructions: "Minesweeper is a puzzle game where you uncover squares on a grid while avoiding hidden mines using numerical clues."
+  },
+  { 
+    id: 'simcity', 
+    name: 'SimCity Classic', 
+    coverArtUrl: 'https://archive.org/services/img/msdos_SimCity_Classic_1994', 
+    archiveId: 'msdos_SimCity_Classic_1994', 
+    aspectRatio: '4/3', 
+    controls: 'Mouse/Keys',
+    instructions: "Design, build, and manage your own city while dealing with zoning, infrastructure, and unpredictable disasters."
+  },
+  { 
+    id: 'amazon-trail', 
+    name: 'Amazon Trail', 
+    coverArtUrl: 'https://archive.org/services/img/msdos_Amazon_Trail_1993', 
+    archiveId: 'msdos_Amazon_Trail_1993', 
+    aspectRatio: '4/3', 
+    controls: 'Mouse/Keys',
+    instructions: "Embark on a historical journey through the Amazon rainforest, learning about its ecosystem and history while trying to survive."
+  },
+  { 
+    id: 'number-munchers', 
+    name: 'Number Munchers', 
+    coverArtUrl: 'https://archive.org/services/img/msdos_Number_Munchers_1990', 
+    archiveId: 'msdos_Number_Munchers_1990', 
+    aspectRatio: '4/3', 
+    controls: 'Arrows/Space',
+    instructions: "Navigate your 'muncher' across a grid to eat numbers that match specific criteria while avoiding the dangerous Troggles."
+  },
+  { 
+    id: 'skifree', 
+    name: 'SkiFree', 
+    coverArtUrl: 'https://archive.org/services/img/win3_SKIFREE', 
+    archiveId: 'win3_SKIFREE', 
+    aspectRatio: '4/3', 
+    controls: 'Arrows',
+    instructions: "Control a skier on a mountain slope, performing stunts and avoiding obstacles while trying to outrun the Abominable Snow Monster."
+  },
+  { 
+    id: 'solitaire', 
+    name: 'Solitaire', 
+    coverArtUrl: 'https://archive.org/services/img/win3_SOLITARE', 
+    archiveId: 'win3_SOLITARE', 
+    aspectRatio: '4/3', 
+    controls: 'Mouse',
+    instructions: "Organize cards by suit and rank in this classic digital version of the popular card game also known as Klondike."
+  }
 ];
 
 function App() {
@@ -759,8 +806,10 @@ function App() {
   const [currentAudio, setCurrentAudio] = useState(null);
   const [isAudioMuted, setIsAudioMuted] = useState(true);
   const [showGame, setShowGame] = useState(false);
-  const [currentGame, setCurrentGame] = useState(retroGames[0]);
+  const [currentGame, setCurrentGame] = useState(retroGames.find(g => g.id === 'simcity') || retroGames[0]);
   const [isRetroMode, setIsRetroMode] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('Ready');
+  const [showStartModal, setShowStartModal] = useState(false);
   const audioRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -863,113 +912,185 @@ function App() {
             }}
             className="section-content"
           >
-            <div className="intro-text">
-              {!isRetroMode ? (
-                <>
-                  <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>Hi, I’m Boden 👋</motion.p>
-                  <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>Welcome to my personal website.</motion.p>
-                  <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>
-                    This is where I share what I’m working on outside of my life as a PM. If you’re looking for the professional side of things, feel free to head over to my <a href="https://www.linkedin.com/in/boden-holland/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textDecorationThickness: '0.5px', textUnderlineOffset: '4px', fontWeight: 300 }}>LinkedIn</a>.
-                  </motion.p>
-                  <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>I hope you find something you enjoy here, and please don’t hesitate to reach out!</motion.p>
-                  
-                  <motion.div 
-                    className="intro-ps"
-                    variants={{ hidden: { opacity: 0 }, visible: { opacity: 0.6 } }}
-                    transition={{ delay: 1 }}
-                  >
-                    PS: Want a quick break? Press Shift + P to launch a 1990s-era PC and play some of my favorite games from back in the day.
-                  </motion.div>
-                </>
-               ) : (
-                <motion.div
-                  className="crt-computer-wrapper"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{ type: "spring", damping: 22, stiffness: 120 }}
+            {!isRetroMode ? (
+              <div className="intro-text">
+                <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>Hi, I’m Boden 👋</motion.p>
+                <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>Welcome to my personal website.</motion.p>
+                <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>
+                  This is where I share the books, music, film, and creative experiments that occupy my time outside of product management. It’s a glimpse into the things I’m building and exploring just for the fun of it.
+                </motion.p>
+                <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>
+                  If you’re looking for the professional side of things, feel free to head over to my <a href="https://www.linkedin.com/in/boden-holland/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textDecorationThickness: '0.5px', textUnderlineOffset: '4px', fontWeight: 300 }}>LinkedIn</a>.
+                </motion.p>
+                <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>I hope you find something you enjoy here, and please don’t hesitate to reach out!</motion.p>
+                
+                <motion.div 
+                  className="intro-ps"
+                  variants={{ hidden: { opacity: 0 }, visible: { opacity: 0.6 } }}
+                  transition={{ delay: 1 }}
                 >
-                  {/* CRT Monitor Body */}
-                  <div className="crt-body">
-                    {/* Top ridge/vent */}
-                    <div className="crt-top-vent">
-                      <span className="crt-vent-slot" /><span className="crt-vent-slot" /><span className="crt-vent-slot" />
-                    </div>
-                    {/* Main bezel + screen */}
-                    <div className="crt-bezel">
-                      <div className="crt-inner-bezel">
-                        <div className="crt-screen">
-                          {/* Scanlines + vignette overlays */}
-                          <div className="crt-scanlines" />
-                          <div className="crt-vignette" />
-                          {/* Win95 desktop */}
-                          <div className="crt-win95-desktop">
-                            {/* Desktop icons */}
-                            {!showGame && (
-                               <>
-                                 {retroGames.map(game => (
-                                   <div key={game.id} className="crt-desk-icon" onClick={() => { setCurrentGame(game); setShowGame(true); }}>
-                                     <div className="crt-desk-icon-img">{game.icon}</div>
-                                     <span>{game.name}</span>
+                  PS: Want a quick break? Press Shift + P to launch a 1990s-era PC and play some of my favorite games from back in the day.
+                </motion.div>
+              </div>
+             ) : (
+              <motion.div
+                className="crt-computer-wrapper"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ type: "spring", damping: 22, stiffness: 120 }}
+              >
+                {/* CRT Monitor Body */}
+                <div className="crt-body">
+                  {/* Top ridge/vent */}
+                  <div className="crt-top-vent">
+                    <span className="crt-vent-slot" /><span className="crt-vent-slot" /><span className="crt-vent-slot" />
+                  </div>
+                  {/* Main bezel + screen */}
+                  <div className="crt-bezel">
+                    <div className="crt-inner-bezel">
+                      <div className="crt-screen">
+                        {/* Scanlines + vignette overlays */}
+                        <div className="crt-scanlines" />
+                        <div className="crt-vignette" />
+                        {/* Win95 desktop */}
+                        <div className="crt-win95-desktop">
+                          {/* Desktop icons */}
+                          {!showGame && (
+                             <>
+                               {retroGames.map(game => (
+                                 <div key={game.id} className="crt-desk-icon" onClick={() => { setCurrentGame(game); setShowGame(true); }}>
+                                   <div className="crt-desk-icon-img">
+                                     <img src={game.coverArtUrl} alt={game.name} />
                                    </div>
-                                 ))}
-                               </>
-                             )}
-                            {/* App Window */}
-                            {showGame && (
-                              <div className="crt-app-window">
-                                <div className="crt-win-titlebar">
-                                  <span>🖥 {currentGame.name}</span>
-                                  <div className="crt-win-btns">
-                                    <div className="crt-win-btn" onClick={() => setShowGame(false)}>▁</div>
-                                    <div className="crt-win-btn">▫</div>
-                                    <div className="crt-win-btn crt-win-close" onClick={() => setShowGame(false)}>✕</div>
-                                  </div>
-                                </div>
-                                <div className="crt-win-body">
-                                  <iframe
-                                    className="crt-game-iframe"
-                                    src={`https://archive.org/embed/${currentGame.archiveId}`}
-                                    allowFullScreen
-                                  />
+                                   <span>{game.name}</span>
+                                 </div>
+                               ))}
+                             </>
+                           )}
+                          {/* App Window */}
+                          {showGame && (
+                            <div className={`crt-app-window ${currentGame.aspectRatio === '3/4' ? 'win-vertical' : ''}`}>
+                              <div className="crt-win-titlebar">
+                                <span>🖥 {currentGame.name}</span>
+                                <div className="crt-win-btns">
+                                  <div className="crt-win-btn">_</div>
+                                  <div className="crt-win-btn">□</div>
+                                  <div className="crt-win-btn crt-win-close" onClick={() => setShowGame(false)}>×</div>
                                 </div>
                               </div>
-                            )}
-                          </div>
-                          {/* Taskbar */}
-                          <div className="crt-taskbar">
-                            <button className="crt-start-btn" onClick={() => { setIsRetroMode(false); setShowGame(false); }}>🏁 Start</button>
-                            <div className="crt-taskbar-sep" />
-                            {showGame && (
-                              <div className="crt-taskbar-pill">
-                                🖥 {currentGame.name}
+                              <div className="crt-win-body">
+                                <iframe
+                                  className="crt-game-iframe"
+                                  src={`https://archive.org/embed/${currentGame.archiveId}?autoplay=1`}
+                                  allowFullScreen
+                                />
                               </div>
-                            )}
-                            <Win95Clock />
-                          </div>
+                              {currentGame.controls && (
+                                <div className="crt-win-statusbar">
+                                  <div className="win95-status-inset">Controls: {currentGame.controls}</div>
+                                  <div className="win95-status-inset">{statusMessage}</div>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    </div>
-                    {/* Bottom control panel */}
-                    <div className="crt-controls">
-                      <div className="crt-brand">BONETEK™</div>
-                      <div className="crt-buttons-row">
-                        <div className="crt-ctrl-btn" />
-                        <div className="crt-ctrl-btn" />
-                        <div className="crt-power-btn" onClick={() => { setIsRetroMode(false); setShowGame(false); }}>
-                          <div className="crt-power-led" />
+                        {/* Taskbar */}
+                        <div className="crt-taskbar">
+                          <button className="crt-start-btn" onClick={() => setShowStartModal(prev => !prev)}>
+                            <div className="win95-logo">
+                              <span className="logo-r1" /><span className="logo-r2" />
+                              <span className="logo-r3" /><span className="logo-r4" />
+                            </div>
+                            Start
+                          </button>
+                          <div className="crt-taskbar-sep" />
+                          {showGame && (
+                            <div className="crt-taskbar-pill">
+                              🖥 {currentGame.name}
+                            </div>
+                          )}
+                          <Win95Clock />
                         </div>
                       </div>
                     </div>
                   </div>
-                  {/* Monitor Stand */}
-                  <div className="crt-neck" />
-                  <div className="crt-base" />
+                  {/* Bottom control panel */}
+                  <div className="crt-controls">
+                    <div className="crt-brand">BOTEK™</div>
+                    <div className="crt-buttons-row">
+                      {showGame && currentGame.controls?.includes('5:') && (
+                        <>
+                          <div 
+                            className="crt-arcade-btn coin" 
+                            onClick={() => {
+                              const iframe = document.querySelector('.crt-game-iframe');
+                              if (iframe) iframe.focus();
+                              setStatusMessage('PRESS 5 ON KEYBOARD');
+                              setTimeout(() => setStatusMessage('Ready'), 3000);
+                            }}
+                          >
+                            <div className="arcade-inner" />
+                            <span className="arcade-label">COIN</span>
+                          </div>
+                          <div 
+                            className="crt-arcade-btn start-p1" 
+                            onClick={() => {
+                              const iframe = document.querySelector('.crt-game-iframe');
+                              if (iframe) iframe.focus();
+                              setStatusMessage('PRESS 1 ON KEYBOARD');
+                              setTimeout(() => setStatusMessage('Ready'), 3000);
+                            }}
+                          >
+                            <div className="arcade-inner" />
+                            <span className="arcade-label">START</span>
+                          </div>
+                        </>
+                      )}
+                      <div className="crt-ctrl-btn" />
+                      <div className="crt-ctrl-btn" />
+                      <div className="crt-power-btn" onClick={() => { setIsRetroMode(false); setShowGame(false); }}>
+                        <div className="crt-power-led" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* Monitor Stand */}
+                <div className="crt-neck" />
+                <div className="crt-base" />
 
-                  <div className="crt-esc-hint">press esc or click power to exit</div>
-                </motion.div>
-              )}
-            </div>
+                {showStartModal && (
+                  <div className="win95-popup">
+                    <div className="popup-title">
+                      <span>Message</span>
+                      <button className="popup-close" onClick={() => setShowStartModal(false)}>×</button>
+                    </div>
+                    <div className="popup-body">
+                      <p>hope you are having a good day : )</p>
+                      <button className="popup-ok" onClick={() => setShowStartModal(false)}>OK</button>
+                    </div>
+                  </div>
+                )}
+
+                <div className="crt-game-manual">
+                  {showGame && (
+                    <div className="manual-content">
+                      <span className="manual-title">{currentGame.name} Manual</span>
+                      <div className="manual-row">
+                        <span className="manual-label">OBJECTIVE:</span>
+                        <p>{currentGame.instructions}</p>
+                      </div>
+                      <div className="manual-row">
+                        <span className="manual-label">CONTROLS:</span>
+                        <p>{currentGame.controls}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="crt-esc-hint">press esc or click power to exit</div>
+              </motion.div>
+            )}
           </motion.div>
         );
       /* RETRO MODE is rendered outside the section, as a fixed full-screen overlay – see below */
