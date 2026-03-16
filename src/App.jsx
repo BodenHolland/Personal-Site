@@ -18,7 +18,8 @@ import {
   Scale,
   Music,
   Volume2,
-  VolumeX
+  VolumeX,
+  Map
 } from 'lucide-react';
 
 const SplitText = ({ children }) => {
@@ -236,6 +237,14 @@ const screensData = [
     trailerId: "wAw6r9-BIt8"
   },
   {
+    title: "Waking Life",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/waking_life.jpg",
+    description: "A man shuffles through a dream meeting various people and discussing the meanings and purposes of the universe.",
+    link: "https://www.imdb.com/title/tt0243017/",
+    trailerId: "edrGozs6W_I"
+  },
+  {
     title: "My Dinner with Andre",
     subtitle: "Movie",
     coverImageUrl: "/screens/my_dinner_with_andre.jpg",
@@ -354,14 +363,6 @@ const screensData = [
     description: "A dry-witted, unfiltered woman navigates life and love in London while trying to cope with tragedy. A brilliant, fourth-wall-breaking exploration of grief, family, and modern life.",
     link: "https://www.imdb.com/title/tt5687612/",
     trailerId: "I5Uv6cb9YRs"
-  },
-  {
-    title: "Waking Life",
-    subtitle: "Movie",
-    coverImageUrl: "/screens/waking_life.jpg",
-    description: "A man shuffles through a dream meeting various people and discussing the meanings and purposes of the universe.",
-    link: "https://www.imdb.com/title/tt0243017/",
-    trailerId: "O1_p2882m4k"
   }
 ];
 
@@ -669,6 +670,14 @@ const products = [
   { name: 'Discover Quickly', desc: 'A powerful interface for music discovery, powered by Spotify.', link: 'https://discoverquickly.com/', iconUrl: '/product_icons/discover_quickly.png' },
   { name: 'Video Speed Controller', desc: 'Speed up, slow down, advance and rewind HTML5 audio/video with shortcuts.', link: 'https://chromewebstore.google.com/detail/video-speed-controller/nffaoalbilbmmfgbnbgppjihopabppdk', iconUrl: '/product_icons/video_speed_controller.png' },
   { name: 'eBay', desc: "The place I go to find stuff you can't get anywhere else on the Internet!", link: 'https://www.ebay.com', iconUrl: '/product_icons/ebay.png' },
+  { name: 'Library of Babel', desc: 'A website that contains every possible combination of 1,312,000 characters.', link: 'https://libraryofbabel.info/', iconUrl: '/product_icons/library_of_babel.png' },
+  { name: 'The True Size', desc: 'An interactive map that allows you to drag and drop countries to see their true size relative to others.', link: 'https://thetruesize.com', iconUrl: '/product_icons/the_true_size.png' },
+  { name: 'On the Grid', desc: 'A curated neighborhood guide for creative people, by creative people.', link: 'https://onthegrid.city/', iconUrl: '/product_icons/on_the_grid.png' },
+  { name: 'Internet Archive', desc: 'A non-profit library of millions of free books, movies, software, music, websites, and more.', link: 'https://archive.org/', iconUrl: '/product_icons/internet_archive.jpg' },
+  { name: 'City-Data', desc: 'Profiles of all U.S. cities with stats on real estate, crime, schools, and more.', link: 'https://www.city-data.com/', iconUrl: '/product_icons/city_data_v2.png' },
+  { name: 'Pilot Varsity Pen', desc: 'Cheap, vivid colors, and fun to write with.', link: 'https://www.dickblick.com/products/pilot-varsity-disposable-fountain-pens/', iconUrl: '/product_icons/varsity_pen.jpg' },
+  { name: 'Kindle Oasis', desc: 'Hands down one of the best Kindle designs to date.', link: 'https://www.amazon.com/Kindle-Oasis-now-with-adjustable-warm-light/dp/B07F7TLZF4?th=1', iconUrl: '/product_icons/kindle_oasis.jpg' },
+  { name: 'dbrand', desc: 'Coolest skins for all your electronics.', link: 'https://dbrand.com/', iconUrl: '/product_icons/dbrand.jpg' },
 ];
 
 const projectsData = [
@@ -718,6 +727,18 @@ const projectsData = [
     image: '/downloaded_data/crafting/workshop.jpg',
     links: [],
     ctaLabel: 'Explore Fixtures'
+  },
+  {
+    id: 'fieldguide',
+    title: 'Field Guide',
+    subtitle: 'Digitizing SF History',
+    description: 'After seeing the physical map made by the directors of The Last Black Man in San Francisco, I decided to digitize it. This Notion page is a collection of their favorite places and many of mine! Feel free to use it for your next walk through the city.',
+    icon: <Map size={32} />,
+    color: '#10b981',
+    image: '/projects/fieldguide_hero.png',
+    links: [
+      { label: 'Check it out', url: 'https://bodenholland.notion.site/Boden-s-Guide-to-SF-16ba7aa277d980f7916bd7d7813e8d94?source=copy_link' }
+    ]
   }
 ];
 
@@ -730,8 +751,8 @@ const photographyData = [
 
 const sections = [
   { id: 'intro', label: 'Welcome' },
-  { id: 'products', label: 'Essentials' },
   { id: 'reading', label: 'Library' },
+  { id: 'products', label: 'Favorites' },
   { id: 'projects', label: 'Experiments' },
   { id: 'light-fixtures', label: 'Light Fixtures', hidden: true },
   { id: 'photography', label: 'Photography' },
@@ -797,7 +818,7 @@ const retroGames = [
 
 function App() {
   const [activeTab, setActiveTab] = useState('intro');
-  const [libraryTab, setLibraryTab] = useState('pages'); // 'pages', 'screens', or 'audio'
+  const [libraryTab, setLibraryTab] = useState('audio'); // 'audio', 'screens', or 'pages'
   const [openedBook, setOpenedBook] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedFixture, setSelectedFixture] = useState(null);
@@ -1099,7 +1120,9 @@ function App() {
           <div className="section-content">
             <div className="section-head">
               <h2>Favorite Products</h2>
-              <p style={{ color: 'var(--text-muted)' }}>Both Software & Hardware</p>
+              <p className="section-description">
+                A collection of the things I love. From the tools I use every day to the objects I just appreciate having around and the corners of the internet I find myself returning to.
+              </p>
             </div>
             <div className="grid">
               {products.map(p => (
@@ -1127,11 +1150,11 @@ function App() {
             <div className="section-head">
               <div className="library-tabs">
                 <button 
-                  className={`library-tab-btn ${libraryTab === 'pages' ? 'active' : ''}`}
-                  onClick={() => setLibraryTab('pages')}
+                  className={`library-tab-btn ${libraryTab === 'audio' ? 'active' : ''}`}
+                  onClick={() => setLibraryTab('audio')}
                 >
-                  Pages
-                  {libraryTab === 'pages' && (
+                  Audio
+                  {libraryTab === 'audio' && (
                     <motion.div 
                       layoutId="library-underline"
                       className="library-tab-underline"
@@ -1153,11 +1176,11 @@ function App() {
                   )}
                 </button>
                 <button 
-                  className={`library-tab-btn ${libraryTab === 'audio' ? 'active' : ''}`}
-                  onClick={() => setLibraryTab('audio')}
+                  className={`library-tab-btn ${libraryTab === 'pages' ? 'active' : ''}`}
+                  onClick={() => setLibraryTab('pages')}
                 >
-                  Audio
-                  {libraryTab === 'audio' && (
+                  Pages
+                  {libraryTab === 'pages' && (
                     <motion.div 
                       layoutId="library-underline"
                       className="library-tab-underline"
@@ -1167,9 +1190,9 @@ function App() {
                 </button>
               </div>
               <p className="section-description">
-                {libraryTab === 'pages' && "I am an avid reader, primarily focused on philosophy, psychology, research, and articles. Luckily, I have people in my life who balance this dense materials with the enjoyable art of fiction and poetry."}
-                {libraryTab === 'screens' && "A curated collection of movies and shows that have left a lasting impression."}
                 {libraryTab === 'audio' && "Just some tracks I’ve probably played one too many times lately. If you are on desktop, you can preview a track by hovering over the album art. Make sure to unmute the page first to hear the audio; I've kept it muted by default to prevent a jarring experience :)"}
+                {libraryTab === 'screens' && "A curated collection of movies and shows that have left a lasting impression."}
+                {libraryTab === 'pages' && "I am an avid reader, primarily focused on philosophy, psychology, research, and articles. Luckily, I have people in my life who balance this dense materials with the enjoyable art of fiction and poetry."}
               </p>
               {libraryTab === 'audio' && (
                 <button 
@@ -1561,9 +1584,9 @@ function App() {
                 </div>
               </motion.div>
 
-              <div style={{ marginTop: '8rem', marginBottom: '2rem' }}>
+              <div style={{ marginTop: '8rem', marginBottom: '0.5rem' }}>
                 <p className="section-description">
-                The following images were taken within a 15min walk from home. Most days begin and end with a walk here. Our neighborhood in Fort Scott is quiet, with only a few houses on the street. Sometimes I cross paths with a neighbor, and we stop to chat; other times, there’s no one at all.
+                These images were taken within a fifteen minute walk from home. Most days begin and end with a walk here. We live in the Fort Scott neighborhood of the Presidio. It is a very beautiful and quiet place.
                 </p>
               </div>
 
