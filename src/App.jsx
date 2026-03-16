@@ -21,6 +21,31 @@ import {
   VolumeX
 } from 'lucide-react';
 
+const SplitText = ({ children }) => {
+  if (typeof children !== 'string') return children;
+  return children.split(' ').map((word, i, arr) => (
+    <React.Fragment key={i}>
+      <span className="hover-word">{word}</span>
+      {i < arr.length - 1 ? ' ' : ''}
+    </React.Fragment>
+  ));
+};
+
+// Live clock for Win95 taskbar
+const Win95Clock = () => {
+  const [time, setTime] = React.useState(() => {
+    const now = new Date();
+    return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  });
+  React.useEffect(() => {
+    const tick = setInterval(() => {
+      const now = new Date();
+      setTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+    }, 10000);
+    return () => clearInterval(tick);
+  }, []);
+  return <div className="win95-clock">{time}</div>;
+};
 const booksData = [
   {
     title: "Seeing Is Forgetting the Name of the Thing One Sees",
@@ -187,6 +212,22 @@ const booksData = [
 
 const screensData = [
   {
+    title: "Eat Drink Man Woman",
+    subtitle: "Movie",
+    coverImageUrl: "/screens/eat_drink_man_woman.jpg",
+    description: "Ang Lee's beautiful exploration of family, tradition, and change in Taipei. A master chef and his three rebellious daughters navigate life's complexities around the Sunday dinner table.",
+    link: "https://www.imdb.com/title/tt0111797/",
+    trailerId: "l7pKpO8NErU"
+  },
+  {
+    title: "Atlanta",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/atlanta.jpg",
+    description: "Donald Glover's surreal and genre-bending series following Earn and his cousin Paper Boi through the Atlanta rap scene. A poignant, hilarious, and often dreamlike reflection on modern life.",
+    link: "https://www.imdb.com/title/tt4288182/",
+    trailerId: "CetGXHU5aOA"
+  },
+  {
     title: "The Tale of Tales",
     subtitle: "Movie (Short)",
     coverImageUrl: "/screens/tale_of_tales.jpg",
@@ -209,22 +250,6 @@ const screensData = [
     description: "Satoshi Kon's mind-bending journey into the world of dreams. When a device that allows therapists to enter patients' dreams is stolen, a young therapist must hunt down the thief through a psychedelic dreamscape.",
     link: "https://www.imdb.com/title/tt0851578/",
     trailerId: "anu2IrsUlVs"
-  },
-  {
-    title: "Eat Drink Man Woman",
-    subtitle: "Movie",
-    coverImageUrl: "/screens/eat_drink_man_woman.jpg",
-    description: "Ang Lee's beautiful exploration of family, tradition, and change in Taipei. A master chef and his three rebellious daughters navigate life's complexities around the Sunday dinner table.",
-    link: "https://www.imdb.com/title/tt0111797/",
-    trailerId: "l7pKpO8NErU"
-  },
-  {
-    title: "Atlanta",
-    subtitle: "TV Series",
-    coverImageUrl: "/screens/atlanta.jpg",
-    description: "Donald Glover's surreal and genre-bending series following Earn and his cousin Paper Boi through the Atlanta rap scene. A poignant, hilarious, and often dreamlike reflection on modern life.",
-    link: "https://www.imdb.com/title/tt4288182/",
-    trailerId: "CetGXHU5aOA"
   },
   {
     title: "The Act of Killing",
@@ -333,50 +358,10 @@ const screensData = [
   {
     title: "Waking Life",
     subtitle: "Movie",
-    coverImageUrl: "/screen_covers/waking_life.jpg",
+    coverImageUrl: "/screens/waking_life.jpg",
     description: "A man shuffles through a dream meeting various people and discussing the meanings and purposes of the universe.",
     link: "https://www.imdb.com/title/tt0243017/",
     trailerId: "O1_p2882m4k"
-  },
-  {
-    title: "Rear Window",
-    subtitle: "Movie",
-    coverImageUrl: "/screen_covers/rear_window.jpg",
-    description: "A bored photographer recovering from a broken leg passes the time by watching his neighbors and begins to suspect one of them of murder.",
-    link: "https://www.imdb.com/title/tt0047396/",
-    trailerId: "6kCcZelM9a4"
-  },
-  {
-    title: "HyperNormalisation",
-    subtitle: "Documentary",
-    coverImageUrl: "/screen_covers/hypernormalisation.jpg",
-    description: "Adam Curtis explains how, at a time of confusing and inexplicable world events, politicians and the people they represent have retreated in to a damaging over-simplified version of what is happening.",
-    link: "https://www.imdb.com/title/tt6156350/",
-    trailerId: "y-y2oA_Gg1U"
-  },
-  {
-    title: "Network",
-    subtitle: "Movie",
-    coverImageUrl: "/screen_covers/network.jpg",
-    description: "A television network cynically exploits a deranged former anchor's ravings and revelations about mass media for its own profit, but finds that his message may be difficult to control.",
-    link: "https://www.imdb.com/title/tt0074958/",
-    trailerId: "N_I_G_mHw_0"
-  },
-  {
-    title: "Freaks and Geeks",
-    subtitle: "TV Series",
-    coverImageUrl: "/screen_covers/freaks_and_geeks.jpg",
-    description: "A high school mathlete starts hanging out with a group of burnouts while her younger brother navigates his freshman year.",
-    link: "https://www.imdb.com/title/tt0193676/",
-    trailerId: "R9_C-V-8nI8"
-  },
-  {
-    title: "Breaking Bad",
-    subtitle: "TV Series",
-    coverImageUrl: "/screen_covers/breaking_bad.jpg",
-    description: "A chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine with a former student to secure his family's future.",
-    link: "https://www.imdb.com/title/tt0903747/",
-    trailerId: "2r1o_3L-Q0U"
   }
 ];
 
@@ -688,6 +673,17 @@ const products = [
 
 const projectsData = [
   {
+    id: 'copythat',
+    title: 'CopyThat',
+    subtitle: 'Universal 2FA for macOS',
+    description: 'A macOS application that allows you to automatically have two-factor authentication codes copy to your clipboard and automatically paste it into boxes. No longer does this feature have to be gated to Safari.',
+    icon: <Smartphone size={32} />,
+    color: '#2563eb',
+    image: '/projects/copythat_hero.png',
+    links: [],
+    ctaLabel: 'Download for macOS'
+  },
+  {
     id: 'kindshare',
     title: 'KindShare',
     subtitle: 'Equitable Cost-Sharing App',
@@ -715,13 +711,13 @@ const projectsData = [
   {
     id: 'lightfixtures',
     title: 'Light Fixtures',
-    subtitle: 'Art of Light & Space',
-    description: 'The art of light and space is my favorite medium. I spend much of my time experimenting and having fun building objects in our workshop. Having a workshop behind our house is a luxury of space that is rare and much appreciated in the city.',
+    subtitle: 'Hobby',
+    description: "The art of light and space is my favorite medium. I spend much of my time experimenting and having fun building objects in our workshop.",
     icon: <Lightbulb size={32} />,
     color: '#eab308',
     image: '/downloaded_data/crafting/workshop.jpg',
     links: [],
-    ctaLabel: 'See more fixtures'
+    ctaLabel: 'Explore Fixtures'
   }
 ];
 
@@ -742,6 +738,16 @@ const sections = [
   { id: 'contact', label: 'Reach Out' }
 ];
 
+const retroGames = [
+  { id: 'spyro', name: 'Spyro the Dragon', icon: <Camera size={20} />, archiveId: 'psx_spyro' },
+  { id: 'crash', name: 'Crash Bandicoot', icon: <Package size={20} />, archiveId: 'crashbandicootflash' },
+  { id: 'rct', name: 'RollerCoaster Tycoon', icon: <Hammer size={20} />, archiveId: 'rctycoon_202002' },
+  { id: 'thps2', name: 'Tony Hawk\'s PS2', icon: <Music size={20} />, archiveId: 'psx_thps2' },
+  { id: 'gta2', name: 'Grand Theft Auto 2', icon: <Smartphone size={20} />, archiveId: 'psx_gta2' },
+  { id: 'oregon-trail', name: 'Oregon Trail', icon: <Trees size={20} />, archiveId: 'msdos_Oregon_Trail_The_1990' },
+  { id: 'simcity', name: 'SimCity', icon: <Package size={20} />, archiveId: 'msdos_SimCity_1989' },
+];
+
 function App() {
   const [activeTab, setActiveTab] = useState('intro');
   const [libraryTab, setLibraryTab] = useState('pages'); // 'pages', 'screens', or 'audio'
@@ -752,7 +758,28 @@ function App() {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const [currentAudio, setCurrentAudio] = useState(null);
   const [isAudioMuted, setIsAudioMuted] = useState(true);
+  const [showGame, setShowGame] = useState(false);
+  const [currentGame, setCurrentGame] = useState(retroGames[0]);
+  const [isRetroMode, setIsRetroMode] = useState(false);
   const audioRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Toggle Retro Mode with Shift + P
+      if (e.shiftKey && e.key.toLowerCase() === 'p') {
+        setIsRetroMode(prev => !prev);
+        setShowGame(false); // Reset game state when toggling mode
+      }
+      
+      // Exit everything with Escape
+      if (e.key === 'Escape') {
+        setShowGame(false);
+        setIsRetroMode(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   React.useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -825,15 +852,127 @@ function App() {
       case 'intro':
         return (
           <motion.div 
-            initial={{ opacity: 0, scale: 0.98 }} 
-            animate={{ opacity: 1, scale: 1 }} 
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { 
+                opacity: 1,
+                transition: { staggerChildren: 0.15, delayChildren: 0.1 }
+              }
+            }}
             className="section-content"
           >
-            <p className="intro-text">
-              Hi, I’m Boden 👋. Welcome to my personal website. This is where I share what I’m working on outside of my life as a PM. If you’re looking for the professional side of things, feel free to head over to my <a href="https://www.linkedin.com/in/boden-holland/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textDecorationThickness: '0.5px', textUnderlineOffset: '4px', fontWeight: 300 }}>LinkedIn</a>. I hope you find something you enjoy here, and please don’t hesitate to reach out!
-            </p>
+            <div className="intro-text">
+              {!isRetroMode ? (
+                <>
+                  <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>Hi, I’m Boden 👋</motion.p>
+                  <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>Welcome to my personal website.</motion.p>
+                  <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>
+                    This is where I share what I’m working on outside of my life as a PM. If you’re looking for the professional side of things, feel free to head over to my <a href="https://www.linkedin.com/in/boden-holland/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textDecorationThickness: '0.5px', textUnderlineOffset: '4px', fontWeight: 300 }}>LinkedIn</a>.
+                  </motion.p>
+                  <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>I hope you find something you enjoy here, and please don’t hesitate to reach out!</motion.p>
+                  
+                  <motion.div 
+                    className="intro-ps"
+                    variants={{ hidden: { opacity: 0 }, visible: { opacity: 0.6 } }}
+                    transition={{ delay: 1 }}
+                  >
+                    PS: Want a quick break? Press Shift + P to launch a 1990s-era PC and play some of my favorite games from back in the day.
+                  </motion.div>
+                </>
+               ) : (
+                <motion.div
+                  className="crt-computer-wrapper"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ type: "spring", damping: 22, stiffness: 120 }}
+                >
+                  {/* CRT Monitor Body */}
+                  <div className="crt-body">
+                    {/* Top ridge/vent */}
+                    <div className="crt-top-vent">
+                      <span className="crt-vent-slot" /><span className="crt-vent-slot" /><span className="crt-vent-slot" />
+                    </div>
+                    {/* Main bezel + screen */}
+                    <div className="crt-bezel">
+                      <div className="crt-inner-bezel">
+                        <div className="crt-screen">
+                          {/* Scanlines + vignette overlays */}
+                          <div className="crt-scanlines" />
+                          <div className="crt-vignette" />
+                          {/* Win95 desktop */}
+                          <div className="crt-win95-desktop">
+                            {/* Desktop icons */}
+                            {!showGame && (
+                               <>
+                                 {retroGames.map(game => (
+                                   <div key={game.id} className="crt-desk-icon" onClick={() => { setCurrentGame(game); setShowGame(true); }}>
+                                     <div className="crt-desk-icon-img">{game.icon}</div>
+                                     <span>{game.name}</span>
+                                   </div>
+                                 ))}
+                               </>
+                             )}
+                            {/* App Window */}
+                            {showGame && (
+                              <div className="crt-app-window">
+                                <div className="crt-win-titlebar">
+                                  <span>🖥 {currentGame.name}</span>
+                                  <div className="crt-win-btns">
+                                    <div className="crt-win-btn" onClick={() => setShowGame(false)}>▁</div>
+                                    <div className="crt-win-btn">▫</div>
+                                    <div className="crt-win-btn crt-win-close" onClick={() => setShowGame(false)}>✕</div>
+                                  </div>
+                                </div>
+                                <div className="crt-win-body">
+                                  <iframe
+                                    className="crt-game-iframe"
+                                    src={`https://archive.org/embed/${currentGame.archiveId}`}
+                                    allowFullScreen
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          {/* Taskbar */}
+                          <div className="crt-taskbar">
+                            <button className="crt-start-btn" onClick={() => { setIsRetroMode(false); setShowGame(false); }}>🏁 Start</button>
+                            <div className="crt-taskbar-sep" />
+                            {showGame && (
+                              <div className="crt-taskbar-pill">
+                                🖥 {currentGame.name}
+                              </div>
+                            )}
+                            <Win95Clock />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Bottom control panel */}
+                    <div className="crt-controls">
+                      <div className="crt-brand">BONETEK™</div>
+                      <div className="crt-buttons-row">
+                        <div className="crt-ctrl-btn" />
+                        <div className="crt-ctrl-btn" />
+                        <div className="crt-power-btn" onClick={() => { setIsRetroMode(false); setShowGame(false); }}>
+                          <div className="crt-power-led" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Monitor Stand */}
+                  <div className="crt-neck" />
+                  <div className="crt-base" />
+
+                  <div className="crt-esc-hint">press esc or click power to exit</div>
+                </motion.div>
+              )}
+            </div>
           </motion.div>
         );
+      /* RETRO MODE is rendered outside the section, as a fixed full-screen overlay – see below */
       case 'products':
         return (
           <div className="section-content">
@@ -1115,7 +1254,7 @@ function App() {
         return (
           <div className="section-content">
             <div className="section-head">
-              <h2>Projects</h2>
+              <h2>Experiments</h2>
               <p className="section-description">
                 A collection of tools and platforms I've built to solve real-world problems and bring more transparency to complex systems.
               </p>
@@ -1135,9 +1274,6 @@ function App() {
                   )}
                   <div className="project-card-content">
                     <div className="project-card-header">
-                      <div className={`project-icon-wrapper project-icon-${project.id}`} style={{ '--project-color': project.color }}>
-                        {project.icon}
-                      </div>
                       <div className="project-meta">
                         <h3>{project.title}</h3>
                         <span className="project-subtitle">{project.subtitle}</span>
@@ -1146,7 +1282,7 @@ function App() {
                     <div className="project-card-body">
                       <p>{project.description}</p>
                     </div>
-                    <div className="project-card-footer">
+                    <div className={`project-card-footer ${project.ctaLabel ? 'cta-centered' : ''}`}>
                       {project.ctaLabel && (
                         <button 
                           className="project-cta-btn" 
@@ -1154,6 +1290,11 @@ function App() {
                           onClick={() => {
                             if (project.id === 'lightfixtures') {
                               navigate('light-fixtures');
+                            } else if (project.id === 'copythat') {
+                              const a = document.createElement('a');
+                              a.href = '/CopyThat.dmg';
+                              a.download = 'CopyThat.dmg';
+                              a.click();
                             }
                           }}
                         >
@@ -1501,6 +1642,7 @@ function App() {
             </motion.div>
           </motion.div>
         )}
+
       </AnimatePresence>
     </div>
   );
