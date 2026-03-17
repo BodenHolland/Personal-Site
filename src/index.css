@@ -116,7 +116,7 @@ h1, h2, h3 {
 section {
   position: absolute;
   inset: 0;
-  padding: clamp(1.5rem, 5vw, 6rem);
+  padding: clamp(1.2rem, 4vh, 5rem);
   overflow-y: auto;
   height: 100%;
 }
@@ -222,7 +222,7 @@ section {
 .intro-text {
   position: relative;
   z-index: 1;
-  font-size: clamp(1.2rem, 2.5vw, 2.3rem);
+  font-size: clamp(1.1rem, 2.2vw, 2.2rem);
   max-width: 1200px;
   line-height: 1.4;
   font-weight: 300;
@@ -231,7 +231,7 @@ section {
 }
 
 .intro-text p {
-  margin-bottom: 2.5rem;
+  margin-bottom: clamp(1rem, 2vh, 2rem);
 }
 
 .intro-text p:last-of-type {
@@ -239,7 +239,7 @@ section {
 }
 
 .intro-ps {
-  margin-top: 4rem;
+  margin-top: clamp(1.5rem, 4vh, 3rem);
   font-size: 0.9rem;
   color: var(--text-muted);
   font-family: var(--font-heading);
