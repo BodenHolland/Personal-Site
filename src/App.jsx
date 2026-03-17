@@ -368,6 +368,13 @@ const screensData = [
 
 const audioData = [
   {
+    title: "Theory of Colours",
+    artist: "Dauwd",
+    coverUrl: "https://i.scdn.co/image/ab67616d0000b273199aa5ec1e066eeca88b5850",
+    previewUrl: "https://cdnt-preview.dzcdn.net/api/1/1/7/a/b/0/7ab371d9cd2f7f4bd4b592fbc1f2f1ba.mp3",
+    spotifyUrl: "https://open.spotify.com/track/7nT24kprAb4l7tI5FSd9zU?si=405b5fa0f32540c7"
+  },
+  {
     title: "Ebb Tide",
     artist: "Houston & Dorsey",
     coverUrl: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0219785e19807ee4b3b16d787e",
@@ -678,6 +685,7 @@ const products = [
   { name: 'Pilot Varsity Pen', desc: 'Cheap, vivid colors, and fun to write with.', link: 'https://www.dickblick.com/products/pilot-varsity-disposable-fountain-pens/', iconUrl: '/product_icons/varsity_pen.jpg' },
   { name: 'Kindle Oasis', desc: 'Hands down one of the best Kindle designs to date.', link: 'https://www.amazon.com/Kindle-Oasis-now-with-adjustable-warm-light/dp/B07F7TLZF4?th=1', iconUrl: '/product_icons/kindle_oasis.jpg' },
   { name: 'dbrand', desc: 'Coolest skins for all your electronics.', link: 'https://dbrand.com/', iconUrl: '/product_icons/dbrand.jpg' },
+  { name: 'Project Gutenberg', desc: 'A library of over 70,000 free eBooks, primarily focusing on public domain works.', link: 'https://www.gutenberg.org/', iconUrl: '/product_icons/gutenberg_v2.jpg' },
 ];
 
 const projectsData = [
