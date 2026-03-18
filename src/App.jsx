@@ -576,6 +576,48 @@ const audioData = [
     "coverUrl": "https://i.scdn.co/image/ab67616d0000b2737ef4d77e3ff43bd72639fcbb",
     "previewUrl": "https://p.scdn.co/mp3-preview/582e505c5f33296b9885bddd42298a6e4a34527a",
     "spotifyUrl": "https://open.spotify.com/track/7JEc8f5JbYdK5aourq93s5"
+  },
+  {
+    "title": "Theory of Colours",
+    "artist": "Dauwd",
+    "coverUrl": "https://image-cdn-fa.spotifycdn.com/image/ab67616d0000b273199aa5ec1e066eeca88b5850",
+    "previewUrl": "https://p.scdn.co/mp3-preview/e7cd0d360f89cb4160195fde5294bd1300057ec3",
+    "spotifyUrl": "https://open.spotify.com/track/7nT24kprAb4l7tI5FSd9zU"
+  },
+  {
+    "title": "Sunset People",
+    "artist": "Donna Summer",
+    "coverUrl": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e020c3a44d76807bef665eacfa3",
+    "previewUrl": "https://p.scdn.co/mp3-preview/228bd01708ac6d95e9da1dc8fca6f776e4776162",
+    "spotifyUrl": "https://open.spotify.com/track/6O7QmxB7Euq2MnTdsPdMui"
+  },
+  {
+    "title": "Dance II",
+    "artist": "Discovery Zone",
+    "coverUrl": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e027507a5adb06f2936b86b0e20",
+    "previewUrl": "https://p.scdn.co/mp3-preview/4400f6b013758518b27529b00945a0f8747aef3e",
+    "spotifyUrl": "https://open.spotify.com/track/5iPyzbAvw84pJBJsFu05P4"
+  },
+  {
+    "title": "I Cry (Night after Night)",
+    "artist": "The Egyptian Lover",
+    "coverUrl": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e021ab9a50d2ccf0515190cd47b",
+    "previewUrl": "https://p.scdn.co/mp3-preview/7841e01c0793d20d10e90a87dd5725e2041572ae",
+    "spotifyUrl": "https://open.spotify.com/track/6W03BOggURVJECgPfpz7Gh"
+  },
+  {
+    "title": "17 Days - Piano & A Microphone 1983 Version",
+    "artist": "Prince",
+    "coverUrl": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02105086205323b81177c709d4",
+    "previewUrl": "https://p.scdn.co/mp3-preview/616754212e2b0614f7579acc46efc86970dc5bb0",
+    "spotifyUrl": "https://open.spotify.com/track/4n23NofxtEOwrkWmAUspOa"
+  },
+  {
+    "title": "Hope",
+    "artist": "Caleb Arredondo",
+    "coverUrl": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e025379f77309913e2e52410350",
+    "previewUrl": "https://p.scdn.co/mp3-preview/0bb70a764065757799f640f52c7a09b2b2fc7cc8",
+    "spotifyUrl": "https://open.spotify.com/track/5u83N41ielZUyeJzvIlBsg"
   }
 ];
 
@@ -1191,7 +1233,7 @@ function App() {
                 </button>
               </div>
               <p className="section-description">
-                {libraryTab === 'audio' && "Just some tracks I’ve probably played one too many times lately. If you are on desktop, you can preview a track by hovering over the album art. Make sure to unmute the page first to hear the audio; I've kept it muted by default to prevent a jarring experience :)"}
+                {libraryTab === 'audio' && "Just some tracks I’ve probably played one too many times lately. If you are on desktop, you can preview a track by hovering over the album art. Make sure to unmute the page first to hear the audio. I've kept it muted by default because there is nothing worse than unexpected audio blasting out of your speakers at the coffee shop."}
                 {libraryTab === 'screens' && "A curated collection of movies and shows that have left a lasting impression."}
                 {libraryTab === 'pages' && "I am an avid reader, primarily focused on philosophy, psychology, research, and articles. Luckily, I have people in my life who balance this dense materials with the enjoyable art of fiction and poetry."}
               </p>
