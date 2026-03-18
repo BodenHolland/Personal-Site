@@ -1235,7 +1235,7 @@ function App() {
               <p className="section-description">
                 {libraryTab === 'audio' && "Just some tracks I’ve probably played one too many times lately. If you are on desktop, you can preview a track by hovering over the album art. Make sure to unmute the page first to hear the audio. I've kept it muted by default because there is nothing worse than unexpected audio blasting out of your speakers at the coffee shop."}
                 {libraryTab === 'screens' && "A curated collection of movies and shows that have left a lasting impression."}
-                {libraryTab === 'pages' && "I am an avid reader, primarily focused on philosophy, psychology, research, and articles. Luckily, I have people in my life who balance this dense materials with the enjoyable art of fiction and poetry."}
+                {libraryTab === 'pages' && "I tend to spend most of my reading time on philosophy, psychology, and theory. Luckily, I have people in my life who keep me balanced by sharing great fiction and poetry."}
               </p>
               {libraryTab === 'audio' && (
                 <button 
