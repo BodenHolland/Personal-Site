@@ -2270,6 +2270,17 @@ body:has(.book-overlay-container) {
   display: block;
 }
 
+.fixture-video-container {
+  aspect-ratio: 16/9;
+}
+
+.fixture-video-container iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: none;
+}
+
 @media (max-width: 850px) {
   .fixture-overlay-header, .fixture-overlay-body {
     padding: 1.5rem;
