@@ -1176,7 +1176,7 @@ function App() {
                     </div>
                     <div className="popup-body">
                       <p>hope you are having a good day : )</p>
-                      <button className="popup-ok" onClick={() => setShowStartModal(false)}>OK</button>
+                      <button className="popup-ok" onClick={() => setShowStartModal(false)}>: )</button>
                     </div>
                   </div>
                 )}
