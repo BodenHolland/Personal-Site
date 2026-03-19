@@ -368,7 +368,7 @@ const screensData = [
   {
     title: "Mad Men",
     subtitle: "TV Series",
-    coverImageUrl: "/screens/mad_men.png",
+    coverImageUrl: "/screens/mad_men_new.png",
     description: "A drama about one of New York's most prestigious ad agencies at the beginning of the 1960s, focusing on one of the firm's most mysterious but extremely talented ad executives, Donald Draper.",
     link: "https://www.imdb.com/title/tt0804535/",
     trailerId: "xWCeqo_Snyo"
@@ -376,7 +376,7 @@ const screensData = [
   {
     title: "Mr. Robot",
     subtitle: "TV Series",
-    coverImageUrl: "/screens/mr_robot.png",
+    coverImageUrl: "/screens/mr_robot_new.jpg",
     description: "A psychological techno-thriller following Elliot Alderson, a cybersecurity engineer and hacker recruited by a mysterious anarchist to join a group of hacktivists aiming to destroy all debt records.",
     link: "https://www.imdb.com/title/tt4158110/",
     trailerId: "Cmzu1Nx0b6o"
@@ -384,7 +384,7 @@ const screensData = [
   {
     title: "Chernobyl",
     subtitle: "TV Series",
-    coverImageUrl: "/screens/chernobyl.png",
+    coverImageUrl: "/screens/chernobyl_new.jpg",
     description: "A harrowing dramatization of the 1986 nuclear disaster and the selfless heroes who fought to contain it. A masterclass in tension, atmosphere, and the cost of institutional denial.",
     link: "https://www.imdb.com/title/tt7046012/",
     trailerId: "s9APLXM9X68"
@@ -392,50 +392,35 @@ const screensData = [
   {
     title: "Breaking Bad",
     subtitle: "TV Series",
-    coverImageUrl: "/screens/breaking_bad.png",
+    coverImageUrl: "/screens/breaking_bad_new.jpg",
     description: "A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family's future.",
     link: "https://www.imdb.com/title/tt0903747/",
     trailerId: "H7M-fFk71eU"
   },
-  {
-    title: "Pushing Daisies (2007–2009)",
-    subtitle: "TV Series",
-    coverImageUrl: "/screens/pushing_daisies.png",
-    description: "A pie-maker with the ability to bring dead things back to life with a touch solves murders alongside his resurrected childhood sweetheart and a cynical private investigator.",
-    link: "https://www.imdb.com/title/tt0925266/",
-    trailerId: "jW9S5cZ1mG0"
-  },
-  {
-    title: "Severance",
-    subtitle: "TV Series",
-    coverImageUrl: "/screens/severance.png",
-    description: "Mark leads a team of office workers whose memories have been surgically divided between their work and personal lives; when a mysterious colleague appears outside of work, it begins a journey to discover the truth about their jobs.",
-    link: "https://www.imdb.com/title/tt11280740/",
-    trailerId: "r_2xH1Tj8_U"
-  },
+
   {
     title: "SimCity 4",
     subtitle: "Game",
     coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/24780/library_600x900_2x.jpg",
     description: "The gold standard of city simulation. SimCity 4 allows you to create and manage sprawling metropolitan regions, balancing complex infrastructure, economics, and the needs of your Sims.",
     link: "https://store.steampowered.com/app/24780/SimCity_4_Deluxe_Edition/",
-    trailerId: "k4TqNl09K0M"
+    trailerId: "lxaJXyF4qbg"
   },
   {
-    title: "Cities: Skylines",
+    title: "Cities: Skylines II",
     subtitle: "Game",
-    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/255710/library_600x900_2x.jpg",
+    coverImageUrl: "/screens/cities_skylines_2.jpg",
     description: "A modern take on the classic city builder. Cities: Skylines provides deep simulation of urban life, traffic, and logistics, giving players total control over every aspect of their city's development.",
     link: "https://www.paradoxinteractive.com/games/cities-skylines/about",
-    trailerId: "68T0uU3L74k"
+    trailerId: "7vlKoMi4Qr0"
   },
   {
-    title: "RollerCoaster Tycoon 3",
+    title: "RollerCoaster Tycoon Classic",
     subtitle: "Game",
-    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/1368820/library_600x900_2x.jpg",
+    coverImageUrl: "/screens/rct_classic.jpg",
     description: "The peak of the theme park management series. Build incredible coasters, manage your park's finances, and watch as guests experience your creations in full 3D.",
     link: "https://www.frontier.co.uk/games/rollercoaster-tycoon-3",
-    trailerId: "H7S86X04t0k"
+    trailerId: "5d9Fe7XUa1c"
   },
   {
     title: "Manor Lords",
@@ -443,7 +428,7 @@ const screensData = [
     coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/1363080/library_600x900_2x.jpg",
     description: "A medieval city builder with deep social and economic simulation and large-scale tactical battles. Manor Lords aims to provide a realistic and high-fidelity 14th-century experience.",
     link: "https://manorlords.com/",
-    trailerId: "S2f9m9S9m7g"
+    trailerId: "hhk4HAxLhq8"
   },
   {
     title: "Banished",
@@ -451,7 +436,7 @@ const screensData = [
     coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/242920/library_600x900_2x.jpg",
     description: "A challenging city builder where you lead a group of exiled travelers to restart their lives in a new land. Every individual matters in this survival-focused management game.",
     link: "http://www.shiningrocksoftware.com/game/",
-    trailerId: "9S_pX_XyS-I"
+    trailerId: "Ls8FBFFjMxk"
   },
   {
     title: "Red Dead Redemption 2",
@@ -459,7 +444,7 @@ const screensData = [
     coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/1174180/library_600x900_2x.jpg",
     description: "Rockstar's epic tale of life in America's unforgiving heartland. An unparalleled open-world experience following the decline of the outlaw era through the eyes of Arthur Morgan.",
     link: "https://www.rockstargames.com/reddeadredemption2",
-    trailerId: "eaW0tYpxyp0"
+    trailerId: "gmA6MrX81z4"
   },
   {
     title: "The Sims 2",
@@ -467,7 +452,7 @@ const screensData = [
     coverImageUrl: "https://images.igdb.com/igdb/image/upload/t_cover_big/co3dm5.jpg",
     description: "The groundbreaking life simulation that introduced DNA, generations, and complex life goals. Manage every detail of your Sims' lives from cradle to grave in this timeless classic.",
     link: "https://www.ea.com/games/the-sims/the-sims-2",
-    trailerId: "2SgXb_Y9-g0"
+    trailerId: "EUc_VDWRAQo"
   },
   {
     title: "The Elder Scrolls V: Skyrim",
@@ -475,7 +460,7 @@ const screensData = [
     coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/489830/library_600x900_2x.jpg",
     description: "The definitive open-world fantasy epic. Skyrim provides an unparalleled sense of freedom and discovery in a vast, cold land of dragons and ancient magic.",
     link: "https://store.steampowered.com/app/489830/The_Elder_Scrolls_V_Skyrim_Special_Edition/",
-    trailerId: "PjqsYzV6L78"
+    trailerId: "JSRtYpNRoN0"
   },
   {
     title: "The Elder Scrolls IV: Oblivion",
@@ -483,31 +468,31 @@ const screensData = [
     coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/22330/library_600x900_2x.jpg",
     description: "A monumental entry in the Elder Scrolls series. Oblivion's lush world and deep questlines set a new standard for Western RPGs, with a sense of wonder that still holds up.",
     link: "https://store.steampowered.com/app/22330/The_Elder_Scrolls_IV_Oblivion_Game_of_the_Year_Edition/",
-    trailerId: "vX9_m_C6v64"
+    trailerId: "wFJ3PZuAjK4"
   },
   {
     title: "Tony Hawk's Pro Skater 3",
     subtitle: "Game",
-    coverImageUrl: "https://upload.wikimedia.org/wikipedia/en/e/e0/Tony_Hawk%27s_Pro_Skater_3_Coverart.png",
+    coverImageUrl: "/screens/tony_hawk_3.jpg",
     description: "The pinnacle of arcade skateboarding. With its perfect combo system and iconic levels, THPS3 remains a masterpiece of flow and frantic fun.",
     link: "https://www.ign.com/games/tony-hawks-pro-skater-3",
-    trailerId: "1u-_V-b4N1Y"
+    trailerId: "yoSQOUKIUI4"
   },
   {
-    title: "Spyro Reignited Trilogy",
+    title: "Spyro 2: Ripto's Rage!",
     subtitle: "Game",
-    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/996580/library_600x900_2x.jpg",
+    coverImageUrl: "/screens/spyro_2.jpg",
     description: "The purple dragon returns in this stunning high-definition remake. A nostalgic journey through vibrant worlds filled with gems, dragons, and charm.",
     link: "https://store.steampowered.com/app/996580/Spyro_Reignited_Trilogy/",
-    trailerId: "2nC88K6zC2Y"
+    trailerId: "TYxwR7K6HOA"
   },
   {
-    title: "Crash Bandicoot N. Sane Trilogy",
+    title: "Crash Bandicoot",
     subtitle: "Game",
-    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/731490/library_600x900_2x.jpg",
+    coverImageUrl: "/screens/crash_bandicoot.jpg",
     description: "The quintessential 90s platformer, meticulously rebuilt for a new generation. Crash's frantic energy and challenging levels are as addictive as ever.",
     link: "https://store.steampowered.com/app/731490/Crash_Bandicoot_N_Sane_Trilogy/",
-    trailerId: "4TXY6nTVVms"
+    trailerId: "n_pwOxMhhGs"
   }
 ];
 
@@ -969,7 +954,7 @@ const projectsData = [
     color: '#6b7c5e',
     image: '/projects/community_hero.png',
     links: [
-      { label: 'Visit kobbeave.com', url: 'https://kobbeave.com' }
+      { label: 'Visit Site', url: 'https://kobbeave.com' }
     ]
   },
   {
