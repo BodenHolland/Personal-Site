@@ -795,7 +795,7 @@ const projectsData = [
     links: [],
     ctaLabel: 'Explore Fixtures'
   },
-  {
+  /*{
     id: 'ambulancecost',
     title: 'AmbulanceCost.com',
     subtitle: 'Medical Billing Transparency',
@@ -806,7 +806,7 @@ const projectsData = [
     links: [
       { label: 'Visit Site', url: 'https://ambulancecost.com' }
     ]
-  },
+  },*/
   {
     id: 'community',
     title: 'Community',
@@ -831,7 +831,7 @@ const projectsData = [
       { label: 'Check it out', url: 'https://bodenholland.notion.site/Boden-s-Guide-to-SF-16ba7aa277d980f7916bd7d7813e8d94?source=copy_link' }
     ]
   },
-  {
+  /*{
     id: 'copythat',
     title: 'CopyThat',
     subtitle: 'Universal 2FA for macOS',
@@ -842,7 +842,7 @@ const projectsData = [
     links: [
       { label: 'Visit Site', url: 'https://copythat2fa.com' }
     ]
-  }
+  }*/
 ];
 
 const photographyData = [
