@@ -374,6 +374,46 @@ const screensData = [
     trailerId: "xWCeqo_Snyo"
   },
   {
+    title: "Mr. Robot",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/mr_robot.png",
+    description: "A psychological techno-thriller following Elliot Alderson, a cybersecurity engineer and hacker recruited by a mysterious anarchist to join a group of hacktivists aiming to destroy all debt records.",
+    link: "https://www.imdb.com/title/tt4158110/",
+    trailerId: "Cmzu1Nx0b6o"
+  },
+  {
+    title: "Chernobyl",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/chernobyl.png",
+    description: "A harrowing dramatization of the 1986 nuclear disaster and the selfless heroes who fought to contain it. A masterclass in tension, atmosphere, and the cost of institutional denial.",
+    link: "https://www.imdb.com/title/tt7046012/",
+    trailerId: "s9APLXM9X68"
+  },
+  {
+    title: "Breaking Bad",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/breaking_bad.png",
+    description: "A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family's future.",
+    link: "https://www.imdb.com/title/tt0903747/",
+    trailerId: "H7M-fFk71eU"
+  },
+  {
+    title: "Pushing Daisies (2007–2009)",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/pushing_daisies.png",
+    description: "A pie-maker with the ability to bring dead things back to life with a touch solves murders alongside his resurrected childhood sweetheart and a cynical private investigator.",
+    link: "https://www.imdb.com/title/tt0925266/",
+    trailerId: "jW9S5cZ1mG0"
+  },
+  {
+    title: "Severance",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/severance.png",
+    description: "Mark leads a team of office workers whose memories have been surgically divided between their work and personal lives; when a mysterious colleague appears outside of work, it begins a journey to discover the truth about their jobs.",
+    link: "https://www.imdb.com/title/tt11280740/",
+    trailerId: "r_2xH1Tj8_U"
+  },
+  {
     title: "SimCity 4",
     subtitle: "Game",
     coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/24780/library_600x900_2x.jpg",
@@ -1418,11 +1458,7 @@ function App() {
               </div>
               <p className="section-description">
                 {libraryTab === 'audio' && "Just some tracks I’ve probably played one too many times lately. If you are on desktop, you can preview a track by hovering over the album art. Make sure to unmute the page first to hear the audio. I've kept it muted by default because there is nothing worse than unexpected audio blasting out of your speakers at the coffee shop."}
-                {libraryTab === 'screens' && (
-                  screensSubTab === 'games' 
-                    ? "I don’t game much anymore so most of these are a bit dated, but they show the pattern I tend to gravitate toward simulation and builder games with a few nostalgic classics mixed in. Some of these you can actually play on the emulator I built if you go to Welcome and press Shift + P."
-                    : "A curated collection of movies, shows, and games that have left a lasting impression."
-                )}
+                {libraryTab === 'screens' && "A curated collection of movies, shows, and games that have left a lasting impression."}
                 {libraryTab === 'pages' && "I tend to spend most of my reading time on philosophy, psychology, and theory. Luckily, I have people in my life who keep me balanced by sharing great fiction and poetry."}
               </p>
               {libraryTab === 'screens' && (
