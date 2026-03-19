@@ -855,7 +855,7 @@ const photographyData = [
 const sections = [
   { id: 'intro', label: 'Welcome' },
   { id: 'reading', label: 'Library' },
-  { id: 'products', label: 'Favorites' },
+  { id: 'products', label: 'Essentials' },
   { id: 'projects', label: 'Experiments' },
   { id: 'light-fixtures', label: 'Light Fixtures', hidden: true },
   { id: 'photography', label: 'Photography' },
