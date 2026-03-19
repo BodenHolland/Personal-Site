@@ -711,7 +711,9 @@ const lightFixturesData = [
       "/light_projects/fluorescent_tube_guards/tube_guard_2122.jpg",
       "/light_projects/fluorescent_tube_guards/tube_guard_2121.jpg",
       "/light_projects/fluorescent_tube_guards/tube_guard_2123.jpg",
-      "/light_projects/fluorescent_tube_guards/tube_guard_2124.jpg"
+      "/light_projects/fluorescent_tube_guards/tube_guard_2124.jpg",
+      "/light_projects/fluorescent_tube_guards/tube_guard_2125.jpg",
+      "/light_projects/fluorescent_tube_guards/tube_guard_2126.jpg"
     ]
   },
   {
@@ -724,7 +726,20 @@ const lightFixturesData = [
       "/light_projects/t5_led_lights/t5_led_4.jpg",
       "/light_projects/t5_led_lights/t5_led_5.jpg",
       "/light_projects/t5_led_lights/t5_led_6.jpg",
-      "/light_projects/t5_led_lights/t5_led_7.jpg"
+      "/light_projects/t5_led_lights/t5_led_7.jpg",
+      "/light_projects/t5_led_lights/t5_led_8.jpg"
+    ]
+  },
+  {
+    title: "Miscellaneous",
+    description: "Fixtures and lighting for events that don't quite cleanly fit one category.",
+    images: [
+      "/light_projects/miscellaneous/misc_1.jpg",
+      "/light_projects/miscellaneous/misc_2.jpg",
+      "/light_projects/miscellaneous/misc_3.jpg",
+      "/light_projects/miscellaneous/misc_4.jpg",
+      "/light_projects/miscellaneous/misc_5.jpg",
+      "/light_projects/miscellaneous/misc_6.jpg"
     ]
   }
 ];
@@ -796,7 +811,7 @@ const projectsData = [
     id: 'community',
     title: 'Community',
     subtitle: 'Co-Living in the Presidio',
-    description: 'Over the past 17 years, I\'ve played a key role in building an emergent co-living community on Kobbe Avenue inside the Presidio of San Francisco. Four independently operating homes, all next door to one another, connected by a shared love of the National Park, each other, and a very active WhatsApp group.',
+    description: 'Over the past 9 years, I\'ve played a key role in building an emergent co-living community on Kobbe Avenue inside the Presidio of San Francisco. Four independently operating homes, all next door to one another, connected by a shared love of the National Park, each other, and a very active WhatsApp group.',
     icon: <Users size={32} />,
     color: '#6b7c5e',
     image: '/projects/community_hero.png',
@@ -1699,7 +1714,7 @@ function App() {
         return (
           <div className="section-content">
             <div className="section-head">
-              <h2>Contact</h2>
+              <h2>Reach Out</h2>
               <p className="section-description">
                 I'm always open to new projects, collaborations, or just a friendly chat. 
                 Drop me a message below and I'll get back to you as soon as I can.
