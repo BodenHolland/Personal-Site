@@ -247,6 +247,19 @@ section {
   opacity: 0.5;
 }
 
+.linkedin-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 0.5px;
+  text-underline-offset: 4px;
+  font-weight: 300;
+  transition: color 0.3s ease;
+}
+
+.linkedin-link:hover {
+  color: var(--accent-blue) !important;
+}
+
 /* =====================================================
    PHYSICAL 3D CRT MONITOR EXPERIENCE
    ===================================================== */
