@@ -364,6 +364,110 @@ const screensData = [
     description: "A dry-witted, unfiltered woman navigates life and love in London while trying to cope with tragedy. A brilliant, fourth-wall-breaking exploration of grief, family, and modern life.",
     link: "https://www.imdb.com/title/tt5687612/",
     trailerId: "I5Uv6cb9YRs"
+  },
+  {
+    title: "Mad Men",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/mad_men.png",
+    description: "A drama about one of New York's most prestigious ad agencies at the beginning of the 1960s, focusing on one of the firm's most mysterious but extremely talented ad executives, Donald Draper.",
+    link: "https://www.imdb.com/title/tt0804535/",
+    trailerId: "xWCeqo_Snyo"
+  },
+  {
+    title: "SimCity 4",
+    subtitle: "Game",
+    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/24780/library_600x900_2x.jpg",
+    description: "The gold standard of city simulation. SimCity 4 allows you to create and manage sprawling metropolitan regions, balancing complex infrastructure, economics, and the needs of your Sims.",
+    link: "https://store.steampowered.com/app/24780/SimCity_4_Deluxe_Edition/",
+    trailerId: "k4TqNl09K0M"
+  },
+  {
+    title: "Cities: Skylines",
+    subtitle: "Game",
+    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/255710/library_600x900_2x.jpg",
+    description: "A modern take on the classic city builder. Cities: Skylines provides deep simulation of urban life, traffic, and logistics, giving players total control over every aspect of their city's development.",
+    link: "https://www.paradoxinteractive.com/games/cities-skylines/about",
+    trailerId: "68T0uU3L74k"
+  },
+  {
+    title: "RollerCoaster Tycoon 3",
+    subtitle: "Game",
+    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/1368820/library_600x900_2x.jpg",
+    description: "The peak of the theme park management series. Build incredible coasters, manage your park's finances, and watch as guests experience your creations in full 3D.",
+    link: "https://www.frontier.co.uk/games/rollercoaster-tycoon-3",
+    trailerId: "H7S86X04t0k"
+  },
+  {
+    title: "Manor Lords",
+    subtitle: "Game",
+    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/1363080/library_600x900_2x.jpg",
+    description: "A medieval city builder with deep social and economic simulation and large-scale tactical battles. Manor Lords aims to provide a realistic and high-fidelity 14th-century experience.",
+    link: "https://manorlords.com/",
+    trailerId: "S2f9m9S9m7g"
+  },
+  {
+    title: "Banished",
+    subtitle: "Game",
+    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/242920/library_600x900_2x.jpg",
+    description: "A challenging city builder where you lead a group of exiled travelers to restart their lives in a new land. Every individual matters in this survival-focused management game.",
+    link: "http://www.shiningrocksoftware.com/game/",
+    trailerId: "9S_pX_XyS-I"
+  },
+  {
+    title: "Red Dead Redemption 2",
+    subtitle: "Game",
+    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/1174180/library_600x900_2x.jpg",
+    description: "Rockstar's epic tale of life in America's unforgiving heartland. An unparalleled open-world experience following the decline of the outlaw era through the eyes of Arthur Morgan.",
+    link: "https://www.rockstargames.com/reddeadredemption2",
+    trailerId: "eaW0tYpxyp0"
+  },
+  {
+    title: "The Sims 2",
+    subtitle: "Game",
+    coverImageUrl: "https://images.igdb.com/igdb/image/upload/t_cover_big/co3dm5.jpg",
+    description: "The groundbreaking life simulation that introduced DNA, generations, and complex life goals. Manage every detail of your Sims' lives from cradle to grave in this timeless classic.",
+    link: "https://www.ea.com/games/the-sims/the-sims-2",
+    trailerId: "2SgXb_Y9-g0"
+  },
+  {
+    title: "The Elder Scrolls V: Skyrim",
+    subtitle: "Game",
+    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/489830/library_600x900_2x.jpg",
+    description: "The definitive open-world fantasy epic. Skyrim provides an unparalleled sense of freedom and discovery in a vast, cold land of dragons and ancient magic.",
+    link: "https://store.steampowered.com/app/489830/The_Elder_Scrolls_V_Skyrim_Special_Edition/",
+    trailerId: "PjqsYzV6L78"
+  },
+  {
+    title: "The Elder Scrolls IV: Oblivion",
+    subtitle: "Game",
+    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/22330/library_600x900_2x.jpg",
+    description: "A monumental entry in the Elder Scrolls series. Oblivion's lush world and deep questlines set a new standard for Western RPGs, with a sense of wonder that still holds up.",
+    link: "https://store.steampowered.com/app/22330/The_Elder_Scrolls_IV_Oblivion_Game_of_the_Year_Edition/",
+    trailerId: "vX9_m_C6v64"
+  },
+  {
+    title: "Tony Hawk's Pro Skater 3",
+    subtitle: "Game",
+    coverImageUrl: "https://upload.wikimedia.org/wikipedia/en/e/e0/Tony_Hawk%27s_Pro_Skater_3_Coverart.png",
+    description: "The pinnacle of arcade skateboarding. With its perfect combo system and iconic levels, THPS3 remains a masterpiece of flow and frantic fun.",
+    link: "https://www.ign.com/games/tony-hawks-pro-skater-3",
+    trailerId: "1u-_V-b4N1Y"
+  },
+  {
+    title: "Spyro Reignited Trilogy",
+    subtitle: "Game",
+    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/996580/library_600x900_2x.jpg",
+    description: "The purple dragon returns in this stunning high-definition remake. A nostalgic journey through vibrant worlds filled with gems, dragons, and charm.",
+    link: "https://store.steampowered.com/app/996580/Spyro_Reignited_Trilogy/",
+    trailerId: "2nC88K6zC2Y"
+  },
+  {
+    title: "Crash Bandicoot N. Sane Trilogy",
+    subtitle: "Game",
+    coverImageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/731490/library_600x900_2x.jpg",
+    description: "The quintessential 90s platformer, meticulously rebuilt for a new generation. Crash's frantic energy and challenging levels are as addictive as ever.",
+    link: "https://store.steampowered.com/app/731490/Crash_Bandicoot_N_Sane_Trilogy/",
+    trailerId: "4TXY6nTVVms"
   }
 ];
 
@@ -746,6 +850,7 @@ const lightFixturesData = [
 
 const products = [
   { name: 'Obsidian', desc: 'A note-taking tool for networked thought.', link: 'https://obsidian.md/', iconUrl: '/product_icons/obsidian.jpg' },
+  { name: 'Divisare', desc: 'A systemized view of architecture organized through images.', link: 'https://divisare.com', iconUrl: '/product_icons/divisare.png' },
   { name: 'Snipd', desc: 'A podcast player that uses AI to create transcripts for podcast episodes that you can follow along as you listen.', link: 'https://www.snipd.com/', iconUrl: '/product_icons/Snipd App Icon.jpg' },
   { name: 'b.bulb', desc: 'An incredible portable light fixture designed by Ingo Maurer.', link: 'https://www.ingo-maurer.com/en/products/bbulb/', iconUrl: '/product_icons/Bulb Ingo Maur Image.jpg' },
   { name: 'Notion', desc: 'We all know this one, I have been using Notion since its early days. By now I have 50 people accessing and using my "Botion".', link: 'https://www.notion.so/', iconUrl: '/product_icons/Notion Icon.jpg' },
@@ -768,6 +873,14 @@ const products = [
   { name: 'Kindle Oasis', desc: 'Hands down one of the best Kindle designs to date.', link: 'https://www.amazon.com/Kindle-Oasis-now-with-adjustable-warm-light/dp/B07F7TLZF4?th=1', iconUrl: '/product_icons/kindle_oasis.jpg' },
   { name: 'dbrand', desc: 'Coolest skins for all your electronics.', link: 'https://dbrand.com/', iconUrl: '/product_icons/dbrand.jpg' },
   { name: 'Project Gutenberg', desc: 'A library of over 70,000 free eBooks, primarily focusing on public domain works.', link: 'https://www.gutenberg.org/', iconUrl: '/product_icons/gutenberg_v2.png' },
+  { 
+    name: 'JODI', 
+    desc: 'Two computer scientists working in San Jose State University in 1995 created the collective JODI. They are widely regarded as some of the first artists to seriously engage in the internet as both a medium and a site.', 
+    longerDesc: 'It is described as an evolving personal index of whatever interests the artist. They refuse to establish an ideological hierarchy of its contents. Instead, it seems to illustrate their foundational principles. The endless blind clicking becomes both a meaning and an end, illustrating the logic of the code as a method of assemblage and the underlying structure of the transfer protocol.',
+    link: 'https://wwwwwwwww.jodi.org/', 
+    iconUrl: '/product_icons/jodi.png',
+    expandable: true
+  },
 ];
 
 const projectsData = [
@@ -795,7 +908,7 @@ const projectsData = [
     links: [],
     ctaLabel: 'Explore Fixtures'
   },
-  /*{
+  {
     id: 'ambulancecost',
     title: 'AmbulanceCost.com',
     subtitle: 'Medical Billing Transparency',
@@ -806,7 +919,7 @@ const projectsData = [
     links: [
       { label: 'Visit Site', url: 'https://ambulancecost.com' }
     ]
-  },*/
+  },
   {
     id: 'community',
     title: 'Community',
@@ -922,6 +1035,7 @@ const retroGames = [
 function App() {
   const [activeTab, setActiveTab] = useState('intro');
   const [libraryTab, setLibraryTab] = useState('audio'); // 'audio', 'screens', or 'pages'
+  const [screensSubTab, setScreensSubTab] = useState('all'); // 'all', 'movie', 'show', 'game'
   const [openedBook, setOpenedBook] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedFixture, setSelectedFixture] = useState(null);
@@ -934,6 +1048,8 @@ function App() {
   const [isRetroMode, setIsRetroMode] = useState(false);
   const [statusMessage, setStatusMessage] = useState('Ready');
   const [showStartModal, setShowStartModal] = useState(false);
+  const [expandedProduct, setExpandedProduct] = useState(null);
+
   const audioRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -1229,20 +1345,28 @@ function App() {
             </div>
             <div className="grid">
               {products.map(p => (
-                <motion.a 
+                <motion.div 
+                  layoutId={`product-${p.name}`}
                   key={p.name} 
-                  href={p.link} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="card product-card"
+                  className={`card product-card ${p.expandable ? 'expandable' : ''}`}
+                  onClick={() => {
+                    if (p.expandable) {
+                      setExpandedProduct(p);
+                    } else {
+                      window.open(p.link, '_blank');
+                    }
+                  }}
                   whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
+                  style={{ cursor: 'pointer' }}
                 >
                   {p.iconUrl && (
                     <img src={p.iconUrl} alt={`${p.name} icon`} className="product-icon" />
                   )}
                   <h3 style={{ marginBottom: '1rem' }}>{p.name}</h3>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{p.desc}</p>
-                </motion.a>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                    {p.desc}{p.expandable && '...'}
+                  </p>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -1294,9 +1418,26 @@ function App() {
               </div>
               <p className="section-description">
                 {libraryTab === 'audio' && "Just some tracks I’ve probably played one too many times lately. If you are on desktop, you can preview a track by hovering over the album art. Make sure to unmute the page first to hear the audio. I've kept it muted by default because there is nothing worse than unexpected audio blasting out of your speakers at the coffee shop."}
-                {libraryTab === 'screens' && "A curated collection of movies and shows that have left a lasting impression."}
+                {libraryTab === 'screens' && (
+                  screensSubTab === 'games' 
+                    ? "I don’t game much anymore so most of these are a bit dated, but they show the pattern I tend to gravitate toward simulation and builder games with a few nostalgic classics mixed in. Some of these you can actually play on the emulator I built if you go to Welcome and press Shift + P."
+                    : "A curated collection of movies, shows, and games that have left a lasting impression."
+                )}
                 {libraryTab === 'pages' && "I tend to spend most of my reading time on philosophy, psychology, and theory. Luckily, I have people in my life who keep me balanced by sharing great fiction and poetry."}
               </p>
+              {libraryTab === 'screens' && (
+                <div className="screens-sub-tabs">
+                  {['all', 'movies', 'shows', 'games'].map(subTab => (
+                    <button 
+                      key={subTab}
+                      className={`sub-tab-btn ${screensSubTab === subTab ? 'active' : ''}`}
+                      onClick={() => setScreensSubTab(subTab)}
+                    >
+                      {subTab.charAt(0).toUpperCase() + subTab.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              )}
               {libraryTab === 'audio' && (
                 <button 
                   className={`audio-mute-toggle ${!isAudioMuted ? 'unmuted' : ''}`}
@@ -1346,27 +1487,35 @@ function App() {
               </div>
             ) : libraryTab === 'screens' ? (
               <div className="screens-grid">
-                {screensData.map(item => {
-                  const isOpened = openedBook?.title === item.title;
-                  return (
-                    <motion.div 
-                      layoutId={`screen-container-${item.title}`}
-                      key={item.title} 
-                      className="poster-card"
-                      onClick={() => setOpenedBook(item)}
-                      style={{ opacity: isOpened ? 0 : 1 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <div className="poster-wrapper">
-                        <img src={item.coverImageUrl} alt={item.title} className="poster-img" />
-                        <div className="poster-overlay">
-                          <h4>{item.title}</h4>
-                          <span>{item.subtitle}</span>
+                {screensData
+                  .filter(item => {
+                    if (screensSubTab === 'all') return true;
+                    if (screensSubTab === 'movies') return item.subtitle.toLowerCase().includes('movie');
+                    if (screensSubTab === 'shows') return item.subtitle.toLowerCase().includes('tv series') || item.subtitle.toLowerCase().includes('show');
+                    if (screensSubTab === 'games') return item.subtitle.toLowerCase().includes('game');
+                    return true;
+                  })
+                  .map(item => {
+                    const isOpened = openedBook?.title === item.title;
+                    return (
+                      <motion.div 
+                        layoutId={`screen-container-${item.title}`}
+                        key={item.title} 
+                        className="poster-card"
+                        onClick={() => setOpenedBook(item)}
+                        style={{ opacity: isOpened ? 0 : 1 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <div className="poster-wrapper">
+                          <img src={item.coverImageUrl} alt={item.title} className="poster-img" />
+                          <div className="poster-overlay">
+                            <h4>{item.title}</h4>
+                            <span>{item.subtitle}</span>
+                          </div>
                         </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
+                      </motion.div>
+                    );
+                  })}
               </div>
             ) : (
               <div className="audio-grid discover-style">
@@ -1433,7 +1582,7 @@ function App() {
                         </div>
                         <div className="cinema-actions">
                           <a href={openedBook.link} target="_blank" rel="noopener noreferrer" className="read-more-btn" style={{ fontSize: '0.9rem' }}>
-                            IMDb <ExternalLink size={16} style={{ marginLeft: '0.6rem' }}/>
+                            {openedBook.subtitle === 'Game' ? 'Link' : 'IMDb'} <ExternalLink size={16} style={{ marginLeft: '0.6rem' }}/>
                           </a>
                         </div>
                       </div>
@@ -1830,6 +1979,62 @@ function App() {
             </motion.button>
             {renderSection()}
           </motion.section>
+        </AnimatePresence>
+
+        {/* Overlay for expanded product */}
+        <AnimatePresence>
+          {expandedProduct && (
+            <div className="product-overlay-container">
+              <motion.div 
+                className="product-overlay-bg"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setExpandedProduct(null)}
+              />
+              <motion.div 
+                layoutId={`product-${expandedProduct.name}`}
+                className="card product-card expanded-overlay"
+              >
+                <button className="close-btn" onClick={() => setExpandedProduct(null)} aria-label="Close">
+                  <X size={20} />
+                </button>
+                {expandedProduct.iconUrl && (
+                  <img src={expandedProduct.iconUrl} alt={`${expandedProduct.name} icon`} className="product-icon" />
+                )}
+                <h3 style={{ marginBottom: '1rem' }}>{expandedProduct.name}</h3>
+                <div className="expanded-content">
+                  <p className="short-desc">{expandedProduct.desc}</p>
+                  {expandedProduct.longerDesc && (
+                    <p className="longer-desc" style={{ marginTop: '1.5rem', borderTop: '1px solid var(--panel-border)', paddingTop: '1.5rem' }}>
+                      {expandedProduct.longerDesc}
+                    </p>
+                  )}
+                  <a 
+                    href={expandedProduct.link} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="visit-button"
+                    style={{ 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      gap: '0.6rem', 
+                      marginTop: '2.5rem', 
+                      padding: '0.8rem 1.8rem',
+                      background: 'var(--accent-blue)',
+                      color: 'white',
+                      borderRadius: '12px',
+                      fontWeight: '600', 
+                      textDecoration: 'none',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    Visit <ExternalLink size={18} />
+                  </a>
+                </div>
+              </motion.div>
+            </div>
+          )}
         </AnimatePresence>
       </div>
 
