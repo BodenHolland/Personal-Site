@@ -334,6 +334,14 @@ const screensData = [
     trailerId: "zLZHdK6l55I"
   },
   {
+    title: "Freaks and Geeks",
+    subtitle: "TV Series",
+    coverImageUrl: "/screens/freaks_and_geeks.png",
+    description: "A cult-classic coming-of-age comedy-drama that brilliantly captures the awkwardness and struggles of high school through the eyes of two distinct groups of teenagers in 1980.",
+    link: "https://www.imdb.com/title/tt0195159/",
+    trailerId: "E0oJ-uYWakw"
+  },
+  {
     title: "The Office",
     subtitle: "TV Series",
     coverImageUrl: "/screens/the_office.jpg",
