@@ -379,7 +379,7 @@ const screensData = [
     coverImageUrl: "/screens/mad_men_new.png",
     description: "A drama about one of New York's most prestigious ad agencies at the beginning of the 1960s, focusing on one of the firm's most mysterious but extremely talented ad executives, Donald Draper.",
     link: "https://www.imdb.com/title/tt0804535/",
-    trailerId: "xWCeqo_Snyo"
+    trailerId: "sIGuUV252i4"
   },
   {
     title: "Mr. Robot",
@@ -387,23 +387,23 @@ const screensData = [
     coverImageUrl: "/screens/mr_robot_new.jpg",
     description: "A psychological techno-thriller following Elliot Alderson, a cybersecurity engineer and hacker recruited by a mysterious anarchist to join a group of hacktivists aiming to destroy all debt records.",
     link: "https://www.imdb.com/title/tt4158110/",
-    trailerId: "Cmzu1Nx0b6o"
+    trailerId: "p0flghBLUSE"
   },
   {
     title: "Chernobyl",
     subtitle: "TV Series",
-    coverImageUrl: "/screens/chernobyl_new.jpg",
+    coverImageUrl: "/screens/chernobyl_liquidator.jpg",
     description: "A harrowing dramatization of the 1986 nuclear disaster and the selfless heroes who fought to contain it. A masterclass in tension, atmosphere, and the cost of institutional denial.",
     link: "https://www.imdb.com/title/tt7046012/",
-    trailerId: "s9APLXM9X68"
+    trailerId: "s9APLXM9Ei8"
   },
   {
     title: "Breaking Bad",
     subtitle: "TV Series",
-    coverImageUrl: "/screens/breaking_bad_new.jpg",
+    coverImageUrl: "/screens/breaking_bad_s5.jpg",
     description: "A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family's future.",
     link: "https://www.imdb.com/title/tt0903747/",
-    trailerId: "H7M-fFk71eU"
+    trailerId: "VFkjBy2b50Q"
   },
 
   {
