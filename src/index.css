@@ -1104,10 +1104,29 @@ section {
   border: 1px solid rgba(255,255,255,0.2);
 }
 
+.product-card.expanded-overlay::-webkit-scrollbar {
+  width: 8px;
+}
+
+.product-card.expanded-overlay::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 20px 0; /* Keeps scrollbar away from the rounded corners */
+}
+
+.product-card.expanded-overlay::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+.product-card.expanded-overlay::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
 .expanded-overlay .close-btn {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
+  z-index: 10;
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
   border-radius: 50%;

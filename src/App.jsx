@@ -20,7 +20,8 @@ import {
   Volume2,
   VolumeX,
   Map,
-  Users
+  Users,
+  Clock
 } from 'lucide-react';
 
 const SplitText = ({ children }) => {
@@ -954,6 +955,24 @@ const projectsData = [
     ]
   },
   {
+    id: 'time',
+    title: 'Clock',
+    subtitle: 'Time Orientation',
+    description: 'This project reorients how we relate to future time. Instead of treating the future as a fixed series of points ahead of us, the clock reverses the frame of reference. Stable markers exist only in the past, while the present trails behind them...',
+    longerDesc: [
+      'This project reorients how we relate to future time. Instead of treating the future as a fixed series of points ahead of us, the clock reverses the frame of reference. Stable markers exist only in the past, while the present trails behind them.',
+      'The hour and minute hands shift at irregular intervals. The minute hand can lag by up to roughly eight minutes before its reference point updates. The design reflects a simple premise: exact time is rarely necessary. In most situations, an approximate sense of time is enough.',
+      'The clock’s visual elements also change throughout the day. The face, hands, and markers move through shifting color states tied to different periods of the day. The system reads the device’s date and time and adjusts for local sunset so these changes remain aligned with daylight conditions.'
+    ],
+    expandable: true,
+    icon: <Clock size={32} />,
+    color: '#14184a',
+    image: null,
+    iframe: '/projects/time_orientation.html',
+    iframeDemo: '/projects/time_orientation_demo.html',
+    links: []
+  },
+  {
     id: 'community',
     title: 'Community',
     subtitle: 'Co-Living in the Presidio',
@@ -985,7 +1004,6 @@ const projectsData = [
     icon: <Smartphone size={32} />,
     color: '#2563eb',
     image: '/projects/copythat_hero.png',
-    links: []
   }
 ];
 
@@ -1080,6 +1098,7 @@ function App() {
   const [statusMessage, setStatusMessage] = useState('Ready');
   const [showStartModal, setShowStartModal] = useState(false);
   const [expandedProduct, setExpandedProduct] = useState(null);
+  const [expandedProject, setExpandedProject] = useState(null);
 
   const audioRef = React.useRef(null);
 
@@ -1688,10 +1707,23 @@ function App() {
                   key={project.id} 
                   className="project-card"
                   whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
+                  onClick={() => {
+                    if(project.expandable) setExpandedProject(project);
+                  }}
+                  style={{ cursor: project.expandable ? 'pointer' : 'default' }}
                 >
-                  {project.image && (
+                  {(project.image || project.iframe) && (
                     <div className="project-card-image">
-                      <img src={project.image} alt={project.title} />
+                      {project.iframe ? (
+                        <iframe 
+                          src={project.iframe} 
+                          title={project.title} 
+                          style={{ width: '100%', height: '100%', border: 'none', pointerEvents: 'none' }}
+                          scrolling="no"
+                        />
+                      ) : (
+                        <img src={project.image} alt={project.title} />
+                      )}
                       <div className="project-card-overlay" style={{ '--project-color': project.color }}></div>
                     </div>
                   )}
@@ -1719,7 +1751,7 @@ function App() {
                           {project.ctaLabel}
                         </button>
                       )}
-                      {project.links.map(link => (
+                      {project.links && project.links.map(link => (
                         <a 
                           key={link.label} 
                           href={link.url} 
@@ -2058,6 +2090,114 @@ function App() {
                   >
                     Visit <ExternalLink size={18} />
                   </a>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+
+        {/* Overlay for expanded project */}
+        <AnimatePresence>
+          {expandedProject && (
+            <div className="product-overlay-container" style={{ zIndex: 1000 }}>
+              <motion.div 
+                className="product-overlay-bg"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setExpandedProject(null)}
+              />
+              <motion.div 
+                layoutId={`project-${expandedProject.id}`}
+                className="card product-card expanded-overlay"
+                style={{
+                  maxWidth: '800px',
+                  width: '90%',
+                  maxHeight: '90vh',
+                  overflowY: 'auto',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '2rem'
+                }}
+              >
+                <button className="close-btn" onClick={() => setExpandedProject(null)} aria-label="Close">
+                  <X size={20} />
+                </button>
+                {(expandedProject.image || expandedProject.iframe) && (
+                  <div style={{ width: '100%', height: '300px', borderRadius: '12px', overflow: 'hidden', marginBottom: '2rem', position: 'relative', flexShrink: 0 }}>
+                    {expandedProject.iframe ? (
+                      <iframe 
+                        src={expandedProject.iframe} 
+                        title={expandedProject.title} 
+                        style={{ width: '100%', height: '100%', border: 'none', pointerEvents: 'none' }}
+                        scrolling="no"
+                      />
+                    ) : (
+                      <img 
+                        src={expandedProject.image} 
+                        alt={expandedProject.title} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    )}
+                  </div>
+                )}
+                <h2 style={{ marginBottom: '0.5rem', fontSize: '2rem', fontWeight: 'bold' }}>{expandedProject.title}</h2>
+                <span style={{ color: 'var(--text-secondary)', display: 'block', marginBottom: '1.5rem', fontWeight: '500', fontSize: '1.2rem' }}>
+                  {expandedProject.subtitle}
+                </span>
+                
+                <div className="expanded-content" style={{ paddingRight: '1rem' }}>
+                  {expandedProject.longerDesc && Array.isArray(expandedProject.longerDesc) ? (
+                    expandedProject.longerDesc.map((paragraph, idx) => (
+                      <p key={idx} style={{ marginBottom: '1rem', lineHeight: '1.6', fontSize: '1.1rem', color: 'var(--text-primary)' }}>
+                        {paragraph}
+                      </p>
+                    ))
+                  ) : (
+                    <p style={{ lineHeight: '1.6', fontSize: '1.1rem', color: 'var(--text-primary)' }}>{expandedProject.description}</p>
+                  )}
+                  
+                  {expandedProject.links && expandedProject.links.length > 0 && (
+                    <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', flexWrap: 'wrap' }}>
+                      {expandedProject.links.map((link, idx) => (
+                        <a 
+                          key={idx}
+                          href={link.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="visit-button"
+                          style={{ 
+                            display: 'inline-flex', 
+                            alignItems: 'center', 
+                            gap: '0.6rem', 
+                            padding: '0.8rem 1.8rem',
+                            background: expandedProject.color || 'var(--accent-blue)',
+                            color: 'white',
+                            borderRadius: '12px',
+                            fontWeight: '600', 
+                            textDecoration: 'none',
+                            transition: 'transform 0.2s ease, opacity 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                        >
+                          {link.label} <ExternalLink size={18} />
+                        </a>
+                      ))}
+                    </div>
+                  )}
+
+                  {expandedProject.iframeDemo && (
+                    <div style={{ width: '100%', height: '500px', borderRadius: '12px', overflow: 'hidden', marginTop: '3rem', position: 'relative', flexShrink: 0 }}>
+                      <h3 style={{ marginBottom: '1rem', fontSize: '1.2rem', color: 'var(--text-secondary)', textAlign: 'center' }}>24-Hour Accelerated Demo</h3>
+                      <iframe 
+                        src={expandedProject.iframeDemo} 
+                        title={`${expandedProject.title} Demo`} 
+                        style={{ width: '100%', height: 'calc(100% - 2.5rem)', border: 'none', pointerEvents: 'none' }}
+                        scrolling="no"
+                      />
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </div>
