@@ -1008,7 +1008,9 @@ const projectsData = [
 ];
 
 const photographyData = [
-  ...[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(i => ({ src: `/photos/${i}.jpg`, alt: "" })),
+  ...[1,2,3,4,5,6,7,8].map(i => ({ src: `/photos/${i}.jpg`, alt: "" })),
+  { src: "/photos/mountain.jpg", alt: "Mountain Sunrise" },
+  ...[9,10,11,12,13,14,15].map(i => ({ src: `/photos/${i}.jpg`, alt: "" })),
   { src: "/photos/16_bad_design.jpg", alt: "Bad design" },
   { src: "/photos/18_robert_irwin.jpg", alt: "Marfa, Texas. Robert Irwin." },
   ...[1,2,3,4,5,6].map(i => ({ src: `/downloaded_data/nature/nature_${i}.jpg`, alt: "" }))
@@ -1876,7 +1878,7 @@ function App() {
               <footer style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>— Dorothea Lange</footer>
             </blockquote>
             <div className="photography-stack">
-              {photographyData.slice(0, 15).map((photo, i) => (
+              {photographyData.slice(0, 16).map((photo, i) => (
                 <motion.div 
                   key={i} 
                   className="photo-item-container" 
@@ -1888,17 +1890,17 @@ function App() {
               ))}
               <motion.div 
                 className="photo-item-container" 
-                onClick={() => setSelectedPhoto(photographyData[15])}
-                whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
-              >
-                <img src={photographyData[15].src} alt={photographyData[15].alt} />
-              </motion.div>
-              <motion.div 
-                className="photo-item-container" 
                 onClick={() => setSelectedPhoto(photographyData[16])}
                 whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
               >
                 <img src={photographyData[16].src} alt={photographyData[16].alt} />
+              </motion.div>
+              <motion.div 
+                className="photo-item-container" 
+                onClick={() => setSelectedPhoto(photographyData[17])}
+                whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
+              >
+                <img src={photographyData[17].src} alt={photographyData[17].alt} />
 
               </motion.div>
 
@@ -1908,7 +1910,7 @@ function App() {
                 </p>
               </div>
 
-              {photographyData.slice(17).map((photo, i) => (
+              {photographyData.slice(18).map((photo, i) => (
                 <motion.div 
                   key={`nature-${i}`} 
                   className="photo-item-container" 
