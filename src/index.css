@@ -303,7 +303,6 @@ section {
   text-decoration: underline;
   text-decoration-thickness: 0.5px;
   text-underline-offset: 4px;
-  font-weight: 300;
   transition: color 0.3s ease;
 }
 
