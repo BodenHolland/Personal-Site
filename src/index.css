@@ -2546,3 +2546,283 @@ body:has(.book-overlay-container) {
 }
 
 
+
+/* Graph View Styles */
+.graph-container {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  background: #050505;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.graph-controls {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 5100;
+}
+
+.graph-controls button {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+@media (hover: hover) {
+  .graph-controls button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.graph-controls .graph-close {
+  margin-top: 0.5rem;
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+@media (hover: hover) {
+  .graph-controls .graph-close:hover {
+    background: #ef4444;
+    color: white;
+  }
+}
+
+.graph-overlay-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5100;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  padding: 0.75rem 1.5rem;
+  border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  pointer-events: none;
+  text-align: center;
+  width: max-content;
+  max-width: 90vw;
+}
+
+/* Toggle Switch Styling */
+.view-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  padding: 0.5rem;
+  background: var(--panel-bg);
+  border-radius: 16px;
+  width: fit-content;
+}
+
+.view-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  border: none;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.view-toggle-btn.active {
+  background: white;
+  color: var(--text-main);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid var(--panel-border);
+}
+
+.network-toggle-sidebar {
+  margin-top: auto;
+  margin-bottom: 1rem;
+}
+
+.nav-link.network-mode-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(59, 130, 246, 0.05);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+@media (hover: hover) {
+  
+.nav-link.network-mode-link:hover {
+    background: #3b82f6;
+    color: white;
+  }
+}
+
+/* Spatial Room Overlay - Light Theme */
+.spatial-room-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5200;
+ /* White frosted glass */
+  background: rgba(250, 250, 250, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.spatial-exit-btn {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #111;
+  padding: 0.8rem 1.5rem;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  z-index: 5300;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.spatial-exit-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: translateX(-4px);
+}
+
+.spatial-room-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6rem 2rem 4rem 2rem;
+  display: flex;
+  justify-content: center;
+  /* Light scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.spatial-room-content::-webkit-scrollbar {
+  width: 6px;
+}
+.spatial-room-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+}
+
+.spatial-room-content .photography-stack {
+  max-width: 900px;
+  width: 100%;
+}
+
+/* Light Theme Overrides for Spatial Wrapper */
+.spatial-room-content h1, 
+.spatial-room-content h2, 
+.spatial-room-content h3, 
+.spatial-room-content h4, 
+.spatial-room-content p, 
+.spatial-room-content span, 
+.spatial-room-content a {
+  color: #111 !important;
+}
+
+.spatial-room-content .section-description {
+  color: #444 !important;
+}
+
+.spatial-room-content .library-tab-btn,
+.spatial-room-content .sub-tab-btn {
+  color: #888 !important;
+}
+
+.spatial-room-content .library-tab-btn.active,
+.spatial-room-content .sub-tab-btn.active {
+  color: #111 !important;
+}
+
+.spatial-room-content .library-tab-underline {
+  background: #111 !important;
+}
+
+.spatial-room-content .audio-mute-toggle {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #111 !important;
+}
+
+.spatial-room-content .audio-mute-toggle.unmuted {
+  background: #111;
+  color: white !important;
+}
+
+.spatial-room-content .audio-mute-toggle.unmuted svg,
+.spatial-room-content .audio-mute-toggle.unmuted span {
+  color: white !important;
+}
+
+.spatial-room-content .audio-preview-content {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.spatial-room-content .audio-preview-content h3 {
+  color: #111 !important;
+}
+
+.spatial-room-content .audio-preview-content p {
+  color: #555 !important;
+}
+
+.spatial-room-content .book-details {
+  background: rgba(250, 250, 250, 0.95) !important;
+  color: #111 !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+}
+
+.spatial-room-content .book-close-btn {
+  color: #111 !important;
+}
+
+.spatial-room-content .product-grid .product-card {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.spatial-room-content .product-grid .product-card:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}

@@ -21,8 +21,11 @@ import {
   VolumeX,
   Map,
   Users,
-  Clock
+  Clock,
+  Network
 } from 'lucide-react';
+import GraphView from './GraphView';
+import ErrorBoundary from './ErrorBoundary';
 
 const SplitText = ({ children }) => {
   if (typeof children !== 'string') return children;
@@ -1100,6 +1103,7 @@ function App() {
   const [showStartModal, setShowStartModal] = useState(false);
   const [expandedProduct, setExpandedProduct] = useState(null);
   const [expandedProject, setExpandedProject] = useState(null);
+  const [isGraphView, setIsGraphView] = useState(false);
 
   const audioRef = React.useRef(null);
 
@@ -1187,8 +1191,9 @@ function App() {
     }
   };
 
-  const renderSection = () => {
-    switch (activeTab) {
+  const renderSection = (sectionId = activeTab, forcedLibraryTab = null) => {
+    const activeLibTab = forcedLibraryTab || libraryTab;
+    switch (sectionId) {
       case 'intro':
         return (
           <motion.div 
@@ -1391,11 +1396,11 @@ function App() {
             <div className="section-head">
               <div className="library-tabs">
                 <button 
-                  className={`library-tab-btn ${libraryTab === 'audio' ? 'active' : ''}`}
+                  className={`library-tab-btn ${activeLibTab === 'audio' ? 'active' : ''}`}
                   onClick={() => setLibraryTab('audio')}
                 >
                   Audio
-                  {libraryTab === 'audio' && (
+                  {activeLibTab === 'audio' && (
                     <motion.div 
                       layoutId="library-underline"
                       className="library-tab-underline"
@@ -1404,11 +1409,11 @@ function App() {
                   )}
                 </button>
                 <button 
-                  className={`library-tab-btn ${libraryTab === 'screens' ? 'active' : ''}`}
+                  className={`library-tab-btn ${activeLibTab === 'screens' ? 'active' : ''}`}
                   onClick={() => setLibraryTab('screens')}
                 >
                   Screens
-                  {libraryTab === 'screens' && (
+                  {activeLibTab === 'screens' && (
                     <motion.div 
                       layoutId="library-underline"
                       className="library-tab-underline"
@@ -1417,11 +1422,11 @@ function App() {
                   )}
                 </button>
                 <button 
-                  className={`library-tab-btn ${libraryTab === 'pages' ? 'active' : ''}`}
+                  className={`library-tab-btn ${activeLibTab === 'pages' ? 'active' : ''}`}
                   onClick={() => setLibraryTab('pages')}
                 >
                   Pages
-                  {libraryTab === 'pages' && (
+                  {activeLibTab === 'pages' && (
                     <motion.div 
                       layoutId="library-underline"
                       className="library-tab-underline"
@@ -1430,11 +1435,11 @@ function App() {
                   )}
                 </button>
                 <button 
-                  className={`library-tab-btn ${libraryTab === 'products' ? 'active' : ''}`}
+                  className={`library-tab-btn ${activeLibTab === 'products' ? 'active' : ''}`}
                   onClick={() => setLibraryTab('products')}
                 >
                   Products
-                  {libraryTab === 'products' && (
+                  {activeLibTab === 'products' && (
                     <motion.div 
                       layoutId="library-underline"
                       className="library-tab-underline"
@@ -1444,16 +1449,16 @@ function App() {
                 </button>
               </div>
               <p className="section-description">
-                {libraryTab === 'audio' && (
+                {activeLibTab === 'audio' && (
                   <>
                     Just some tracks I’ve probably played one too many times lately. If you are on desktop, you can preview a track by hovering over the album art. Make sure to unmute the page first to hear the audio. I've kept it muted by default because there is nothing worse than unexpected audio blasting out of your speakers at the coffee shop. You can also browse the playlist on <a href="https://open.spotify.com/playlist/1Lk0XE8oOv6gkymTJBux7M?si=0f07ffbbb43c4d73" target="_blank" rel="noopener noreferrer" className="spotify-link">Spotify</a>.
                   </>
                 )}
-                {libraryTab === 'screens' && "A curated collection of movies, shows, and games that have left a lasting impression."}
-                {libraryTab === 'pages' && "I tend to spend most of my reading time on philosophy, psychology, and theory. Luckily, I have people in my life who keep me balanced by sharing great fiction and poetry."}
-                {libraryTab === 'products' && "A collection of the things I love. From the tools I use every day to the objects I just appreciate having around and the corners of the internet I find myself returning to."}
+                {activeLibTab === 'screens' && "A curated collection of movies, shows, and games that have left a lasting impression."}
+                {activeLibTab === 'pages' && "I tend to spend most of my reading time on philosophy, psychology, and theory. Luckily, I have people in my life who keep me balanced by sharing great fiction and poetry."}
+                {activeLibTab === 'products' && "A collection of the things I love. From the tools I use every day to the objects I just appreciate having around and the corners of the internet I find myself returning to."}
               </p>
-              {libraryTab === 'screens' && (
+              {activeLibTab === 'screens' && (
                 <div className="screens-sub-tabs">
                   {['all', 'movies', 'shows', 'games'].map(subTab => (
                     <button 
@@ -1466,7 +1471,7 @@ function App() {
                   ))}
                 </div>
               )}
-              {libraryTab === 'audio' && (
+              {activeLibTab === 'audio' && (
                 <button 
                   className={`audio-mute-toggle ${!isAudioMuted ? 'unmuted' : ''}`}
                   onClick={() => setIsAudioMuted(!isAudioMuted)}
@@ -1478,7 +1483,7 @@ function App() {
               )}
             </div>
             
-            {libraryTab === 'pages' ? (
+            {activeLibTab === 'pages' ? (
               <div className="books-shelf">
                 {booksData.map(item => {
                   const isOpened = openedBook?.title === item.title;
@@ -1513,7 +1518,7 @@ function App() {
                   );
                 })}
               </div>
-            ) : libraryTab === 'screens' ? (
+            ) : activeLibTab === 'screens' ? (
               <div className="screens-grid">
                 {screensData
                   .filter(item => {
@@ -2001,6 +2006,16 @@ function App() {
             {s.label}
           </motion.button>
         ))}
+
+        <div className="network-toggle-sidebar">
+          <motion.button 
+            className="nav-link network-mode-link"
+            onClick={() => setIsGraphView(true)}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Network size={20} /> Network
+          </motion.button>
+        </div>
       </nav>
 
       {/* Mobile drawer */}
@@ -2275,6 +2290,38 @@ function App() {
           </motion.div>
         )}
 
+      </AnimatePresence>
+
+      {/* Network View Overlay */}
+      <AnimatePresence>
+        {isGraphView && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ position: 'fixed', inset: 0, zIndex: 5000 }}
+          >
+            <ErrorBoundary onClose={() => setIsGraphView(false)}>
+              <GraphView 
+                sections={sections}
+                booksData={booksData}
+                screensData={screensData}
+                audioData={audioData}
+                products={products}
+                projectsData={projectsData}
+                photographyData={photographyData}
+                renderSpatialContent={(nodeId) => {
+                  if (nodeId === 'cat-books') return renderSection('reading', 'pages');
+                  if (nodeId === 'cat-screens') return renderSection('reading', 'screens');
+                  if (nodeId === 'cat-audio') return renderSection('reading', 'audio');
+                  return renderSection(nodeId);
+                }}
+                onClose={() => setIsGraphView(false)}
+              />
+            </ErrorBoundary>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
