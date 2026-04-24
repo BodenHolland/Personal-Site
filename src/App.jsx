@@ -1205,7 +1205,7 @@ function App() {
           >
             {!isRetroMode ? (
               <div className="intro-text">
-                <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>Hi, I’m boden 👋</motion.p>
+                <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>Hi, I’m Boden 👋</motion.p>
                 <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>Welcome to my personal website.</motion.p>
                 <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>
                   This is where I share the books, music, film, and creative experiments that occupy my time outside of product management. It’s a glimpse into the things I’m building and exploring just for the fun of it.
