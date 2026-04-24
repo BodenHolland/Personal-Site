@@ -21,8 +21,32 @@ import {
   VolumeX,
   Map,
   Users,
-  Clock
+  Clock,
+  Sunrise,
+  SunMedium,
+  Sun,
+  Sunset,
+  Sparkles,
+  Moon
 } from 'lucide-react';
+
+const PHASE_ORDER = ['sunrise', 'dawn', 'day', 'sunset', 'bluehour', 'night'];
+const PHASE_META = {
+  sunrise:  { label: 'Sunrise',   Icon: Sunrise },
+  dawn:     { label: 'Dawn',      Icon: SunMedium },
+  day:      { label: 'Day',       Icon: Sun },
+  sunset:   { label: 'Sunset',    Icon: Sunset },
+  bluehour: { label: 'Blue Hour', Icon: Sparkles },
+  night:    { label: 'Night',     Icon: Moon },
+};
+const getPhaseFromHour = (h) => {
+  if (h >= 5 && h < 7) return 'sunrise';
+  if (h >= 7 && h < 10) return 'dawn';
+  if (h >= 10 && h < 17) return 'day';
+  if (h >= 17 && h < 19) return 'sunset';
+  if (h >= 19 && h < 21) return 'bluehour';
+  return 'night';
+};
 
 const SplitText = ({ children }) => {
   if (typeof children !== 'string') return children;
@@ -1096,6 +1120,14 @@ function App() {
   const [showGame, setShowGame] = useState(false);
   const [currentGame, setCurrentGame] = useState(retroGames.find(g => g.id === 'simcity') || retroGames[0]);
   const [isRetroMode, setIsRetroMode] = useState(false);
+  const [timePhase, setTimePhase] = useState(() => getPhaseFromHour(new Date().getHours()));
+  const cyclePhase = () => setTimePhase(p => PHASE_ORDER[(PHASE_ORDER.indexOf(p) + 1) % PHASE_ORDER.length]);
+
+  React.useEffect(() => {
+    const el = document.documentElement;
+    PHASE_ORDER.forEach(p => el.classList.remove(`phase-${p}`));
+    el.classList.add(`phase-${timePhase}`);
+  }, [timePhase]);
   const [statusMessage, setStatusMessage] = useState('Ready');
   const [showStartModal, setShowStartModal] = useState(false);
   const [expandedProduct, setExpandedProduct] = useState(null);
@@ -1787,7 +1819,7 @@ function App() {
                 className="back-btn"
                 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1rem', padding: 0 }}
               >
-                <ChevronLeft size={20} /> Back to Projects
+                <ChevronLeft size={20} /> Back to Experiments
               </button>
               <h2>Light Fixtures Portfolio</h2>
               <p className="section-description">
@@ -1989,6 +2021,19 @@ function App() {
 
   return (
     <div className="container">
+      {(() => {
+        const { label, Icon } = PHASE_META[timePhase];
+        return (
+          <button
+            className="phase-toggle"
+            onClick={cyclePhase}
+            aria-label={`Current phase: ${label}. Click to cycle to the next phase.`}
+          >
+            <Icon size={18} strokeWidth={1.5} />
+            <span className="phase-toggle__label">{label}</span>
+          </button>
+        );
+      })()}
       {/* Desktop sidebar — left */}
       <nav className="navbar">
         {sections.filter(s => !s.hidden).map(s => (

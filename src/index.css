@@ -215,7 +215,7 @@ section {
 }
 
 .library-tab-btn:hover:not(.active) {
-  color: #94a3b8;
+  color: var(--text-main);
 }
 
 .screens-sub-tabs {
@@ -243,15 +243,15 @@ section {
 }
 
 .sub-tab-btn:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
+  background: var(--panel-border);
+  border-color: var(--text-muted);
   color: var(--text-main);
   transform: translateY(-1px);
 }
 
 .sub-tab-btn.active {
   background: var(--text-main);
-  color: white;
+  color: var(--bg-color);
   border-color: var(--text-main);
   transform: scale(1.05);
 }
@@ -295,7 +295,7 @@ section {
 }
 
 .linkedin-link:hover {
-  color: var(--accent-blue) !important;
+  color: #0A66C2 !important;
 }
 
 .spotify-link {
@@ -951,7 +951,7 @@ section {
   font-weight: 400;
   font-size: clamp(0.9rem, 1.2vw, 1.1rem);
   letter-spacing: 0.04em;
-  color: #94a3b8;
+  color: var(--text-muted);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   text-decoration: none;
@@ -971,13 +971,13 @@ section {
   left: 0;
   width: 0;
   height: 1.5px;
-  background: #334155;
+  background: var(--text-main);
   transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @media (hover: hover) {
   .nav-link:hover {
-    color: #334155;
+    color: var(--text-main);
     transform: translateX(8px);
   }
   .nav-link:hover::before {
@@ -986,13 +986,14 @@ section {
 }
 
 .nav-link.active {
-  color: #0f172a;
+  color: var(--text-muted);
+  font-weight: 700;
   transform: translateX(8px);
 }
 
 .nav-link.active::before {
   width: 100%;
-  background: #0f172a;
+  background: var(--text-main);
 }
 
 .section-description {
@@ -1109,11 +1110,11 @@ section {
   overflow-y: auto;
   position: relative;
   z-index: 10001;
-  background: white;
+  background: var(--panel-bg);
   padding: 3rem;
   border-radius: 24px;
   box-shadow: 0 40px 80px rgba(0,0,0,0.15);
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid var(--panel-border);
 }
 
 .product-card.expanded-overlay::-webkit-scrollbar {
@@ -1476,7 +1477,7 @@ section {
   font-family: var(--font-body);
   font-size: clamp(1rem, 1.2vw, 1.15rem);
   line-height: 1.7;
-  color: #475569;
+  color: var(--text-muted);
 }
 
 .cinema-actions {
@@ -1538,7 +1539,7 @@ body:has(.book-overlay-container) {
 .book-overlay-bg {
   position: fixed;
   inset: 0;
-  background: rgba(248, 250, 252, 0.85);
+  background: color-mix(in srgb, var(--bg-color) 85%, transparent);
   backdrop-filter: blur(12px);
   cursor: pointer;
 }
@@ -1914,7 +1915,7 @@ body:has(.book-overlay-container) {
 .project-card {
   display: flex;
   flex-direction: column;
-  background: white;
+  background: var(--panel-bg);
   border: 1px solid var(--panel-border);
   border-radius: 32px;
   overflow: hidden;
@@ -2011,7 +2012,7 @@ body:has(.book-overlay-container) {
 .project-card-body p {
   font-size: clamp(1rem, 1.1vw, 1.15rem);
   line-height: 1.6;
-  color: #475569;
+  color: var(--text-muted);
   max-width: 1100px;
   margin-bottom: 2rem;
 }
@@ -2029,16 +2030,18 @@ body:has(.book-overlay-container) {
 
 .project-cta-btn {
   padding: 1rem 2.5rem;
-  background: var(--project-color);
-  color: white;
-  border: none;
+  background: color-mix(in srgb, var(--text-main) 10%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-main);
+  border: 1.5px solid var(--text-main);
   border-radius: 99px;
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
 }
 
 @media (hover: hover) {
@@ -2299,7 +2302,7 @@ body:has(.book-overlay-container) {
 .fixture-overlay-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(250, 249, 246, 0.95);
+  background: color-mix(in srgb, var(--bg-color) 92%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -2307,7 +2310,7 @@ body:has(.book-overlay-container) {
 .fixture-overlay-content {
   position: relative;
   width: 100%;
-  background: white;
+  background: var(--panel-bg);
   box-shadow: 0 25px 50px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
@@ -2384,7 +2387,7 @@ body:has(.book-overlay-container) {
 .fixture-description {
   font-size: clamp(1.05rem, 1.3vw, 1.25rem);
   line-height: 1.7;
-  color: #475569;
+  color: var(--text-muted);
   white-space: pre-wrap;
 }
 
@@ -2545,4 +2548,129 @@ body:has(.book-overlay-container) {
   }
 }
 
+/* --- Phase palettes (sourced from time_orientation clock, h5/h12/h18/h0) */
+.phase-dawn {
+  /* Hazy morning air — softer/lighter than clock h7 */
+  --bg-color: #eef6fc;
+  --panel-bg: #e3eef7;
+  --panel-border: #c9dbe8;
+  --accent-primary: #1a2b3c;
+  --text-main: #2c3e54;
+  --text-muted: #7a8fa5;
+  --accent-blue: #d99bb8;
+  --accent-blue-hover: #b87f98;
+}
+.phase-day {
+  /* Clock h12 "Noon — brightest white-blue" */
+  --bg-color: #ffffff;
+  --panel-bg: #f4f9ff;
+  --panel-border: #d6e5f0;
+  --accent-primary: #051832;
+  --text-main: #051832;
+  --text-muted: #5a6a7e;
+  --accent-blue: #4a7cb5;
+  --accent-blue-hover: #355d8e;
+}
+.phase-sunset {
+  /* Clock h18 "Sunset Peak — peach / copper amber" */
+  --bg-color: #fff4e6;
+  --panel-bg: #fceadb;
+  --panel-border: #fbc9a4;
+  --accent-primary: #5c3a1c;
+  --text-main: #3a2a1a;
+  --text-muted: #8a6849;
+  --accent-blue: #d97437;
+  --accent-blue-hover: #b85d24;
+}
+.phase-sunrise {
+  /* Light baby pink — gentler than clock h6 */
+  --bg-color: #fde7f0;
+  --panel-bg: #f7dbe5;
+  --panel-border: #ecbdd1;
+  --accent-primary: #442330;
+  --text-main: #442330;
+  --text-muted: #8c6375;
+  --accent-blue: #c85189;
+  --accent-blue-hover: #a03e6d;
+}
+.phase-bluehour {
+  /* Clock h20 "Blue Hour" */
+  --bg-color: #2e3880;
+  --panel-bg: #384294;
+  --panel-border: #4a55ad;
+  --accent-primary: #ffffff;
+  --text-main: #ffffff;
+  --text-muted: #c0ccee;
+  --accent-blue: #b0c8ff;
+  --accent-blue-hover: #8ea8e0;
+}
+.phase-night {
+  /* Clock h0 "Midnight — deep navy" (white text variant) */
+  --bg-color: #14184a;
+  --panel-bg: #1d2252;
+  --panel-border: #2a3070;
+  --accent-primary: #ffffff;
+  --text-main: #ffffff;
+  --text-muted: #bdc5e8;
+  --accent-blue: #88aaff;
+  --accent-blue-hover: #6688dd;
+}
+
+body, .container, .navbar, .content-wrapper, .panel {
+  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}
+
+/* --- Phase toggle button ---------------------------- */
+.phase-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 40px;
+  height: 40px;
+  padding: 0 0 0 11px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-main);
+  opacity: 0.55;
+  cursor: pointer;
+  overflow: hidden;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease,
+              background-color 0.3s ease,
+              border-color 0.3s ease,
+              color 0.5s ease;
+}
+.phase-toggle:hover {
+  width: 120px;
+  opacity: 1;
+  background: var(--panel-bg);
+  border-color: var(--panel-border);
+  backdrop-filter: blur(8px);
+}
+.phase-toggle svg {
+  flex-shrink: 0;
+  transition: transform 0.35s ease;
+}
+.phase-toggle__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0;
+  margin-left: 10px;
+  white-space: nowrap;
+  transform: translateX(-8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.phase-toggle:hover .phase-toggle__label {
+  opacity: 1;
+  transform: translateX(0);
+}
+.phase-toggle:active svg { transform: rotate(-15deg) scale(0.92); }
 
