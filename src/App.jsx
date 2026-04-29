@@ -1270,13 +1270,15 @@ function App() {
                 </motion.p>
                 <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>I hope you find something you enjoy here, and please don’t hesitate to reach out!</motion.p>
                 
-                <motion.div 
-                  className="intro-ps"
-                  variants={{ hidden: { opacity: 0 }, visible: { opacity: 0.6 } }}
-                  transition={{ delay: 1 }}
-                >
-                  PS: Want a quick break? Press Shift + P to launch a 1990s-era PC and play some of my favorite games from back in the day.
-                </motion.div>
+                {!isMobile && (
+                  <motion.div 
+                    className="intro-ps"
+                    variants={{ hidden: { opacity: 0 }, visible: { opacity: 0.6 } }}
+                    transition={{ delay: 1 }}
+                  >
+                    PS: Want a quick break? Press Shift + P to launch a 1990s-era PC and play some of my favorite games from back in the day.
+                  </motion.div>
+                )}
               </div>
              ) : (
               <motion.div

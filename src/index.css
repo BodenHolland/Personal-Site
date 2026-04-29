@@ -2428,6 +2428,11 @@ body:has(.book-overlay-container) {
   .fixture-overlay-nav {
     padding: 1rem 1rem 0;
   }
+  .library-tabs {
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    padding-right: 4rem; /* Extra space to ensure the fade looks intentional */
+  }
 }
 
 /* Discover Quickly Style Audio Section */
