@@ -481,6 +481,25 @@ section {
   object-fit: contain;
 }
 
+.readme-file {
+  background: #ffffff;
+  border: 1px solid #000000;
+  box-shadow: 1px 1px 0 #808080, 2px 2px 0 #000000;
+  position: relative;
+}
+
+.readme-file::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background: #c0c0c0;
+  border-left: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+}
+
 .crt-desk-icon span {
   font-family: 'MS Sans Serif', 'Tahoma', 'Courier New', monospace;
   font-size: 11px;
@@ -488,8 +507,12 @@ section {
   text-align: center;
   padding: 2px 4px;
   line-height: 1.2;
-  word-break: break-word;
-  max-width: 65px;
+  word-break: normal;
+  max-width: 85px;
+}
+
+.readme-icon span {
+  white-space: nowrap;
 }
 
 .crt-desk-icon:hover span {
@@ -933,6 +956,44 @@ section {
   border: 1px solid #404040;
   border-right-color: #dfdfdf;
   border-bottom-color: #dfdfdf;
+}
+
+/* Info specific popup */
+.info-popup {
+  width: 320px;
+}
+
+.info-popup .popup-body {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px;
+  position: relative;
+  min-height: 100px;
+}
+
+.win95-info-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.win95-info-text {
+  flex: 1;
+  padding-bottom: 25px; /* Space for the OK button */
+  text-align: left;
+}
+
+.win95-info-text p {
+  margin-bottom: 8px;
+  line-height: 1.4;
+  font-size: 11px;
+}
+
+.info-popup .popup-ok {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
 }
 
 .crt-esc-hint {

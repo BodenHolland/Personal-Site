@@ -13,6 +13,8 @@ import {
   HeartPulse,
   Smartphone,
   Lightbulb,
+  Info,
+  FileText,
   ChevronLeft,
   ChevronRight,
   Scale,
@@ -1143,6 +1145,7 @@ function App() {
   const [showGame, setShowGame] = useState(false);
   const [currentGame, setCurrentGame] = useState(retroGames.find(g => g.id === 'simcity') || retroGames[0]);
   const [isRetroMode, setIsRetroMode] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const [timePhase, setTimePhase] = useState(() => getPhaseFromHour(new Date().getHours()));
   const cyclePhase = () => setTimePhase(p => PHASE_ORDER[(PHASE_ORDER.indexOf(p) + 1) % PHASE_ORDER.length]);
 
@@ -1329,6 +1332,12 @@ function App() {
                                    <span>{game.name}</span>
                                  </div>
                                ))}
+                               <div className="crt-desk-icon readme-icon" onClick={() => setShowInfoModal(true)}>
+                                 <div className="crt-desk-icon-img readme-file">
+                                   <FileText size={24} color="#000" />
+                                 </div>
+                                 <span>README.txt</span>
+                               </div>
                              </>
                            )}
                           {/* App Window */}
@@ -1421,6 +1430,25 @@ function App() {
                 {/* Monitor Stand */}
                 <div className="crt-neck" />
                 <div className="crt-base" />
+
+                {showInfoModal && (
+                  <div className="win95-popup info-popup">
+                    <div className="popup-title">
+                      <span>System Information</span>
+                      <button className="popup-close" onClick={() => setShowInfoModal(false)}>×</button>
+                    </div>
+                    <div className="popup-body">
+                      <div className="win95-info-icon">
+                        <Info size={32} color="#000080" />
+                      </div>
+                      <div className="win95-info-text">
+                        <p><strong>Notice:</strong></p>
+                        <p>I am using the Internet Archive to emulate these games. At times the Archive can go down, so if something isn't loading, their services are probably experiencing issues.</p>
+                      </div>
+                      <button className="popup-ok" onClick={() => setShowInfoModal(false)}>OK</button>
+                    </div>
+                  </div>
+                )}
 
                 {showStartModal && (
                   <div className="win95-popup">
