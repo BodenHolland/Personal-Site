@@ -2627,8 +2627,6 @@ body, .container, .navbar, .content-wrapper, .panel {
 .phase-toggle:hover {
   width: 120px;
   opacity: 1;
-  background: var(--panel-bg);
-  border-color: var(--panel-border);
   backdrop-filter: blur(8px);
 }
 .phase-toggle svg {
