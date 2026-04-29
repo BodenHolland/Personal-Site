@@ -2429,9 +2429,13 @@ body:has(.book-overlay-container) {
     padding: 1rem 1rem 0;
   }
   .library-tabs {
-    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
-    mask-image: linear-gradient(to right, black 85%, transparent 100%);
-    padding-right: 4rem; /* Extra space to ensure the fade looks intentional */
+    gap: 1.5rem; /* Reduced gap to help items peek */
+    padding-right: 2rem;
+    position: relative;
+    scrollbar-width: none;
+  }
+  .library-tabs::-webkit-scrollbar {
+    display: none;
   }
 }
 

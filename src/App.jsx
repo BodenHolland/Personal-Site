@@ -1156,6 +1156,7 @@ function App() {
   const [expandedProduct, setExpandedProduct] = useState(null);
   const [expandedProject, setExpandedProject] = useState(null);
 
+  const tabsRef = React.useRef(null);
   const audioRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -1211,6 +1212,20 @@ function App() {
     setActiveTab(id);
     setMobileOpen(false);
   };
+
+  // Auto-scroll active library tab into view (centered) on mobile
+  React.useEffect(() => {
+    if (activeTab === 'reading' && tabsRef.current) {
+      const activeBtn = tabsRef.current.querySelector('.library-tab-btn.active');
+      if (activeBtn) {
+        activeBtn.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center'
+        });
+      }
+    }
+  }, [libraryTab, activeTab]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -1446,7 +1461,7 @@ function App() {
         return (
           <div className="section-content">
             <div className="section-head">
-              <div className="library-tabs">
+              <div className="library-tabs" ref={tabsRef}>
                 <button 
                   className={`library-tab-btn ${libraryTab === 'audio' ? 'active' : ''}`}
                   onClick={() => setLibraryTab('audio')}
