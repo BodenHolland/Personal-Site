@@ -12,7 +12,7 @@
   --accent-blue: #2563eb;
   --accent-blue-hover: #1d4ed8;
   --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  --sidebar-width: 220px;
+  --sidebar-width: 160px;
 }
 
 * {
@@ -46,12 +46,12 @@ h1, h2, h3 {
   width: var(--sidebar-width);
   min-width: var(--sidebar-width);
   height: 100vh;
-  padding: clamp(2rem, 5vh, 4rem) 2rem;
+  padding: clamp(2rem, 5vh, 4rem) 1.5rem;
   border-right: 1px solid var(--panel-border);
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  background: var(--bg-color);
+  background: transparent;
   z-index: 100;
 }
 
@@ -2582,38 +2582,17 @@ body:has(.book-overlay-container) {
   --accent-blue: #d97437;
   --accent-blue-hover: #b85d24;
 }
-.phase-sunrise {
-  /* Light baby pink — gentler than clock h6 */
-  --bg-color: #fde7f0;
-  --panel-bg: #f7dbe5;
-  --panel-border: #ecbdd1;
-  --accent-primary: #442330;
-  --text-main: #442330;
-  --text-muted: #8c6375;
-  --accent-blue: #c85189;
-  --accent-blue-hover: #a03e6d;
-}
-.phase-bluehour {
-  /* Clock h20 "Blue Hour" */
-  --bg-color: #2e3880;
-  --panel-bg: #384294;
-  --panel-border: #4a55ad;
+
+.phase-evening {
+  /* Deeper, richer night shade blue */
+  --bg-color: #0a0e2e;
+  --panel-bg: #0f143d;
+  --panel-border: #1a1f5c;
   --accent-primary: #ffffff;
   --text-main: #ffffff;
-  --text-muted: #c0ccee;
-  --accent-blue: #b0c8ff;
-  --accent-blue-hover: #8ea8e0;
-}
-.phase-night {
-  /* Clock h0 "Midnight — deep navy" (white text variant) */
-  --bg-color: #14184a;
-  --panel-bg: #1d2252;
-  --panel-border: #2a3070;
-  --accent-primary: #ffffff;
-  --text-main: #ffffff;
-  --text-muted: #bdc5e8;
-  --accent-blue: #88aaff;
-  --accent-blue-hover: #6688dd;
+  --text-muted: #8e9ad1;
+  --accent-blue: #4169e1;
+  --accent-blue-hover: #3658c1;
 }
 
 body, .container, .navbar, .content-wrapper, .panel {
@@ -2674,3 +2653,123 @@ body, .container, .navbar, .content-wrapper, .panel {
 }
 .phase-toggle:active svg { transform: rotate(-15deg) scale(0.92); }
 
+/* Night Sky Container */
+.night-sky-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Far-off Galaxy / Nebula */
+.far-off-galaxy {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 70% 30%, rgba(65, 105, 225, 0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at 30% 70%, rgba(138, 43, 226, 0.1) 0%, transparent 50%);
+  filter: blur(40px);
+  opacity: 0.8;
+  animation: pulse-galaxy 20s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-galaxy {
+  0% { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 0.9; transform: scale(1.05); }
+}
+
+/* Twinkling Stars */
+.twinkle-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+  opacity: 0.2;
+  animation: twinkle linear infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 6px rgba(255, 255, 255, 0.9); }
+}
+
+/* Shooting Stars Layer */
+.shooting-stars-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.shooting-star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  animation: shooting-star-anim linear infinite;
+}
+
+.shooting-star::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 100%;
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0));
+}
+
+@keyframes shooting-star-anim {
+  0% {
+    transform: translate(0, 0) rotate(-35deg);
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  15% {
+    transform: translate(-60vw, 40vw) rotate(-35deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-60vw, 40vw) rotate(-35deg);
+    opacity: 0;
+  }
+}
+
+/* Spread them out, extremely rare, and distinct */
+.star-1 { 
+  top: 10%; left: 90%; 
+  animation-duration: 120s; animation-delay: 5s; 
+  width: 2px; height: 2px; 
+}
+.star-1::before { width: 150px; }
+
+.star-2 { 
+  top: -10%; left: 60%; 
+  animation-duration: 165s; animation-delay: 45s; 
+  width: 4px; height: 4px; 
+  box-shadow: 0 0 8px 3px rgba(200, 220, 255, 0.9);
+  background: #e6f0ff;
+}
+.star-2::before { width: 200px; background: linear-gradient(to right, rgba(230,240,255,0.8), rgba(255,255,255,0)); }
+
+.star-3 { 
+  top: 30%; left: 110%; 
+  animation-duration: 140s; animation-delay: 85s; 
+  width: 3px; height: 3px; 
+}
+.star-3::before { width: 100px; }
+
+.star-4 { 
+  top: 5%; left: 40%; 
+  animation-duration: 185s; animation-delay: 110s; 
+  width: 1px; height: 1px; 
+  box-shadow: 0 0 2px 1px rgba(255, 255, 255, 0.6);
+}
+.star-4::before { width: 60px; background: linear-gradient(to right, rgba(255,255,255,0.5), rgba(255,255,255,0)); }

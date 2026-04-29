@@ -30,22 +30,45 @@ import {
   Moon
 } from 'lucide-react';
 
-const PHASE_ORDER = ['sunrise', 'dawn', 'day', 'sunset', 'bluehour', 'night'];
+const PHASE_ORDER = ['dawn', 'day', 'sunset', 'evening'];
 const PHASE_META = {
-  sunrise:  { label: 'Sunrise',   Icon: Sunrise },
   dawn:     { label: 'Dawn',      Icon: SunMedium },
   day:      { label: 'Day',       Icon: Sun },
   sunset:   { label: 'Sunset',    Icon: Sunset },
-  bluehour: { label: 'Blue Hour', Icon: Sparkles },
-  night:    { label: 'Night',     Icon: Moon },
+  evening:  { label: 'Evening',   Icon: Moon },
 };
 const getPhaseFromHour = (h) => {
-  if (h >= 5 && h < 7) return 'sunrise';
-  if (h >= 7 && h < 10) return 'dawn';
+  if (h >= 5 && h < 10) return 'dawn';
   if (h >= 10 && h < 17) return 'day';
   if (h >= 17 && h < 19) return 'sunset';
-  if (h >= 19 && h < 21) return 'bluehour';
-  return 'night';
+  return 'evening';
+};
+
+const NightSky = () => {
+  return (
+    <div className="night-sky-container">
+      <div className="far-off-galaxy"></div>
+      <div className="twinkling-stars">
+        {[...Array(40)].map((_, i) => (
+          <div 
+            key={i} 
+            className="twinkle-star" 
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${3 + Math.random() * 4}s`
+            }}
+          />
+        ))}
+      </div>
+      <div className="shooting-stars-layer">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className={`shooting-star star-${i + 1}`}></div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 const SplitText = ({ children }) => {
@@ -2021,6 +2044,7 @@ function App() {
 
   return (
     <div className="container">
+      {timePhase === 'evening' && <NightSky />}
       {(() => {
         const { label, Icon } = PHASE_META[timePhase];
         return (
