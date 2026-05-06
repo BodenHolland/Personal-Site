@@ -285,17 +285,41 @@ section {
   opacity: 0.5;
 }
 
-.linkedin-link {
+.linkedin-link, .open-form-link {
   color: inherit;
   text-decoration: underline;
   text-decoration-thickness: 0.5px;
   text-underline-offset: 4px;
   font-weight: 300;
   transition: color 0.3s ease;
+  display: inline-block;
 }
 
 .linkedin-link:hover {
   color: #0A66C2 !important;
+}
+
+.open-form-link:hover {
+  background: linear-gradient(
+    to right, 
+    var(--accent-blue) 20%, 
+    #93c5fd 40%, 
+    #93c5fd 60%, 
+    var(--accent-blue) 80%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 5s linear infinite;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-blue);
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
 }
 
 .spotify-link {
