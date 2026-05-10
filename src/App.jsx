@@ -2041,14 +2041,14 @@ function App() {
           <div className="section-content">
             <div className="section-head">
               <h2>Photography</h2>
-              <p className="section-description">
+              <p className="section-description" style={{ marginBottom: '1.5rem' }}>
                 My first real hobby was photography.
               </p>
+              <blockquote style={{ fontSize: 'clamp(1.1rem, 1.5vw, 1.4rem)', fontStyle: 'italic' }}>
+                "The camera is an instrument that teaches people how to see without a camera."
+                <footer style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>— Dorothea Lange</footer>
+              </blockquote>
             </div>
-            <blockquote style={{ fontSize: 'clamp(1.1rem, 1.5vw, 1.4rem)', fontStyle: 'italic', marginBottom: '3rem' }}>
-              "The camera is an instrument that teaches people how to see without a camera."
-              <footer style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>— Dorothea Lange</footer>
-            </blockquote>
             <div className="photography-stack">
               {photographyData.slice(0, 16).map((photo, i) => (
                 <motion.div 
