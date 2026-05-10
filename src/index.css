@@ -2680,11 +2680,11 @@ body:has(.book-overlay-container) {
 .phase-evening {
   /* Deeper, richer night shade blue */
   --bg-color: #0a0e2e;
-  --panel-bg: #0f143d;
-  --panel-border: #1a1f5c;
+  --panel-bg: #202a65;
+  --panel-border: #2e3b8a;
   --accent-primary: #ffffff;
   --text-main: #ffffff;
-  --text-muted: #8e9ad1;
+  --text-muted: #ffffff;
   --accent-blue: #4169e1;
   --accent-blue-hover: #3658c1;
 }

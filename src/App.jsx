@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import SunCalc from 'suncalc';
 import { 
   Package, 
   BookOpen, 
@@ -44,6 +45,31 @@ const getPhaseFromHour = (h) => {
   if (h >= 10 && h < 17) return 'day';
   if (h >= 17 && h < 19) return 'sunset';
   return 'evening';
+};
+
+const getPhaseFromSuncalc = (lat, lon, date = new Date()) => {
+  try {
+    const times = SunCalc.getTimes(date, lat, lon);
+    const now = date.getTime();
+    
+    // Fallbacks if some times are missing
+    if (!times.dawn || !times.goldenHourEnd || !times.goldenHour || !times.dusk) {
+      return getPhaseFromHour(date.getHours());
+    }
+
+    if (now >= times.dawn.getTime() && now < times.goldenHourEnd.getTime()) {
+      return 'dawn';
+    } else if (now >= times.goldenHourEnd.getTime() && now < times.goldenHour.getTime()) {
+      return 'day';
+    } else if (now >= times.goldenHour.getTime() && now < times.dusk.getTime()) {
+      return 'sunset';
+    } else {
+      return 'evening';
+    }
+  } catch (e) {
+    console.error('Error calculating sun phase:', e);
+    return getPhaseFromHour(date.getHours());
+  }
 };
 
 const NightSky = () => {
@@ -1053,6 +1079,19 @@ const projectsData = [
     icon: <Smartphone size={32} />,
     color: '#2563eb',
     image: '/projects/copythat_hero.png',
+  },
+  {
+    id: 'yournyc',
+    title: 'Your NYC',
+    subtitle: 'Civic Project',
+    description: 'Open-source civic project that takes published documents about New York City and turns them into something interactive, so any New Yorker can browse, filter, and find what\'s relevant to them.',
+    icon: <FileText size={32} />,
+    color: '#0ea5e9',
+    image: '/projects/yournyc_hero.jpg',
+    noOverlay: true,
+    links: [
+      { label: 'Visit Site', url: 'https://www.yournyc.app' }
+    ]
   }
 ];
 
@@ -1148,6 +1187,33 @@ function App() {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [timePhase, setTimePhase] = useState(() => getPhaseFromHour(new Date().getHours()));
   const cyclePhase = () => setTimePhase(p => PHASE_ORDER[(PHASE_ORDER.indexOf(p) + 1) % PHASE_ORDER.length]);
+
+  React.useEffect(() => {
+    let interval;
+    const fetchLocationAndPhase = async () => {
+      try {
+        const res = await fetch('https://get.geojs.io/v1/ip/geo.json');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.latitude && data.longitude) {
+            const phase = getPhaseFromSuncalc(parseFloat(data.latitude), parseFloat(data.longitude));
+            setTimePhase(phase);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to fetch location for time phase', e);
+      }
+    };
+    
+    fetchLocationAndPhase();
+    
+    // Update every 15 mins to catch phase changes while tab is open
+    interval = setInterval(() => {
+      fetchLocationAndPhase();
+    }, 15 * 60 * 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   React.useEffect(() => {
     const el = document.documentElement;
@@ -1833,7 +1899,9 @@ function App() {
                       ) : (
                         <img src={project.image} alt={project.title} />
                       )}
-                      <div className="project-card-overlay" style={{ '--project-color': project.color }}></div>
+                      {!project.noOverlay && (
+                        <div className="project-card-overlay" style={{ '--project-color': project.color }}></div>
+                      )}
                     </div>
                   )}
                   <div className="project-card-content">
@@ -1974,12 +2042,12 @@ function App() {
             <div className="section-head">
               <h2>Photography</h2>
               <p className="section-description">
-                My first real hobby was photography. I’ve always been drawn to light and its changing qualities.
+                My first real hobby was photography.
               </p>
             </div>
-            <blockquote style={{ fontSize: 'clamp(1.1rem, 1.5vw, 1.4rem)', fontStyle: 'italic', marginBottom: '3rem', paddingLeft: '2rem', borderLeft: '4px solid #eee' }}>
+            <blockquote style={{ fontSize: 'clamp(1.1rem, 1.5vw, 1.4rem)', fontStyle: 'italic', marginBottom: '3rem' }}>
               "The camera is an instrument that teaches people how to see without a camera."
-              <footer style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>— Dorothea Lange</footer>
+              <footer style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>— Dorothea Lange</footer>
             </blockquote>
             <div className="photography-stack">
               {photographyData.slice(0, 16).map((photo, i) => (
