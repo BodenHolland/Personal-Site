@@ -1084,13 +1084,14 @@ const projectsData = [
     id: 'yournyc',
     title: 'Your NYC',
     subtitle: 'Civic Project',
-    description: 'Open-source civic project that takes published documents about New York City and turns them into something interactive, so any New Yorker can browse, filter, and find what\'s relevant to them.',
+    description: 'An ongoing open-source civic initiative making city data accessible and interactive. What started as a project to turn New York City\'s published documents into a dedicated application has since expanded to include San Francisco, helping citizens easily browse, filter, and find what\'s relevant to their neighborhood.',
     icon: <FileText size={32} />,
     color: '#0ea5e9',
     image: '/projects/yournyc_hero.jpg',
     noOverlay: true,
     links: [
-      { label: 'Visit Site', url: 'https://www.yournyc.app' }
+      { label: 'Visit YourNYC', url: 'https://www.yournyc.app' },
+      { label: 'Visit YourSF', url: 'https://www.yoursf.us' }
     ]
   }
 ];
