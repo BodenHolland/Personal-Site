@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- Blue book cover -->
+  <path d="M4,5 H28 V27 H4 Z" fill="#0a4aa0" stroke="#000" stroke-width="1"/>
+  <!-- Page edge -->
+  <path d="M4,5 H28 V8 H4 Z" fill="#3070c8"/>
+  <!-- Question mark in white -->
+  <path d="M14,11 Q14,9 16,9 Q18,9 18,11 Q18,12 17,13 L16,15 V17 H15 V14 Q16,13 17,12 Q17,11 16,11 Q15,11 15,12 H14 Z" fill="#ffffff"/>
+  <rect x="15" y="19" width="2" height="2" fill="#ffffff"/>
+  <!-- Red ribbon -->
+  <rect x="22" y="5" width="3" height="14" fill="#c81818"/>
+  <polygon points="22,19 25,19 23.5,22" fill="#c81818"/>
+</svg>

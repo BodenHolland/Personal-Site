@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- Monitor body -->
+  <rect x="3"  y="5"  width="26" height="18" fill="#c3c6ca" stroke="#000" stroke-width="1"/>
+  <!-- Inner bezel -->
+  <rect x="5"  y="7"  width="22" height="13" fill="#000080" stroke="#000" stroke-width="1"/>
+  <!-- Stand -->
+  <rect x="12" y="23" width="8"  height="3" fill="#86898d" stroke="#000" stroke-width="1"/>
+  <rect x="7"  y="26" width="18" height="2" fill="#86898d" stroke="#000" stroke-width="1"/>
+  <!-- Red shutdown key / chevron -->
+  <path d="M18,9 L24,9 L24,13 L26,13 L21,18 L16,13 L18,13 Z" fill="#c81818" stroke="#000" stroke-width="1"/>
+</svg>

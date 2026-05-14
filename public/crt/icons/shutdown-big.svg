@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" shape-rendering="crispEdges">
+  <!-- Monitor body -->
+  <rect x="5"  y="7"  width="38" height="26" fill="#c3c6ca" stroke="#000" stroke-width="1"/>
+  <!-- Inner bezel -->
+  <rect x="8"  y="10" width="32" height="20" fill="#000080" stroke="#000" stroke-width="1"/>
+  <!-- Star / sparkle (Win9x shutdown badge) -->
+  <g transform="translate(24,20)" fill="#ffffff" stroke="#000" stroke-width="0.5">
+    <polygon points="0,-7 1.5,-2 7,-2 2.5,1 4,7 0,3.5 -4,7 -2.5,1 -7,-2 -1.5,-2"/>
+  </g>
+  <!-- Stand -->
+  <rect x="19" y="33" width="10" height="5" fill="#86898d" stroke="#000" stroke-width="1"/>
+  <rect x="12" y="38" width="24" height="3" fill="#86898d" stroke="#000" stroke-width="1"/>
+  <!-- Power button on the monitor base -->
+  <circle cx="38" cy="29" r="1.2" fill="#3a3"/>
+</svg>

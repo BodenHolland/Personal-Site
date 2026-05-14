@@ -539,36 +539,20 @@ section {
   to { visibility: hidden; }
 }
 
-/* Custom pixelated cursors — apply only inside the CRT screen.
-   Hotspots: arrow/busy at top-left (0,0); pointer at fingertip (12,1). */
+/* Custom cursors inside the CRT — Boden's .cur files.
+   One hand cursor everywhere (no hover-state swap), loading cursor while
+   the OS is booting / playing the Windows startup video. */
 .crt-screen,
 .crt-screen * {
-  cursor: url('/crt/cursors/arrow.svg') 0 0, default;
+  cursor: url('/crt/cursors/hand.cur'), pointer;
 }
-/* Pointer for any obviously clickable thing inside the CRT */
-.crt-screen a,
-.crt-screen button,
-.crt-screen .crt-desk-icon,
-.crt-screen .crt-start-btn,
-.crt-screen .crt-start-menu-item,
-.crt-screen .crt-power-btn,
-.crt-screen .crt-ctrl-btn,
-.crt-screen .crt-arcade-btn,
-.crt-screen .crt-taskbar-pill,
-.crt-screen .crt-game-iframe,
-.crt-screen .popup-ok,
-.crt-screen .popup-close {
-  cursor: url('/crt/cursors/pointer.svg') 12 1, pointer;
-}
-/* While Windows is loading, full hourglass everywhere */
+/* Loading cursor during the Windows startup video and the brief busy phase
+   right after the desktop reveals. */
 .crt-screen.crt-cursor-wait,
-.crt-screen.crt-cursor-wait * {
-  cursor: url('/crt/cursors/wait.svg') 16 16, wait !important;
-}
-/* Right after Windows finishes loading: arrow + small hourglass */
+.crt-screen.crt-cursor-wait *,
 .crt-screen.crt-cursor-busy,
 .crt-screen.crt-cursor-busy * {
-  cursor: url('/crt/cursors/busy.svg') 0 0, progress !important;
+  cursor: url('/crt/cursors/loading.cur'), wait !important;
 }
 
 /* Windows startup video splash between DOS boot and the desktop.
@@ -771,22 +755,22 @@ section {
   100% { transform: scaleX(0.005) scaleY(1.4); opacity: 0; }
 }
 
-/* Start menu — Henry's structure: outer raised bevel containing a dark
-   vertical sidebar (kept as a decorative column, no branding text) and
-   the items column on the right. */
+/* Start menu — Win95 reference 1:1. Dark vertical bar on the left has
+   white "Windows 95" text running bottom-to-top in serif italic.  Items
+   are three columns: 32×32 icon, label, optional submenu arrow. */
 .crt-start-menu {
   position: absolute;
   left: 4px;
   bottom: 32px;
   z-index: 10000;
   display: flex;
-  min-width: 220px;
+  width: 260px;
   box-sizing: border-box;
   border: 1px solid #ffffff;
   border-bottom-color: #000;
   border-right-color: #000;
   background: #c3c6ca;
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
   font-family: 'MS Sans Serif', Tahoma, sans-serif;
 }
 
@@ -799,49 +783,180 @@ section {
 }
 
 .crt-start-menu-side {
-  width: 22px;
-  background: linear-gradient(180deg, #86898d 0%, #5a5d61 100%);
-  border-right: 1px solid #4a4d51;
+  position: relative;
+  width: 26px;
+  background: linear-gradient(180deg, #8a8d92 0%, #54565a 100%);
+  border-right: 1px solid #3a3c40;
   align-self: stretch;
+  flex-shrink: 0;
+}
+
+.crt-start-menu-side-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  text-align: center;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: 1px;
+  line-height: 1.05;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: pre;
 }
 
 .crt-start-menu-content {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 2px 2px 4px;
-  justify-content: flex-end;
+  padding: 2px;
 }
 
-/* Empty vertical breathing room above the items (mimics Henry's spacer). */
-.crt-start-menu-spacer {
-  flex: 1;
-  min-height: 80px;
-}
-
-.crt-start-menu-rule {
+.crt-start-menu-sep {
   height: 1px;
   background: #86898d;
   border-bottom: 1px solid #ffffff;
-  margin: 2px 0 4px;
+  margin: 3px 4px;
 }
 
 .crt-start-menu-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
   align-items: center;
-  gap: 12px;
-  padding: 8px 18px 8px 10px;
+  gap: 8px;
+  padding: 4px 6px 4px 4px;
   background: transparent;
   border: none;
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
   text-align: left;
   color: #000;
+  white-space: nowrap;
 }
 
-.crt-start-menu-item:hover {
+.crt-start-menu-item:hover:not(.crt-menu-disabled) {
   background: #000080;
-  color: #fff;
+  color: #ffffff;
+}
+
+.crt-menu-disabled {
+  /* Decorative-only Win95 items: visible, hoverable, but no action. */
+  cursor: default;
+}
+.crt-menu-disabled:hover {
+  background: #000080;
+  color: #ffffff;
+}
+
+.crt-menu-icon {
+  width: 28px;
+  height: 28px;
+  display: block;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+.crt-menu-label {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 14px;
+}
+
+.crt-menu-arrow {
+  font-size: 10px;
+  margin-left: 6px;
+  color: inherit;
+  opacity: 0.85;
+}
+
+/* Shut Down Windows confirmation modal — Win95 dialog. */
+.shutdown-confirm-popup {
+  width: 420px;
+  max-width: 92%;
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11000;
+  background: #c3c6ca;
+  border: 2px solid #ffffff;
+  border-bottom-color: #000;
+  border-right-color: #000;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+}
+
+.shutdown-confirm-body {
+  display: flex;
+  gap: 16px;
+  padding: 18px 18px 6px;
+  align-items: flex-start;
+}
+.shutdown-confirm-icon img {
+  width: 56px;
+  height: 56px;
+  image-rendering: pixelated;
+}
+.shutdown-confirm-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.shutdown-confirm-prompt {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+  color: #000;
+}
+.shutdown-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #000;
+  cursor: default;
+}
+.shutdown-radio input[type='radio'] {
+  margin: 0;
+  cursor: pointer;
+}
+.shutdown-radio span {
+  user-select: none;
+}
+
+.shutdown-confirm-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 18px 16px;
+}
+
+.win95-button {
+  min-width: 78px;
+  padding: 6px 14px;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 13px;
+  color: #000;
+  background: #c3c6ca;
+  border: 1px solid #ffffff;
+  border-bottom-color: #000;
+  border-right-color: #000;
+  box-shadow:
+    inset -1px -1px 0 #86898d,
+    inset 1px 1px 0 #efefef;
+  cursor: pointer;
+}
+.win95-button:active {
+  border: 1px solid #000;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  box-shadow:
+    inset 1px 1px 0 #86898d,
+    inset -1px -1px 0 #efefef;
 }
 
 /* Win95-style "My Computer"-ish icon — small CRT monitor on a base.

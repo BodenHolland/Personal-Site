@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- Folder tab -->
+  <path d="M2,8 H12 L14,10 H30 V12 H2 Z" fill="#a07814"/>
+  <!-- Folder body -->
+  <path d="M2,11 H30 V28 H2 Z" fill="#dca820" stroke="#000" stroke-width="1"/>
+  <!-- Document peeking out -->
+  <path d="M8,13 H22 V25 H8 Z" fill="#ffffff" stroke="#000" stroke-width="1"/>
+  <line x1="11" y1="17" x2="19" y2="17" stroke="#000" stroke-width="1"/>
+  <line x1="11" y1="20" x2="19" y2="20" stroke="#000" stroke-width="1"/>
+  <line x1="11" y1="22" x2="17" y2="22" stroke="#000" stroke-width="1"/>
+</svg>

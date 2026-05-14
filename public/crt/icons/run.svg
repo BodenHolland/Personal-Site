@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- Document -->
+  <path d="M9,7 H25 L29,11 V29 H9 Z" fill="#ffffff" stroke="#000" stroke-width="1"/>
+  <path d="M25,7 V11 H29" fill="none" stroke="#000" stroke-width="1"/>
+  <line x1="12" y1="17" x2="26" y2="17" stroke="#888" stroke-width="1"/>
+  <line x1="12" y1="20" x2="26" y2="20" stroke="#888" stroke-width="1"/>
+  <line x1="12" y1="23" x2="22" y2="23" stroke="#888" stroke-width="1"/>
+  <!-- Hourglass overlay -->
+  <g transform="translate(2,2)">
+    <rect x="0" y="0" width="13" height="2" fill="#000"/>
+    <rect x="0" y="13" width="13" height="2" fill="#000"/>
+    <polygon points="1,2 12,2 6.5,7.5 12,13 1,13 6.5,7.5" fill="#000"/>
+    <polygon points="2.5,3 10.5,3 6.5,7 10.5,12 2.5,12 6.5,8" fill="#ffffff"/>
+    <polygon points="3.5,4 9.5,4 6.5,7" fill="#d6a86a"/>
+    <polygon points="4.5,11.5 8.5,11.5 7,10 6,10" fill="#d6a86a"/>
+  </g>
+</svg>

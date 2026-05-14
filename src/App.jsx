@@ -1203,6 +1203,8 @@ function App() {
   const [isPoweringOff, setIsPoweringOff] = useState(false);
   const [isWindowsLoading, setIsWindowsLoading] = useState(false);
   const [isCursorBusy, setIsCursorBusy] = useState(false);
+  const [isShutdownConfirmOpen, setIsShutdownConfirmOpen] = useState(false);
+  const [shutdownChoice, setShutdownChoice] = useState('shutdown');
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showCreditsModal, setShowCreditsModal] = useState(false);
   const [timePhase, setTimePhase] = useState(() => getPhaseFromHour(new Date().getHours()));
@@ -1359,6 +1361,7 @@ function App() {
         setIsWindowsLoading(false);
         setIsCursorBusy(false);
         setIsStartMenuOpen(false);
+        setIsShutdownConfirmOpen(false);
         try { stopAmbient({ fade: 250 }); } catch {}
       }
 
@@ -1642,32 +1645,60 @@ function App() {
                             </div>
                           )}
                         </div>
-                        {/* Start menu — Henry-style structure: dark vertical
-                            sidebar on the left (no branding text per Boden's
-                            preference), items list on the right. */}
+                        {/* Start menu — Win95 reference 1:1: vertical
+                            "Windows 95"-style sidebar, colorful icons, full
+                            menu item list with submenu arrows on the upper
+                            items and a separator above Shut down. */}
                         {isStartMenuOpen && (
                           <div
                             className="crt-start-menu"
                             onClick={(e) => e.stopPropagation()}
                           >
                             <div className="crt-start-menu-inner">
-                              <div className="crt-start-menu-side" aria-hidden="true" />
+                              <div className="crt-start-menu-side" aria-hidden="true">
+                                <span className="crt-start-menu-side-text">
+                                  Windows<br />95
+                                </span>
+                              </div>
                               <div className="crt-start-menu-content">
-                                <div className="crt-start-menu-spacer" />
-                                <div className="crt-start-menu-rule" />
+                                <button className="crt-start-menu-item crt-menu-disabled" disabled>
+                                  <img className="crt-menu-icon" src="/crt/icons/programs.svg" alt="" />
+                                  <span className="crt-menu-label"><u>P</u>rograms</span>
+                                  <span className="crt-menu-arrow">▶</span>
+                                </button>
+                                <button className="crt-start-menu-item crt-menu-disabled" disabled>
+                                  <img className="crt-menu-icon" src="/crt/icons/documents.svg" alt="" />
+                                  <span className="crt-menu-label"><u>D</u>ocuments</span>
+                                  <span className="crt-menu-arrow">▶</span>
+                                </button>
+                                <button className="crt-start-menu-item crt-menu-disabled" disabled>
+                                  <img className="crt-menu-icon" src="/crt/icons/settings.svg" alt="" />
+                                  <span className="crt-menu-label"><u>S</u>ettings</span>
+                                  <span className="crt-menu-arrow">▶</span>
+                                </button>
+                                <button className="crt-start-menu-item crt-menu-disabled" disabled>
+                                  <img className="crt-menu-icon" src="/crt/icons/find.svg" alt="" />
+                                  <span className="crt-menu-label"><u>F</u>ind</span>
+                                  <span className="crt-menu-arrow">▶</span>
+                                </button>
                                 <button
                                   className="crt-start-menu-item"
                                   onClick={() => { setIsStartMenuOpen(false); setShowCreditsModal(true); }}
                                 >
-                                  <span className="crt-menu-icon-monitor" />
-                                  <span><u>C</u>redits</span>
+                                  <img className="crt-menu-icon" src="/crt/icons/help.svg" alt="" />
+                                  <span className="crt-menu-label"><u>H</u>elp</span>
                                 </button>
+                                <button className="crt-start-menu-item crt-menu-disabled" disabled>
+                                  <img className="crt-menu-icon" src="/crt/icons/run.svg" alt="" />
+                                  <span className="crt-menu-label"><u>R</u>un...</span>
+                                </button>
+                                <div className="crt-start-menu-sep" />
                                 <button
                                   className="crt-start-menu-item"
-                                  onClick={handleShutdown}
+                                  onClick={() => { setIsStartMenuOpen(false); setIsShutdownConfirmOpen(true); }}
                                 >
-                                  <span className="crt-menu-icon-monitor" />
-                                  <span>Sh<u>u</u>t down...</span>
+                                  <img className="crt-menu-icon" src="/crt/icons/shutdown.svg" alt="" />
+                                  <span className="crt-menu-label">Sh<u>u</u>t Down...</span>
                                 </button>
                               </div>
                             </div>
@@ -1826,6 +1857,87 @@ function App() {
                         </div>
                       </div>
                       <button className="popup-ok" onClick={() => setShowCreditsModal(false)}>OK</button>
+                    </div>
+                  </div>
+                )}
+
+                {isShutdownConfirmOpen && (
+                  <div
+                    className="win95-popup shutdown-confirm-popup"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="popup-title">
+                      <span>Shut Down Windows</span>
+                      <button
+                        className="popup-close"
+                        onClick={() => setIsShutdownConfirmOpen(false)}
+                      >×</button>
+                    </div>
+                    <div className="popup-body shutdown-confirm-body">
+                      <div className="shutdown-confirm-icon">
+                        <img src="/crt/icons/shutdown-big.svg" alt="" />
+                      </div>
+                      <div className="shutdown-confirm-content">
+                        <p className="shutdown-confirm-prompt">Are you sure you want to:</p>
+                        <label className="shutdown-radio">
+                          <input
+                            type="radio"
+                            name="shutdownChoice"
+                            value="shutdown"
+                            checked={shutdownChoice === 'shutdown'}
+                            onChange={() => setShutdownChoice('shutdown')}
+                          />
+                          <span><u>S</u>hut down the computer?</span>
+                        </label>
+                        <label className="shutdown-radio">
+                          <input
+                            type="radio"
+                            name="shutdownChoice"
+                            value="restart"
+                            checked={shutdownChoice === 'restart'}
+                            onChange={() => setShutdownChoice('restart')}
+                          />
+                          <span><u>R</u>estart the computer?</span>
+                        </label>
+                        <label className="shutdown-radio">
+                          <input
+                            type="radio"
+                            name="shutdownChoice"
+                            value="dos"
+                            checked={shutdownChoice === 'dos'}
+                            onChange={() => setShutdownChoice('dos')}
+                          />
+                          <span>Restart the computer in <u>M</u>S-DOS mode?</span>
+                        </label>
+                        <label className="shutdown-radio">
+                          <input
+                            type="radio"
+                            name="shutdownChoice"
+                            value="logoff"
+                            checked={shutdownChoice === 'logoff'}
+                            onChange={() => setShutdownChoice('logoff')}
+                          />
+                          <span><u>C</u>lose all programs and log on as a different user?</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className="shutdown-confirm-buttons">
+                      <button
+                        className="win95-button"
+                        onClick={() => {
+                          setIsShutdownConfirmOpen(false);
+                          // Any choice → run the DOS shutdown sequence.
+                          handleShutdown();
+                        }}
+                      >Yes</button>
+                      <button
+                        className="win95-button"
+                        onClick={() => setIsShutdownConfirmOpen(false)}
+                      >No</button>
+                      <button
+                        className="win95-button"
+                        onClick={() => setIsShutdownConfirmOpen(false)}
+                      >Help</button>
                     </div>
                   </div>
                 )}
