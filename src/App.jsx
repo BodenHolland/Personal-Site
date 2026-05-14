@@ -1664,12 +1664,8 @@ function App() {
                                   className="crt-start-menu-item"
                                   onClick={() => { setIsStartMenuOpen(false); setShowCreditsModal(true); }}
                                 >
-                                  <img className="crt-menu-icon" src="/crt/icons/help.svg" alt="" />
-                                  <span className="crt-menu-label"><u>H</u>elp</span>
-                                </button>
-                                <button className="crt-start-menu-item crt-menu-disabled" disabled>
-                                  <img className="crt-menu-icon" src="/crt/icons/run.svg" alt="" />
-                                  <span className="crt-menu-label"><u>R</u>un...</span>
+                                  <img className="crt-menu-icon" src="/crt/icons/about.png" alt="" />
+                                  <span className="crt-menu-label"><u>A</u>bout</span>
                                 </button>
                                 <div className="crt-start-menu-sep" />
                                 <button
@@ -1903,6 +1899,8 @@ function App() {
                     <div className="shutdown-confirm-buttons">
                       <button
                         className="win95-button"
+                        onMouseDown={() => { try { playMouseDown(); } catch {} }}
+                        onMouseUp={() => { try { playMouseUp(); } catch {} }}
                         onClick={() => {
                           setIsShutdownConfirmOpen(false);
                           // Any choice → run the DOS shutdown sequence.
@@ -1911,10 +1909,14 @@ function App() {
                       >Yes</button>
                       <button
                         className="win95-button"
+                        onMouseDown={() => { try { playMouseDown(); } catch {} }}
+                        onMouseUp={() => { try { playMouseUp(); } catch {} }}
                         onClick={() => setIsShutdownConfirmOpen(false)}
                       >No</button>
                       <button
                         className="win95-button"
+                        onMouseDown={() => { try { playMouseDown(); } catch {} }}
+                        onMouseUp={() => { try { playMouseUp(); } catch {} }}
                         onClick={() => setIsShutdownConfirmOpen(false)}
                       >Help</button>
                     </div>

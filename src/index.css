@@ -784,19 +784,19 @@ section {
 
 .crt-start-menu-side {
   position: relative;
-  width: 26px;
+  width: 28px;
   background: linear-gradient(180deg, #8a8d92 0%, #54565a 100%);
   border-right: 1px solid #3a3c40;
   align-self: stretch;
   flex-shrink: 0;
+  overflow: hidden;
+  /* Keeps the rotated text positioned cleanly inside the column. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .crt-start-menu-side-text {
-  position: absolute;
-  left: 50%;
-  bottom: 10px;
-  transform: translateX(-50%) rotate(-90deg);
-  transform-origin: bottom center;
   font-family: 'Times New Roman', Georgia, serif;
   font-style: italic;
   font-weight: bold;
@@ -807,6 +807,9 @@ section {
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
   white-space: nowrap;
   pointer-events: none;
+  /* Rotate the inline text in place — never escapes its parent column. */
+  transform: rotate(-90deg);
+  transform-origin: center center;
 }
 
 .crt-start-menu-content {
@@ -814,6 +817,9 @@ section {
   flex-direction: column;
   flex: 1;
   padding: 2px;
+  /* Ensure menu has enough vertical room for the rotated BOTEK 92 text. */
+  min-height: 132px;
+  justify-content: flex-end;
 }
 
 .crt-start-menu-sep {
@@ -874,10 +880,10 @@ section {
 
 /* Shut Down Windows confirmation modal — Win95 dialog. */
 .shutdown-confirm-popup {
-  width: 420px;
-  max-width: 92%;
+  width: 540px;
+  max-width: 94%;
   position: absolute;
-  top: 22%;
+  top: 18%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 11000;
@@ -891,47 +897,56 @@ section {
 
 .shutdown-confirm-body {
   display: flex;
-  gap: 16px;
-  padding: 18px 18px 6px;
+  gap: 18px;
+  padding: 18px 20px 8px;
   align-items: flex-start;
+}
+.shutdown-confirm-icon {
+  flex: 0 0 56px;
+  padding-top: 4px;
 }
 .shutdown-confirm-icon img {
   width: 56px;
   height: 56px;
   image-rendering: pixelated;
+  display: block;
 }
 .shutdown-confirm-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 .shutdown-confirm-prompt {
-  margin: 0 0 4px 0;
+  margin: 0 0 6px 0;
   font-size: 13px;
   color: #000;
 }
 .shutdown-radio {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-size: 13px;
   color: #000;
   cursor: default;
+  line-height: 1.25;
 }
 .shutdown-radio input[type='radio'] {
   margin: 0;
+  flex: 0 0 auto;
   cursor: pointer;
 }
 .shutdown-radio span {
   user-select: none;
+  flex: 1;
+  white-space: nowrap; /* keep each option on a single line */
 }
 
 .shutdown-confirm-buttons {
   display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  padding: 10px 18px 16px;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 20px 18px;
 }
 
 .win95-button {
