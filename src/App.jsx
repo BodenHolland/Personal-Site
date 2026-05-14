@@ -130,7 +130,57 @@ const booksData = [
     author: "Lawrence Weschler",
     coverImageUrl: "/book_covers/book1.jpg",
     description: "A fascinating biography of artist Robert Irwin, tracing his journey from abstract expressionist painter to a pioneer of site-specific light and space installations.",
-    link: "https://www.ucpress.edu/book/9780520256095/seeing-is-forgetting-the-name-of-the-thing-one-sees"
+    link: "https://www.ucpress.edu/book/9780520256095/seeing-is-forgetting-the-name-of-the-thing-one-sees",
+    highlights: [
+      { text: "The entire enterprise basks in irreality.", page: 74 },
+      { text: "The dots, discs, columns, rooms, desert experiments, and city projects that were to follow—all the way to a ground zero, achieved somewhere in the mid-seventies, when Irwin declared that nonobjective art now meant \"nonobject,\" and that perception itself, independent of any object, was the true art act. But another way of seeing those late lines is to realize that they themselves were that ground zero, that in a period of two years Irwin had achieved a complete revolution in his thinking.", page: 84 },
+      { text: "You have to make it very clear to anyone who might read your essay, especially any young artist who might happen to pick it up, that my whole process was really an intuitive activity in which all of the time I was only putting one foot in front of the other, and that each step was not that resolved.", page: 89 },
+      { text: "What Robert Irwin is insisting upon, these paintings seem irresistibly to declare, is that the medium is not the message. They explore a division, as absolute as can possibly be demonstrated, between the art-object and the art, between painting and the experience of art. What stays in the museum is only the art-object, not valueless, but not the value of art. The art is what has happened to the viewer.", page: 95 },
+      { text: "That's a big difference between a West Coast artist and a European. A European artist really believes in himself as part of that historical tradition, that archive. They see themselves as part of the stream of history, and they conduct themselves in that way, with a certain amount of importance and self-esteem and so forth… But the minute I start thinking about making gestures about my historical role, I mean, I can't do it, I have to start laughing, because there's a certain humor in that.", page: 99 },
+      { text: "You start out asking questions and following leads, and it gets to be like being a private detective. I'd already had a bit of experience with that working on the frames for the dots. With the discs I don't know how long it took. There were times I'd set out in the morning and spend two or three weeks driving all day long, tracing a lead down, trying to find someone willing to undertake a particular kind of work.", page: 105 },
+      { text: "Most of the time I approached them as a store-window decorator. I never approached them as an artist, because that wasn't something they were going to understand—hell, even I didn't understand it—and it only confused matters. It was much better to keep it on a practical level, as if you were going to do a hundred signs in this format.", page: 105 },
+      { text: "Each time I had to find something materially, physically, that had the same scale as the questions I was asking.", page: 114 },
+      { text: "To me teaching is a really interesting activity, and it's also one of the most precarious activities in the world, because it's such a huge responsibility.", page: 123 },
+      { text: "I would think that the most immoral thing one can do is have ambitions for someone else's mind. That's the crux of the challenge and the responsibility of having the opportunity to deal with young people at such a crucial time in their formation. One of the hardest things to do is not to give them clues—Here, do it this way, it's a lot easier—and instead to keep them on the edge of the question.", page: 125 },
+      { text: "That's the last thing you can do for them, that's the worst — be their guru. And wherever I've been, once it begins to shift from why to how, I simply know I'm gone.", page: 126 },
+      { text: "At that time, I was beginning to think about using energy in my work, as opposed to matter, and that meant dealing with light and sound and other kinds of energy forms. So the idea that I might be able to talk to some physicists, not about hardware or things of that sort, but rather about how they actually thought about those ideas of space and energy and matter, what their approach was to the whole question, their mental picture: that seemed to me to be something really worth doing.", page: 128 },
+      { text: "All art is experience, yet all experience is not art. The artist chooses from experience that which he defines as art, possibly because it has not yet been experienced enough, or because it needs to be experienced more.", page: 131 },
+      { text: "All art-world distinctions are meaningless.", page: 131 },
+      { text: "I think what happens is that in our ordinary lives we move through the world with a strong expectation-fit ratio which we use as much to block out information as to gather it in—and for good reason, most of the time; we block out information which is not critical to our activity.", page: 133 },
+      { text: "Irwin, who was fascinated by the ability of the two eyes to integrate their separate perceptions, mastered a technique for separating their focus: \"We taught ourselves by placing a dot on a window and gazing both at and beyond it, thus allowing two planes of focus, one for each eye… I can still do it any time I want. It takes a few minutes' concentration, but I can just separate them, for example, having one eye register foreground and the other background.\"", page: 134 },
+      { text: "Reason / individual / intuition / feeling: Reason is the processing of our interface with our own subjective being. Logic / community / intellect / mental: Logic is the processing of our interface with our objective constructs, our social being.", page: 139 },
+      { text: "Another word Irwin uses in this context is inquiry. All these researchers in their own ways are engaged in the process of inquiry, and the most salient feature of inquiry is its open-endedness. It is pursued for no reason whatsoever; it is the project of the passionately curious. The wilderness is stalked by explorers without maps and without any particular goals: their principal compass is their reason.", page: 141 },
+      { text: "He is quite adamant on the question of whether society owes the artist a living; he feels it does not. He urges young artists to structure their finances in such a way that they do not have to rely on the sale of their art: he urges them to reduce their material requirements and to cultivate alternative sources of income. The important thing, whenever possible, is to safeguard the art from impinging financial pressures. Irwin does not subscribe to the sackcloth-and-ashes school of artistic romanticism; he sees no special virtue in starving in garrets.", page: 142 },
+      { text: "Instead of my overlaying my ideas onto that space, that space overlaid itself on me.", page: 154 },
+      { text: "I cut the knot. I got rid of the studio, sold all the things I owned, all the equipment, all my stuff; and without knowing what I was going to do with myself or how I was going to spend my time, I simply stopped being an artist in those senses. I just quit.", page: 160 },
+      { text: "Whoever you are, go out into the evening, leaving your room, of which you know every bit; your house is the last before the infinite, whoever you are. — Rainer Maria Rilke", page: 161 },
+      { text: "Irwin chose to absorb the lessons of the desert and apply them, on a site-by-site basis, to each new room whose presence he would be confronting and trying to modulate during the coming years.", page: 165 },
+      { text: "What would be left, Irwin hoped, would be that shiver of perception perceiving itself.", page: 194 },
+      { text: "They were going to spend a lot of money to tear down that obsolete spur of freeway, but I suggested that for the same amount of money, they could erect a monument, as it were, to their triumph. I proposed that they extend the supporting buttresses one span beyond the halted freeway, but then, rather than extending the concrete highway to reach that next span, they instead arch the double-decker roadway gently skyward, as if some huge hand had simply come down and peeled the highway back, bringing the whole project to a halt. Which is, in effect, what had happened.", page: 195 },
+      { text: "I'm no longer concerned with the art world context. I'll use any materials, any techniques (I don't care if somebody else is using them or seems to have them earmarked; I don't care if they're thought of as art or nonart), anything that references against the specific conditions of the site. Whether it works is my only criterion.", page: 196 },
+      { text: "What I'm moving toward in my recent work is something I would call 'site-generated.' The site in its absolute particularity dictates to me the possibilities of response.", page: 199 },
+      { text: "Stella projects the ideal of an art that would not allow us 'to avoid the fact that it's supposed to be entirely visual.' It is significant however that Stella does not claim his art succeeds in being entirely visual. What the work of art is, is not what it is supposed to be. Instead of being fully present, it is only a metaphor of presence. No matter how radical the pursuit of presence, the work of art will always fall short of that purer art that is its telos. It points beyond itself and lacks the plenitude it demands. — Karsten Harries", page: 200 },
+      { text: "Instead of being fully present, it is only a metaphor of presence. With this phrase, Harries summons the passion of Irwin's career, the ghost he tries to shake. In everything Irwin has done since the abstract expressionist canvases in the late fifties, he has been trying to approach—and slowly getting closer and closer to his goal—that presence that would not be metaphorical.", page: 201 },
+      { text: "The piece was gentle enough not to make any issues about its existence. And it was as close as I've been able to get to simple presence. The metaphor, the means were minimal. The intellectual connotation that it was about art was just about as minimal as I've ever gotten it, and yet it still did something. It was integrated and yet active.", page: 202 },
+      { text: "The thing to realize is that the reduction was a reduction of imagery to get at physicality, a reduction of metaphor to get at presence. I did it within the painting. I had to restrict my means, because the more complex the painting was, the more it became, for me and other people, metaphor. We had to drain it of metaphor so that we'd see the presence. But, at another level, the presence is always there. You can see it in the most restricted things, but you can see it in the most elaborate things, too, so long as you're attending to it.", page: 203 },
+      { text: "Even revolutions don't cause change: change causes revolutions.", page: 204 },
+      { text: "Sure he's been scared. He's scared of the prospects of his disappearance as an artist, that what he's doing might get sufficiently far enough from the expectations of artists and fellow inquirers that he disappears. That's of concern to him. But it's of interest as well. And face it: it's real exciting having one foot on a banana peel and the other hanging over the edge of an abyss. — Ed Wortz", page: 205 },
+      { text: "In short, he is an artist who one day got hooked on his own curiosity and decided to live it.", page: 206 },
+      { text: "He has an extraordinary tolerance for ambiguity: he asks questions that seem by their very nature unanswerable, but he maintains his interest because the questions are legitimate—and are themselves probably more interesting than any answer they might summon.", page: 206 },
+      { text: "With food, for instance, people seem able to understand what's involved: you savor the taste rather than just feed the body. But people have a hard time understanding that it should be the same way with visual experience.", page: 215 },
+      { text: "No wonder there are so many sensory junkies in this town, no wonder people take drugs. Most people in this city—and it's true of most cities—are simply oblivious to the incredibly rich spectacle of the everyday world; they're missing out on this visual Disneyland happening all around them all the time. All that drugs do—they don't heighten or brighten one's sense of perception—all they do is momentarily override all the habitual inhibitions to clear seeing which we manage to place in our way most of the rest of the time.", page: 216 },
+      { text: "Artists need to be in there from the start, making the argument for quality. As opposed to, say, giving the artist one percent afterward—which is, hell, just tokenism to the nth degree.", page: 222 },
+      { text: "If you asked me, 'What is your ambition?'—basically, the answer is just to make you a little more aware than you were the day before of how beautiful the world is. This isn't saying that I know what the world should look like. It's not that I'm rebuilding the world. What artists do is to teach you how to exercise your own potential; they always have.", page: 227 },
+      { text: "Malevich, Tatlin, Mondrian, de Kooning, Einstein, Watson, Crick… in claiming these masters as his colleagues, he's not so much keying on his own importance as asserting the importance of the continuing dialogue. Irwin's sensibility is immensely playful, but the play is absolutely serious. If he speaks of Einstein and Watson, he's merely insisting that art has both the right and the obligation to stake its claims as high as any science.", page: 233 },
+      { text: "You must listen without always wanting to compare with the musical basis you already have… when music for which you have no prepared compartments strikes your ear, what happens? Either the music remains outside you or you force it with all your might into one of those compartments, although it does not fit… and that hurts you and you blame the music. But in reality you are to blame, because you force it into a compartment into which it does not fit, instead of calmly, passively, quietly, and without opposition, helping the music to build a new compartment for itself. — Ernst Toch", page: 234 },
+      { text: "Paradoxically, presence itself, immediacy—Irwin's Holy Grail—reveals itself only across time, across the fourth dimension. You have to stop, shut up, and listen if you're ever going to hear.", page: 235 },
+      { text: "Here's an artist who tries time and again to nail down beatitude. He wants to take all that bliss, all that serenity, all that wonder, and—damn it—he wants to batten it down. He wants to batten it down tight and then—ppfff, the tulip opening to simply let it go.", page: 236 },
+      { text: "Nicolas of Cusa has this wonderful way of talking about the difference between logic and faith—between knowing and truth. Logic, he suggests, is like an n-sided polygon nested inside a circle. The more sides you add, the more the polygon approaches the circle which surrounds it. And yet, the farther away it gets as well. For the circle is but a single, seamless line, whereas your polygon seems to be breeding more and more lines, more and more angles, becoming less and less seamless. No matter how many sides you add, it never reaches the circle, and at a certain point a leap is required, from endlessly compounding multiplicity to singleness of being. Another name for that leap, of course, is grace.", page: 236 },
+      { text: "Newly sensitized to the infinitely varied, infinitesimally graduated spectrum of hues and color in nature through his recent intensive work with flowers at the Getty, Irwin now tried to bring a sense of that dazzling variety back inside at the Dia. Disappointed at the surprisingly attenuated range of colors available in standard commercial fluorescent and neon shafts, Irwin resolved to fashion his own by wrapping meticulously selected fluorescent bulbs in layer upon layer of wildly various theatrical gels.", page: 263 },
+      { text: "Seeing really is forgetting the name of the thing you see. You walk in and your brain tells you, oh, that's a red, a yellow, and a blue plane—so that that's what you see. You see 'red,' and 'yellow' and 'blue,' and it takes a while for your perceptual apparatus to burn through all that initial cognitive/linguistic labeling.", page: 285 },
+      { text: "The point is to get people to peel those visors off their faces, to remove the goggles, to abandon the screens. Those screens whose very purpose is to screen the actual world out. Who cares about virtuality when there's all this reality—this incredible, inexhaustible, insatiable, astonishing reality—present all around!", page: 292 },
+      { text: "Philosophy unties knots in our thinking; hence its results must be simple; but philosophizing has to be as complicated as the knots it unties. — Ludwig Wittgenstein, Zettel, #452", page: null }
+    ]
   },
   {
     title: "Before Forgiveness",
@@ -1176,6 +1226,7 @@ function App() {
   const [libraryTab, setLibraryTab] = useState('audio'); // 'audio', 'screens', or 'pages'
   const [screensSubTab, setScreensSubTab] = useState('all'); // 'all', 'movie', 'show', 'game'
   const [openedBook, setOpenedBook] = useState(null);
+  const [bookPageIndex, setBookPageIndex] = useState(0);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedFixture, setSelectedFixture] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -1654,7 +1705,7 @@ function App() {
                       layoutId={`book-container-${item.title}`}
                       key={item.title} 
                       className="book-container"
-                      onClick={() => setOpenedBook(item)}
+                      onClick={() => { setBookPageIndex(0); setOpenedBook(item); }}
                       style={{ opacity: isOpened ? 0 : 1 }} 
                       whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
                     >
@@ -1697,7 +1748,7 @@ function App() {
                         layoutId={`screen-container-${item.title}`}
                         key={item.title} 
                         className="poster-card"
-                        onClick={() => setOpenedBook(item)}
+                        onClick={() => { setBookPageIndex(0); setOpenedBook(item); }}
                         style={{ opacity: isOpened ? 0 : 1 }}
                         whileTap={{ scale: 0.98 }}
                       >
@@ -1773,7 +1824,7 @@ function App() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    onClick={() => setOpenedBook(null)}
+                    onClick={() => { setOpenedBook(null); setBookPageIndex(0); }}
                   />
                   
                   {openedBook.trailerId ? (
@@ -1841,25 +1892,75 @@ function App() {
                           <div className="book-cover-back"></div>
                         </motion.div>
 
-                        {/* 3. Inside Content */}
+                        {/* 3. Inside Content — Highlights page (deepest layer) */}
                         <div className="book-inside-page">
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ delay: 0.3, duration: 0.3 }}
-                            className="inside-content"
-                          >
-                            <h3>{openedBook.title}</h3>
-                            <p className="author">{`by ${openedBook.author}`}</p>
-                            <p className="desc">{openedBook.description}</p>
-                            <div className="read-more-container">
-                              <a href={openedBook.link} target="_blank" rel="noopener noreferrer" className="read-more-btn">
-                                Read More <ExternalLink size={14} style={{ marginLeft: '0.4rem' }}/>
-                              </a>
-                            </div>
-                          </motion.div>
+                          {openedBook.highlights && openedBook.highlights.length > 0 && (
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: bookPageIndex >= 1 ? 1 : 0 }}
+                              transition={{ delay: bookPageIndex >= 1 ? 0.25 : 0, duration: 0.3 }}
+                              className="inside-content highlights-page"
+                            >
+                              <div className="highlights-header">
+                                <span className="highlights-label">Highlights</span>
+                                <span className="highlights-count">{openedBook.highlights.length}</span>
+                              </div>
+                              <ul className="highlights-list">
+                                {openedBook.highlights.map((h, i) => (
+                                  <li key={i} className="highlight-item">
+                                    <p className="highlight-text">{h.text}</p>
+                                    {h.page != null && (
+                                      <span className="highlight-page">Page {h.page}</span>
+                                    )}
+                                  </li>
+                                ))}
+                              </ul>
+                              <button
+                                className="page-turn-btn page-turn-back"
+                                onClick={(e) => { e.stopPropagation(); setBookPageIndex(0); }}
+                              >
+                                <ChevronLeft size={14} style={{ marginRight: '0.4rem' }}/> Back
+                              </button>
+                            </motion.div>
+                          )}
                         </div>
+
+                        {/* 4. Description page — flips like a paper page to reveal highlights */}
+                        <motion.div
+                          className="book-paper-page"
+                          style={{ originX: 0 }}
+                          initial={{ rotateY: 0 }}
+                          animate={{ rotateY: bookPageIndex >= 1 ? -160 : 0 }}
+                          transition={{ type: 'spring', stiffness: 90, damping: 18, mass: 1 }}
+                        >
+                          <div className="paper-page-front">
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ delay: 0.3, duration: 0.3 }}
+                              className="inside-content"
+                            >
+                              <h3>{openedBook.title}</h3>
+                              <p className="author">{`by ${openedBook.author}`}</p>
+                              <p className="desc">{openedBook.description}</p>
+                              <div className="read-more-container">
+                                <a href={openedBook.link} target="_blank" rel="noopener noreferrer" className="read-more-btn">
+                                  Read More <ExternalLink size={14} style={{ marginLeft: '0.4rem' }}/>
+                                </a>
+                                {openedBook.highlights && openedBook.highlights.length > 0 && (
+                                  <button
+                                    className="page-turn-btn"
+                                    onClick={(e) => { e.stopPropagation(); setBookPageIndex(1); }}
+                                  >
+                                    Highlights <ChevronRight size={14} style={{ marginLeft: '0.4rem' }}/>
+                                  </button>
+                                )}
+                              </div>
+                            </motion.div>
+                          </div>
+                          <div className="paper-page-back"></div>
+                        </motion.div>
                       </div>
                     </motion.div>
                   )}
