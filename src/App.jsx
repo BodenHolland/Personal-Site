@@ -1905,71 +1905,72 @@ function App() {
                           <div className="book-cover-back"></div>
                         </motion.div>
 
-                        {/* 3. Inside Content — Highlights page (deepest layer) */}
+                        {/* 3. Inside Content */}
                         <div className="book-inside-page">
-                          {openedBook.highlights && openedBook.highlights.length > 0 && (
-                            <motion.div
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: bookPageIndex >= 1 ? 1 : 0 }}
-                              transition={{ delay: bookPageIndex >= 1 ? 0.25 : 0, duration: 0.3 }}
-                              className="inside-content highlights-page"
-                            >
-                              <div className="highlights-header">
-                                <span className="highlights-label">Highlights</span>
-                                <span className="highlights-count">{openedBook.highlights.length}</span>
-                              </div>
-                              <ul className="highlights-list">
-                                {openedBook.highlights.map((h, i) => (
-                                  <li key={i} className="highlight-item">
-                                    <p className="highlight-text">{h.text}</p>
-                                    {h.page != null && (
-                                      <span className="highlight-page">Page {h.page}</span>
-                                    )}
-                                  </li>
-                                ))}
-                              </ul>
-                              <button
-                                className="page-turn-btn page-turn-back"
-                                onClick={(e) => { e.stopPropagation(); playBookSfx('turn'); setBookPageIndex(0); }}
+                          <AnimatePresence mode="wait" initial={false}>
+                            {bookPageIndex === 0 ? (
+                              <motion.div
+                                key="desc"
+                                initial={{ opacity: 0, rotateY: 90 }}
+                                animate={{ opacity: 1, rotateY: 0 }}
+                                exit={{ opacity: 0, rotateY: -90 }}
+                                transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+                                className="inside-content"
+                                style={{ transformOrigin: 'left center' }}
                               >
-                                <ChevronLeft size={14} style={{ marginRight: '0.4rem' }}/> Back
-                              </button>
-                            </motion.div>
-                          )}
-                        </div>
-
-                        {/* 4. Description page — flips like a paper page to reveal highlights */}
-                        <motion.div
-                          className="book-paper-page"
-                          style={{ originX: 0 }}
-                          initial={{ rotateY: 0 }}
-                          animate={{ rotateY: bookPageIndex >= 1 ? -160 : 0 }}
-                          transition={{ type: 'spring', stiffness: 90, damping: 18, mass: 1 }}
-                        >
-                          <div className="paper-page-front">
-                            <div className="inside-content">
-                              <h3>{openedBook.title}</h3>
-                              <p className="author">{`by ${openedBook.author}`}</p>
-                              <p className="desc">{openedBook.description}</p>
-                              <div className="read-more-container">
-                                <a href={openedBook.link} target="_blank" rel="noopener noreferrer" className="read-more-btn">
-                                  Read More <ExternalLink size={14} style={{ marginLeft: '0.4rem' }}/>
-                                </a>
-                              </div>
-                            </div>
-                            {openedBook.highlights && openedBook.highlights.length > 0 && (
-                              <button
-                                className="page-turn-corner"
-                                onClick={(e) => { e.stopPropagation(); playBookSfx('turn'); setBookPageIndex(1); }}
-                                aria-label="Turn page to highlights"
+                                <h3>{openedBook.title}</h3>
+                                <p className="author">{`by ${openedBook.author}`}</p>
+                                <p className="desc">{openedBook.description}</p>
+                                <div className="read-more-container">
+                                  <a href={openedBook.link} target="_blank" rel="noopener noreferrer" className="read-more-btn">
+                                    Read More <ExternalLink size={14} style={{ marginLeft: '0.4rem' }}/>
+                                  </a>
+                                </div>
+                                {openedBook.highlights && openedBook.highlights.length > 0 && (
+                                  <button
+                                    className="page-turn-corner"
+                                    onClick={(e) => { e.stopPropagation(); playBookSfx('turn'); setBookPageIndex(1); }}
+                                    aria-label="Turn page to highlights"
+                                  >
+                                    <span className="page-turn-label">Turn page</span>
+                                    <span className="page-turn-arrow">→</span>
+                                  </button>
+                                )}
+                              </motion.div>
+                            ) : (
+                              <motion.div
+                                key="highlights"
+                                initial={{ opacity: 0, rotateY: 90 }}
+                                animate={{ opacity: 1, rotateY: 0 }}
+                                exit={{ opacity: 0, rotateY: -90 }}
+                                transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+                                className="inside-content highlights-page"
+                                style={{ transformOrigin: 'left center' }}
                               >
-                                <span className="page-turn-label">Turn page</span>
-                                <span className="page-turn-arrow">→</span>
-                              </button>
+                                <div className="highlights-header">
+                                  <span className="highlights-label">Highlights</span>
+                                  <span className="highlights-count">{openedBook.highlights.length}</span>
+                                </div>
+                                <ul className="highlights-list">
+                                  {openedBook.highlights.map((h, i) => (
+                                    <li key={i} className="highlight-item">
+                                      <p className="highlight-text">{h.text}</p>
+                                      {h.page != null && (
+                                        <span className="highlight-page">Page {h.page}</span>
+                                      )}
+                                    </li>
+                                  ))}
+                                </ul>
+                                <button
+                                  className="page-turn-btn page-turn-back"
+                                  onClick={(e) => { e.stopPropagation(); playBookSfx('turn'); setBookPageIndex(0); }}
+                                >
+                                  <ChevronLeft size={14} style={{ marginRight: '0.4rem' }}/> Back
+                                </button>
+                              </motion.div>
                             )}
-                          </div>
-                          <div className="paper-page-back"></div>
-                        </motion.div>
+                          </AnimatePresence>
+                        </div>
                       </div>
                     </motion.div>
                   )}
