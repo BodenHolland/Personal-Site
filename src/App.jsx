@@ -1948,16 +1948,18 @@ function App() {
                                 <a href={openedBook.link} target="_blank" rel="noopener noreferrer" className="read-more-btn">
                                   Read More <ExternalLink size={14} style={{ marginLeft: '0.4rem' }}/>
                                 </a>
-                                {openedBook.highlights && openedBook.highlights.length > 0 && (
-                                  <button
-                                    className="page-turn-btn"
-                                    onClick={(e) => { e.stopPropagation(); setBookPageIndex(1); }}
-                                  >
-                                    Highlights <ChevronRight size={14} style={{ marginLeft: '0.4rem' }}/>
-                                  </button>
-                                )}
                               </div>
                             </motion.div>
+                            {openedBook.highlights && openedBook.highlights.length > 0 && (
+                              <button
+                                className="page-turn-corner"
+                                onClick={(e) => { e.stopPropagation(); setBookPageIndex(1); }}
+                                aria-label="Turn page to highlights"
+                              >
+                                <span className="page-turn-label">Turn page</span>
+                                <span className="page-turn-arrow">→</span>
+                              </button>
+                            )}
                           </div>
                           <div className="paper-page-back"></div>
                         </motion.div>

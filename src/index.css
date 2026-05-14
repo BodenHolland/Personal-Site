@@ -1925,6 +1925,59 @@ body:has(.book-overlay-container) {
   padding-left: 0;
 }
 
+/* Dog-ear style "Turn page" affordance in bottom-right of description page */
+.page-turn-corner {
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.5rem;
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0.6rem;
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: #6b6b6b;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 200;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.page-turn-corner::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.12));
+  border-radius: 0 0 3px 0;
+  transition: width 0.25s ease, height 0.25s ease;
+  z-index: -1;
+}
+
+.page-turn-corner:hover {
+  color: #1a1a1a;
+  transform: translate(-2px, -2px);
+}
+
+.page-turn-corner:hover::before {
+  width: 38px;
+  height: 38px;
+}
+
+.page-turn-arrow {
+  font-size: 1rem;
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.page-turn-corner:hover .page-turn-arrow {
+  transform: translateX(3px);
+}
+
 .highlights-header {
   display: flex;
   align-items: baseline;
