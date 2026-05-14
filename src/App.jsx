@@ -1227,6 +1227,19 @@ function App() {
   const [screensSubTab, setScreensSubTab] = useState('all'); // 'all', 'movie', 'show', 'game'
   const [openedBook, setOpenedBook] = useState(null);
   const [bookPageIndex, setBookPageIndex] = useState(0);
+  const bookSfxRef = React.useRef({});
+  React.useEffect(() => {
+    const a = bookSfxRef.current;
+    a.open = new Audio('/sounds/open-book.mp3');
+    a.turn = new Audio('/sounds/turn-page.mp3');
+    a.close = new Audio('/sounds/close-book.mp3');
+    [a.open, a.turn, a.close].forEach(el => { el.preload = 'auto'; el.volume = 0.6; });
+  }, []);
+  const playBookSfx = (key) => {
+    const el = bookSfxRef.current[key];
+    if (!el) return;
+    try { el.currentTime = 0; el.play().catch(() => {}); } catch {}
+  };
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedFixture, setSelectedFixture] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -1705,7 +1718,7 @@ function App() {
                       layoutId={`book-container-${item.title}`}
                       key={item.title} 
                       className="book-container"
-                      onClick={() => { setBookPageIndex(0); setOpenedBook(item); }}
+                      onClick={() => { setBookPageIndex(0); setOpenedBook(item); playBookSfx('open'); }}
                       style={{ opacity: isOpened ? 0 : 1 }} 
                       whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
                     >
@@ -1748,7 +1761,7 @@ function App() {
                         layoutId={`screen-container-${item.title}`}
                         key={item.title} 
                         className="poster-card"
-                        onClick={() => { setBookPageIndex(0); setOpenedBook(item); }}
+                        onClick={() => { setBookPageIndex(0); setOpenedBook(item); playBookSfx('open'); }}
                         style={{ opacity: isOpened ? 0 : 1 }}
                         whileTap={{ scale: 0.98 }}
                       >
@@ -1824,7 +1837,7 @@ function App() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    onClick={() => { setOpenedBook(null); setBookPageIndex(0); }}
+                    onClick={() => { playBookSfx('close'); setOpenedBook(null); setBookPageIndex(0); }}
                   />
                   
                   {openedBook.trailerId ? (
@@ -1917,7 +1930,7 @@ function App() {
                               </ul>
                               <button
                                 className="page-turn-btn page-turn-back"
-                                onClick={(e) => { e.stopPropagation(); setBookPageIndex(0); }}
+                                onClick={(e) => { e.stopPropagation(); playBookSfx('turn'); setBookPageIndex(0); }}
                               >
                                 <ChevronLeft size={14} style={{ marginRight: '0.4rem' }}/> Back
                               </button>
@@ -1953,7 +1966,7 @@ function App() {
                             {openedBook.highlights && openedBook.highlights.length > 0 && (
                               <button
                                 className="page-turn-corner"
-                                onClick={(e) => { e.stopPropagation(); setBookPageIndex(1); }}
+                                onClick={(e) => { e.stopPropagation(); playBookSfx('turn'); setBookPageIndex(1); }}
                                 aria-label="Turn page to highlights"
                               >
                                 <span className="page-turn-label">Turn page</span>
