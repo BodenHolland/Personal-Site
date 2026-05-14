@@ -6,10 +6,13 @@ import {
   playMouseUp,
   playKeyboard,
   playPowerOn,
+  playPowerOff,
   playMonitorClick,
   playShutdown,
   startAmbient,
   stopAmbient,
+  setMasterVolume,
+  setMuted as setAudioMuted,
 } from './crtAudio';
 import { 
   Package, 
@@ -1959,6 +1962,20 @@ function App() {
   const [isCursorBusy, setIsCursorBusy] = useState(false);
   const [isShutdownConfirmOpen, setIsShutdownConfirmOpen] = useState(false);
   const [shutdownChoice, setShutdownChoice] = useState('shutdown');
+  // CRT picture controls — 0..6 steps. 3 = neutral (1.0x).
+  const [brightnessStep, setBrightnessStep] = useState(3);
+  const [contrastStep, setContrastStep] = useState(3);
+  // Volume knob — 0..6, step 6 = full, step 0 = silent. Default at 4 (~67%).
+  const [volumeStep, setVolumeStep] = useState(4);
+  const [isCrtMuted, setIsCrtMuted] = useState(false);
+
+  // Push volume + mute into the audio module whenever they change.
+  React.useEffect(() => {
+    setMasterVolume(volumeStep / 6);
+  }, [volumeStep]);
+  React.useEffect(() => {
+    setAudioMuted(isCrtMuted);
+  }, [isCrtMuted]);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showCreditsModal, setShowCreditsModal] = useState(false);
   const [timePhase, setTimePhase] = useState(() => getPhaseFromHour(new Date().getHours()));
@@ -2306,6 +2323,11 @@ function App() {
                         className={`crt-screen${isCursorBusy ? ' crt-cursor-busy' : ''}${isWindowsLoading ? ' crt-cursor-wait' : ''}`}
                         onMouseDown={handleCrtMouseDown}
                         onMouseUp={handleCrtMouseUp}
+                        style={{
+                          // CRT picture controls — period dials map to CSS filter.
+                          // step 3 = neutral (1.0×). 0..6 spans 0.6×..1.4×.
+                          filter: `brightness(${(0.6 + brightnessStep * (0.8 / 6)).toFixed(3)}) contrast(${(0.6 + contrastStep * (0.8 / 6)).toFixed(3)})`,
+                        }}
                       >
                         {/* Scanlines + vignette overlays */}
                         <div className="crt-scanlines" />
@@ -2352,6 +2374,13 @@ function App() {
                               autoPlay
                               playsInline
                               preload="auto"
+                              // Tame the startup chime — full volume is too
+                              // startling on first load. Baseline ~0.35 then
+                              // multiplied by the user's master volume / mute.
+                              onLoadedMetadata={(e) => {
+                                const base = 0.35;
+                                e.currentTarget.volume = isCrtMuted ? 0 : base * (volumeStep / 6);
+                              }}
                               onEnded={handleStartupVideoEnded}
                               onError={handleStartupVideoEnded}
                             />
@@ -2451,7 +2480,24 @@ function App() {
                               🖥 {currentGame.name}
                             </div>
                           )}
-                          <Win95Clock />
+                          {/* System tray — speaker mute + clock, period-correct */}
+                          <div className="crt-system-tray">
+                            <button
+                              className="crt-tray-speaker"
+                              onClick={() => {
+                                try { playMonitorClick(); } catch {}
+                                setIsCrtMuted((m) => !m);
+                              }}
+                              title={isCrtMuted ? 'Unmute' : 'Mute'}
+                              aria-label={isCrtMuted ? 'Unmute' : 'Mute'}
+                            >
+                              <img
+                                src={isCrtMuted ? '/crt/icons/speaker_off.svg' : '/crt/icons/speaker_on.svg'}
+                                alt=""
+                              />
+                            </button>
+                            <Win95Clock />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2490,33 +2536,80 @@ function App() {
                           </div>
                         </>
                       )}
-                      <div
-                        className="crt-ctrl-btn"
-                        onClick={() => { try { playMonitorClick(); } catch {} }}
-                      />
-                      <div
-                        className="crt-ctrl-btn"
-                        onClick={() => { try { playMonitorClick(); } catch {} }}
-                      />
-                      <div
-                        className="crt-power-btn"
-                        onClick={() => {
-                          if (isPoweringOff) return;
-                          try { playMonitorClick(); } catch {}
-                          try { stopAmbient({ fade: 250 }); } catch {}
-                          setIsStartMenuOpen(false);
-                          setIsPoweringOff(true);
-                          // Animation duration is tuned to the ~1.03s click sound:
-                          // 80ms flash, 250ms collapse to line, 320ms shrink to dot,
-                          // 300ms fade out. Then exit retro mode.
-                          setTimeout(() => {
-                            setIsRetroMode(false);
-                            setIsPoweringOff(false);
-                            setShowGame(false);
-                          }, 1000);
-                        }}
-                      >
-                        <div className="crt-power-led" />
+                      {/* Brightness dial */}
+                      <div className="crt-control-group">
+                        <button
+                          className="crt-knob"
+                          title="Brightness"
+                          aria-label={`Brightness ${brightnessStep}/6`}
+                          onClick={() => {
+                            try { playMonitorClick(); } catch {}
+                            setBrightnessStep((s) => (s + 1) % 7);
+                          }}
+                          style={{ transform: `rotate(${(brightnessStep - 3) * 36}deg)` }}
+                        >
+                          <span className="crt-knob-notch" />
+                        </button>
+                        <span className="crt-control-label">BRIGHTNESS</span>
+                      </div>
+
+                      {/* Contrast dial */}
+                      <div className="crt-control-group">
+                        <button
+                          className="crt-knob"
+                          title="Contrast"
+                          aria-label={`Contrast ${contrastStep}/6`}
+                          onClick={() => {
+                            try { playMonitorClick(); } catch {}
+                            setContrastStep((s) => (s + 1) % 7);
+                          }}
+                          style={{ transform: `rotate(${(contrastStep - 3) * 36}deg)` }}
+                        >
+                          <span className="crt-knob-notch" />
+                        </button>
+                        <span className="crt-control-label">CONTRAST</span>
+                      </div>
+
+                      {/* Volume dial — maps to audio masterVolume */}
+                      <div className="crt-control-group">
+                        <button
+                          className="crt-knob"
+                          title="Volume"
+                          aria-label={`Volume ${volumeStep}/6`}
+                          onClick={() => {
+                            try { playMonitorClick(); } catch {}
+                            setVolumeStep((s) => (s + 1) % 7);
+                          }}
+                          style={{ transform: `rotate(${(volumeStep - 3) * 36}deg)` }}
+                        >
+                          <span className="crt-knob-notch" />
+                        </button>
+                        <span className="crt-control-label">VOLUME</span>
+                      </div>
+
+                      {/* Power button + label */}
+                      <div className="crt-control-group">
+                        <div
+                          className="crt-power-btn"
+                          onClick={() => {
+                            if (isPoweringOff) return;
+                            try { playPowerOff(); } catch {}
+                            try { stopAmbient({ fade: 250 }); } catch {}
+                            setIsStartMenuOpen(false);
+                            setIsPoweringOff(true);
+                            // Animation duration is tuned to the ~1.03s click sound:
+                            // 80ms flash, 250ms collapse to line, 320ms shrink to dot,
+                            // 300ms fade out. Then exit retro mode.
+                            setTimeout(() => {
+                              setIsRetroMode(false);
+                              setIsPoweringOff(false);
+                              setShowGame(false);
+                            }, 1000);
+                          }}
+                        >
+                          <div className="crt-power-led" />
+                        </div>
+                        <span className="crt-control-label">POWER</span>
                       </div>
                     </div>
                   </div>

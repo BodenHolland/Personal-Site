@@ -880,8 +880,9 @@ section {
 
 /* Shut Down Windows confirmation modal — Win95 dialog. */
 .shutdown-confirm-popup {
-  width: 540px;
+  width: 460px;
   max-width: 94%;
+  box-sizing: border-box;
   position: absolute;
   top: 18%;
   left: 50%;
@@ -893,63 +894,77 @@ section {
   border-right-color: #000;
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
   font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  overflow: hidden; /* belt-and-braces: physically clip any stray content */
 }
 
 .shutdown-confirm-body {
   display: flex;
-  gap: 18px;
-  padding: 18px 20px 8px;
+  gap: 14px;
+  padding: 14px 16px 6px;
   align-items: flex-start;
+  box-sizing: border-box;
   /* Override the .popup-body text-align: center default — Win95 shutdown
      dialog is strictly left-aligned in the content column. */
   text-align: left;
 }
 .shutdown-confirm-icon {
-  flex: 0 0 56px;
-  padding-top: 4px;
+  flex: 0 0 44px;
+  padding-top: 2px;
 }
 .shutdown-confirm-icon img {
-  width: 56px;
-  height: 56px;
+  width: 44px;
+  height: 44px;
   image-rendering: pixelated;
   display: block;
 }
 .shutdown-confirm-content {
   flex: 1;
+  min-width: 0; /* allow flex child to shrink so labels can wrap if needed */
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 .shutdown-confirm-prompt {
   margin: 0 0 6px 0;
-  font-size: 13px;
+  font-size: 11px;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
   color: #000;
 }
 .shutdown-radio {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 11px;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
   color: #000;
   cursor: default;
-  line-height: 1.25;
+  line-height: 1.35;
+  padding: 1px 0;
 }
 .shutdown-radio input[type='radio'] {
-  margin: 0;
+  margin: 1px 0 0 0;
   flex: 0 0 auto;
   cursor: pointer;
+  /* slightly tighter radio buttons */
+  width: 13px;
+  height: 13px;
 }
 .shutdown-radio span {
   user-select: none;
-  white-space: nowrap; /* keep each option on a single line */
   text-align: left;
+  flex: 1;
+  min-width: 0;
+  /* wrap if needed — wrapped lines indent to align under the label, not under the radio */
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .shutdown-confirm-buttons {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  padding: 12px 20px 18px;
+  gap: 14px;
+  /* Generous side/top padding so Yes/No/Help aren't touching the modal edges. */
+  padding: 14px 40px 22px;
 }
 
 .win95-button {
@@ -1375,8 +1390,8 @@ section {
 
 .crt-buttons-row {
   display: flex;
-  gap: 12px;
-  align-items: center;
+  gap: 16px;
+  align-items: flex-end;
 }
 
 .crt-ctrl-btn {
@@ -1384,9 +1399,112 @@ section {
   height: 6px;
   background: #b5b0a5;
   border-radius: 3px;
-  box-shadow: 
+  box-shadow:
     inset 1px 1px 2px rgba(0,0,0,0.2),
     0 1px 1px rgba(255,255,255,0.8);
+}
+
+/* Labeled control group — period-correct CRT bezel labels (small caps,
+   slightly grayed, sit under the control they describe). */
+.crt-control-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  user-select: none;
+}
+
+.crt-control-label {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 6px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #6b665c;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* Brightness / Contrast dials — small textured knob with a single
+   indent showing the current angle. Clicking cycles 0..6. */
+.crt-knob {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background:
+    radial-gradient(circle at 30% 30%, #e6dfd0 0%, #b5ab97 65%, #897f6c 100%);
+  box-shadow:
+    0 1px 1px rgba(255, 255, 255, 0.6),
+    0 2px 3px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.15);
+  position: relative;
+  transition: transform 0.18s cubic-bezier(0.5, 0, 0.4, 1.4);
+}
+.crt-knob:active {
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.4),
+    0 1px 1px rgba(255, 255, 255, 0.4);
+}
+.crt-knob-notch {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 2px;
+  height: 5px;
+  background: #2d2620;
+  border-radius: 1px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+/* System tray — wraps the speaker mute icon + clock in a single inset
+   bevel on the right side of the taskbar, just like Win95. */
+.crt-system-tray {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 4px;
+  border: 1px inset #808080;
+  background: #c3c6ca;
+  height: 18px;
+  box-sizing: border-box;
+}
+
+/* The clock sits inside the tray now — remove its old standalone bevel. */
+.crt-system-tray .win95-clock {
+  margin-left: 0;
+  border: none;
+  padding: 0 2px;
+  background: transparent;
+  line-height: 1;
+}
+
+.crt-tray-speaker {
+  width: 18px;
+  height: 16px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 18px;
+  cursor: pointer;
+}
+.crt-tray-speaker img {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+  pointer-events: none;
+  display: block;
+}
+.crt-tray-speaker:hover {
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .crt-arcade-btn {

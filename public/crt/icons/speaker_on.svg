@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" shape-rendering="crispEdges">
+  <!-- speaker box -->
+  <rect x="2" y="7" width="3" height="6" fill="#ffffff" stroke="#000" stroke-width="1"/>
+  <!-- speaker cone -->
+  <polygon points="5,7 10,3 10,17 5,13" fill="#ffffff" stroke="#000" stroke-width="1"/>
+  <!-- sound waves -->
+  <path d="M12,8 Q13.5,10 12,12" fill="none" stroke="#000" stroke-width="1"/>
+  <path d="M14,6 Q17,10 14,14" fill="none" stroke="#000" stroke-width="1"/>
+</svg>

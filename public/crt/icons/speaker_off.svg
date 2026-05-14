@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" shape-rendering="crispEdges">
+  <!-- speaker box -->
+  <rect x="2" y="7" width="3" height="6" fill="#ffffff" stroke="#000" stroke-width="1"/>
+  <!-- speaker cone -->
+  <polygon points="5,7 10,3 10,17 5,13" fill="#ffffff" stroke="#000" stroke-width="1"/>
+  <!-- red X over the sound-wave area -->
+  <line x1="12" y1="6"  x2="18" y2="14" stroke="#c81818" stroke-width="2"/>
+  <line x1="18" y1="6"  x2="12" y2="14" stroke="#c81818" stroke-width="2"/>
+</svg>
