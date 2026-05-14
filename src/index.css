@@ -1859,6 +1859,7 @@ body:has(.book-overlay-container) {
   transform-style: preserve-3d;
   z-index: 150;
   pointer-events: none;
+  transform: translateZ(3px);
 }
 
 .expanded-overlay-3d .book-paper-page {
