@@ -1930,19 +1930,27 @@ body:has(.book-overlay-container) {
   position: absolute;
   bottom: 1.25rem;
   right: 1.5rem;
+  max-width: 16rem;
+  text-align: right;
   background: transparent;
   border: none;
   padding: 0.5rem 0.6rem;
   font-family: 'Georgia', serif;
   font-style: italic;
   font-size: 0.85rem;
+  line-height: 1.35;
   color: #6b6b6b;
   cursor: pointer;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-end;
+  justify-content: flex-end;
   gap: 0.4rem;
   z-index: 200;
   transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.page-turn-label {
+  display: inline-block;
 }
 
 .page-turn-corner::before {
@@ -2046,6 +2054,7 @@ body:has(.book-overlay-container) {
 
 .read-more-container {
   margin-top: auto;
+  margin-bottom: 4.5rem;
   padding-top: 2rem;
   display: flex;
   justify-content: center;

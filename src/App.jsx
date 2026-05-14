@@ -1932,7 +1932,7 @@ function App() {
                                     onClick={(e) => { e.stopPropagation(); playBookSfx('turn'); setBookPageIndex(1); }}
                                     aria-label="Turn page to highlights"
                                   >
-                                    <span className="page-turn-label">Turn page</span>
+                                    <span className="page-turn-label">Turn page to see my highlights from this book</span>
                                     <span className="page-turn-arrow">→</span>
                                   </button>
                                 )}
