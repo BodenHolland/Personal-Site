@@ -900,6 +900,9 @@ section {
   gap: 18px;
   padding: 18px 20px 8px;
   align-items: flex-start;
+  /* Override the .popup-body text-align: center default — Win95 shutdown
+     dialog is strictly left-aligned in the content column. */
+  text-align: left;
 }
 .shutdown-confirm-icon {
   flex: 0 0 56px;
@@ -938,8 +941,8 @@ section {
 }
 .shutdown-radio span {
   user-select: none;
-  flex: 1;
   white-space: nowrap; /* keep each option on a single line */
+  text-align: left;
 }
 
 .shutdown-confirm-buttons {
