@@ -2403,7 +2403,7 @@ body:has(.book-overlay-container) {
     linear-gradient(to bottom, #fdfcf9, #fbfaf6);
   border-radius: 0 3px 3px 0;
   box-shadow: inset 12px 0 20px rgba(0,0,0,0.08), 5px 10px 20px rgba(0,0,0,0.1);
-  padding: 3rem 2.5rem;
+  padding: clamp(1.75rem, 3vw, 3rem) clamp(1.5rem, 3vw, 3.25rem);
   overflow-y: auto;
   opacity: 0;
   pointer-events: none;
@@ -2443,37 +2443,241 @@ body:has(.book-overlay-container) {
 
 .inside-content h3 {
   font-family: 'Georgia', serif;
-  font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.6rem;
   color: #000;
-  line-height: 1.4;
+  line-height: 1.3;
   text-align: center;
 }
 
 .inside-content .author {
   font-family: 'Georgia', serif;
   font-style: italic;
-  font-size: 1rem;
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
   color: #555;
-  margin-bottom: 0.8rem;
+  margin-bottom: 1.4rem;
   text-align: center;
 }
 
 .inside-content .desc {
   font-family: 'Georgia', serif;
-  font-size: 1.05rem;
-  line-height: 1.7;
-  text-align: left;
+  font-size: clamp(1.05rem, 1.4vw, 1.45rem);
+  line-height: 1.65;
+  text-align: justify;
   text-indent: 1.5rem;
   color: #383531;
+  hyphens: auto;
+}
+
+/* Flippable description page that sits on top of the highlights page */
+.book-paper-page {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  transform-style: preserve-3d;
+  z-index: 150;
+  pointer-events: none;
+  transform: translateZ(3px);
+}
+
+.expanded-overlay-3d .book-paper-page {
+  pointer-events: auto;
+}
+
+.paper-page-front {
+  position: absolute;
+  inset: 0;
+  background: #fdfcf9;
+  background-image:
+    linear-gradient(90deg, rgba(0,0,0,0.04) 0%, transparent 4%, transparent 96%, rgba(0,0,0,0.02) 100%),
+    linear-gradient(to bottom, #fdfcf9, #fbfaf6);
+  border-radius: 0 3px 3px 0;
+  box-shadow: inset 12px 0 20px rgba(0,0,0,0.08), 5px 10px 20px rgba(0,0,0,0.1);
+  padding: clamp(1.75rem, 3vw, 3rem) clamp(1.5rem, 3vw, 3.25rem);
+  overflow-y: auto;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  color: #2c2925;
+  backface-visibility: hidden;
+  transform: translateZ(1px);
+}
+
+.paper-page-back {
+  position: absolute;
+  inset: 0;
+  background: #fbfaf6;
+  background-image: linear-gradient(to left, rgba(0,0,0,0.05) 0%, transparent 10%);
+  border-radius: 3px 0 0 3px;
+  transform: rotateY(180deg) translateZ(1px);
+  backface-visibility: hidden;
+  box-shadow: inset -5px 0 15px rgba(0,0,0,0.05);
+}
+
+.highlights-page {
+  padding: 0;
+}
+
+.page-turn-btn {
+  padding: 0.4rem 0.8rem;
+  background: transparent;
+  color: #888;
+  border: none;
+  font-family: var(--font-main);
+  font-weight: 500;
+  font-size: 0.7rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-left: 1rem;
+}
+
+.page-turn-btn:hover {
+  color: #1a1a1a;
+}
+
+.page-turn-back {
+  align-self: flex-start;
+  margin: 0.75rem 0 0 0;
+  padding-left: 0;
+}
+
+/* Dog-ear style "Turn page" affordance in bottom-right of description page */
+.page-turn-corner {
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.5rem;
+  max-width: 16rem;
+  text-align: right;
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0.6rem;
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  color: #6b6b6b;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  z-index: 200;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.page-turn-label {
+  display: inline-block;
+}
+
+.page-turn-corner::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.12));
+  border-radius: 0 0 3px 0;
+  transition: width 0.25s ease, height 0.25s ease;
+  z-index: -1;
+}
+
+.page-turn-corner:hover {
+  color: #1a1a1a;
+  transform: translate(-2px, -2px);
+}
+
+.page-turn-corner:hover::before {
+  width: 38px;
+  height: 38px;
+}
+
+.page-turn-arrow {
+  font-size: 1rem;
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.page-turn-corner:hover .page-turn-arrow {
+  transform: translateX(3px);
+}
+
+.highlights-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.highlights-label {
+  font-family: 'Georgia', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6b6b6b;
+}
+
+.highlights-count {
+  font-family: 'Georgia', serif;
+  font-size: 0.75rem;
+  color: #a0a0a0;
+  font-variant-numeric: tabular-nums;
+}
+
+.highlights-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0.25rem 0 0;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
+}
+
+.highlights-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.highlights-list::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.18);
+  border-radius: 3px;
+}
+
+.highlight-item {
+  padding: 1.1rem 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.08);
+}
+
+.highlight-item:last-child {
+  border-bottom: none;
+}
+
+.highlight-text {
+  font-family: 'Georgia', serif;
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  line-height: 1.65;
+  color: #2c2a27;
+  margin: 0 0 0.5rem 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.highlight-page {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+  color: #9a8f80;
 }
 
 .read-more-container {
-  margin-top: auto;
-  padding-top: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+  padding-top: 1rem;
   display: flex;
   justify-content: center;
 }
