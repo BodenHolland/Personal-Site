@@ -1947,13 +1947,7 @@ function App() {
                           transition={{ type: 'spring', stiffness: 90, damping: 18, mass: 1 }}
                         >
                           <div className="paper-page-front">
-                            <motion.div
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              transition={{ delay: 0.3, duration: 0.3 }}
-                              className="inside-content"
-                            >
+                            <div className="inside-content">
                               <h3>{openedBook.title}</h3>
                               <p className="author">{`by ${openedBook.author}`}</p>
                               <p className="desc">{openedBook.description}</p>
@@ -1962,7 +1956,7 @@ function App() {
                                   Read More <ExternalLink size={14} style={{ marginLeft: '0.4rem' }}/>
                                 </a>
                               </div>
-                            </motion.div>
+                            </div>
                             {openedBook.highlights && openedBook.highlights.length > 0 && (
                               <button
                                 className="page-turn-corner"
