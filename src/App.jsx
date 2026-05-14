@@ -1632,6 +1632,7 @@ function App() {
                               <div className="crt-win-body">
                                 <iframe
                                   className="crt-game-iframe"
+                                  style={{ aspectRatio: (currentGame.aspectRatio || '4/3').replace('/', ' / ') }}
                                   src={`https://archive.org/embed/${currentGame.archiveId}?autoplay=1`}
                                   allowFullScreen
                                 />

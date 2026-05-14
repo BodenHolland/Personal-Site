@@ -1324,11 +1324,17 @@ section {
 }
 
 .crt-game-iframe {
-  width: 100%;
-  max-width: 100%;
+  /* Keep the game's native aspect ratio so archive.org doesn't letterbox
+     it left-aligned with empty black bars on the right. Centered via the
+     parent .crt-win-body's flex centering. */
   height: 100%;
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 4 / 3; /* default — overridden inline per-game */
   border: none;
-  aspect-ratio: auto; /* Handled by parent container if needed */
+  display: block;
+  background: #000;
 }
 
 /* Bottom Control Panel */
