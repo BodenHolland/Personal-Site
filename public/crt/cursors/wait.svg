@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- Top and bottom caps -->
+  <rect x="6" y="3"  width="20" height="2" fill="#000000"/>
+  <rect x="6" y="27" width="20" height="2" fill="#000000"/>
+  <!-- Hourglass body outline -->
+  <polygon points="7,5 25,5 16,16 25,27 7,27 16,16"
+           fill="#000000"/>
+  <polygon points="9,6 23,6 16,15 23,26 9,26 16,17"
+           fill="#ffffff"/>
+  <!-- Sand pile top (light brown) -->
+  <polygon points="10,7 22,7 16,13" fill="#d6a86a"/>
+  <!-- Sand pile bottom -->
+  <polygon points="10,25 22,25 19,21 13,21" fill="#d6a86a"/>
+</svg>

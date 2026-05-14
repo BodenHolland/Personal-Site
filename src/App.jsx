@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SunCalc from 'suncalc';
+import {
+  playMouseDown,
+  playMouseUp,
+  playKeyboard,
+  playPowerOn,
+  playMonitorClick,
+  playShutdown,
+  startAmbient,
+  stopAmbient,
+} from './crtAudio';
 import { 
   Package, 
   BookOpen, 
@@ -1185,7 +1195,16 @@ function App() {
   const [showGame, setShowGame] = useState(false);
   const [currentGame, setCurrentGame] = useState(retroGames.find(g => g.id === 'simcity') || retroGames[0]);
   const [isRetroMode, setIsRetroMode] = useState(false);
+  const [isBootingUp, setIsBootingUp] = useState(false);
+  const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
+  const [isShuttingDown, setIsShuttingDown] = useState(false);
+  const [bootLines, setBootLines] = useState([]);
+  const [shutdownLines, setShutdownLines] = useState([]);
+  const [isPoweringOff, setIsPoweringOff] = useState(false);
+  const [isWindowsLoading, setIsWindowsLoading] = useState(false);
+  const [isCursorBusy, setIsCursorBusy] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
   const [timePhase, setTimePhase] = useState(() => getPhaseFromHour(new Date().getHours()));
   const cyclePhase = () => setTimePhase(p => PHASE_ORDER[(PHASE_ORDER.indexOf(p) + 1) % PHASE_ORDER.length]);
 
@@ -1229,23 +1248,167 @@ function App() {
   const tabsRef = React.useRef(null);
   const audioRef = React.useRef(null);
 
+  // DOS-style BIOS boot script — each entry is [delayMs, text].
+  // Total wall-clock duration is tuned to match the power-on audio (~5.04s).
+  const BOOT_SCRIPT = React.useMemo(() => ([
+    [80,  'BOTEK BIOS v2.04 (C) 1996, BOTEK Industries'],
+    [280, 'CPU: BOTEK 486DX2-66  RAM: 640K Conventional, 7424K Extended'],
+    [80,  ''],
+    [420, 'Performing POST...'],
+    [260, '  Memory test:  640K OK'],
+    [220, '  Extended memory test:  7424K OK'],
+    [300, '  Detecting IDE drives... HDD-0: BOTEK-540MB'],
+    [240, '  CD-ROM: BOTEK CDR-204 .................... OK'],
+    [200, '  Mouse: PS/2 Compatible .................. OK'],
+    [200, '  Keyboard: 102-key US ..................... OK'],
+    [80,  ''],
+    [520, 'Starting BOTEK DOS...'],
+    [360, 'HIMEM    is testing extended memory.........done.'],
+    [340, 'Loading CONFIG.SYS...........................OK'],
+    [340, 'Loading AUTOEXEC.BAT.........................OK'],
+    [80,  ''],
+    [320, 'C:\\>'],
+  ]), []);
+
+  const SHUTDOWN_SCRIPT = React.useMemo(() => ([
+    [80,  'C:\\>shutdown /now'],
+    [380, ''],
+    [80,  'Closing applications...'],
+    [260, 'Saving session state................. OK'],
+    [260, 'Flushing disk cache.................. OK'],
+    [240, 'Unmounting drives.................... OK'],
+    [260, 'Stopping system services............. OK'],
+    [260, 'Halting CPU.......................... OK'],
+    [120, ''],
+    [240, 'It is now safe to turn off your computer.'],
+  ]), []);
+
   React.useEffect(() => {
     const handleKeyDown = (e) => {
-      // Toggle Retro Mode with Shift + P
+      // Toggle Retro Mode with Shift + P. Side effects live OUTSIDE the
+      // setState updater to avoid double-firing under React.StrictMode.
       if (e.shiftKey && e.key.toLowerCase() === 'p') {
-        setIsRetroMode(prev => !prev);
-        setShowGame(false); // Reset game state when toggling mode
+        const next = !isRetroMode;
+        setIsRetroMode(next);
+        if (next) {
+          // Boot chain: DOS BIOS → Windows startup video → desktop with busy cursor.
+          // The video carries its own audio (no separate playPowerOn).
+          setBootLines([]);
+          setIsBootingUp(true);
+          setIsWindowsLoading(false);
+          setIsCursorBusy(false);
+          setIsShuttingDown(false);
+          setShowGame(false);
+          setIsStartMenuOpen(false);
+          // Play the power-on sfx during the DOS boot phase. Capture the
+          // audio node so we can fade it out right when the startup video
+          // takes over (the video carries its own audio).
+          let powerOnNode = null;
+          try { powerOnNode = playPowerOn(); } catch {}
+
+          let acc = 0;
+          BOOT_SCRIPT.forEach(([delay, text]) => {
+            acc += delay;
+            setTimeout(() => setBootLines(prev => [...prev, text]), acc);
+          });
+
+          // After all BIOS lines (acc ≈ 4320ms), pause briefly, then show the
+          // Windows startup video. The video advances to the desktop on its
+          // own via `handleStartupVideoEnded` (onEnded). A safety timeout
+          // covers the case where the video errors out and never fires `ended`.
+          const dosEnd = acc + 450;
+          setTimeout(() => {
+            setIsBootingUp(false);
+            setIsWindowsLoading(true);
+            // Cut the boot sfx so the video's audio doesn't overlap with it.
+            if (powerOnNode) {
+              try {
+                // Tiny fade-out over ~180ms then pause.
+                const start = powerOnNode.volume;
+                const steps = 8;
+                let i = 0;
+                const id = setInterval(() => {
+                  i += 1;
+                  powerOnNode.volume = Math.max(0, start * (1 - i / steps));
+                  if (i >= steps) {
+                    clearInterval(id);
+                    powerOnNode.pause();
+                  }
+                }, 22);
+              } catch {}
+            }
+          }, dosEnd);
+          setTimeout(() => {
+            // Safety net: ~6.6s video + 1s buffer
+            handleStartupVideoEnded();
+          }, dosEnd + 7600);
+        } else {
+          setIsBootingUp(false);
+          setIsWindowsLoading(false);
+          setIsCursorBusy(false);
+          setIsStartMenuOpen(false);
+          try { stopAmbient({ fade: 250 }); } catch {}
+        }
       }
-      
+
       // Exit everything with Escape
       if (e.key === 'Escape') {
         setShowGame(false);
         setIsRetroMode(false);
+        setIsBootingUp(false);
+        setIsWindowsLoading(false);
+        setIsCursorBusy(false);
+        setIsStartMenuOpen(false);
+        try { stopAmbient({ fade: 250 }); } catch {}
+      }
+
+      // Play a key click while the CRT is open.
+      if (isRetroMode && !isBootingUp && e.key !== 'Escape' && !e.repeat) {
+        try { playKeyboard(); } catch {}
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isRetroMode, isBootingUp]);
+
+  // Click sounds inside the CRT screen.
+  const handleCrtMouseDown = () => {
+    if (!isRetroMode || isBootingUp) return;
+    try { playMouseDown(); } catch {}
+  };
+  const handleCrtMouseUp = () => {
+    if (!isRetroMode || isBootingUp) return;
+    try { playMouseUp(); } catch {}
+  };
+
+  // Called when the Windows startup video finishes (or errors). Reveals the
+  // desktop with a brief busy/progress cursor before settling to normal.
+  const handleStartupVideoEnded = React.useCallback(() => {
+    setIsWindowsLoading(false);
+    setIsCursorBusy(true);
+    try { startAmbient(0.3); } catch {}
+    setTimeout(() => setIsCursorBusy(false), 2400);
   }, []);
+
+  const handleShutdown = () => {
+    setIsStartMenuOpen(false);
+    setShutdownLines([]);
+    setIsShuttingDown(true);
+    try { stopAmbient({ fade: 600 }); } catch {}
+    try { playShutdown(); } catch {}
+    let acc = 0;
+    SHUTDOWN_SCRIPT.forEach(([delay, text]) => {
+      acc += delay;
+      setTimeout(() => setShutdownLines(prev => [...prev, text]), acc);
+    });
+    // Hold the shutdown screen until the 4.51s shutdown audio finishes.
+    // Script lines total ~2180ms; +2400ms buffer lands ~4580ms.
+    setTimeout(() => {
+      setIsRetroMode(false);
+      setIsShuttingDown(false);
+      setShowGame(false);
+    }, acc + 2400);
+  };
 
   React.useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -1382,10 +1545,61 @@ function App() {
                   {/* Main bezel + screen */}
                   <div className="crt-bezel">
                     <div className="crt-inner-bezel">
-                      <div className="crt-screen">
+                      <div
+                        className={`crt-screen${isCursorBusy ? ' crt-cursor-busy' : ''}${isWindowsLoading ? ' crt-cursor-wait' : ''}`}
+                        onMouseDown={handleCrtMouseDown}
+                        onMouseUp={handleCrtMouseUp}
+                      >
                         {/* Scanlines + vignette overlays */}
                         <div className="crt-scanlines" />
                         <div className="crt-vignette" />
+                        {/* Glass overlays — smudge + inner shadow */}
+                        <div className="crt-shadow-overlay" />
+                        <div className="crt-smudge-overlay" />
+                        {/* DOS-style boot-up screen */}
+                        {isBootingUp && (
+                          <div className="crt-dos-screen">
+                            {bootLines.map((line, i) => (
+                              <div key={i} className="crt-dos-line">
+                                {line || ' '}
+                              </div>
+                            ))}
+                            <span className="crt-dos-cursor" />
+                          </div>
+                        )}
+                        {/* DOS-style shutdown screen */}
+                        {isShuttingDown && (
+                          <div className="crt-dos-screen">
+                            {shutdownLines.map((line, i) => (
+                              <div key={i} className="crt-dos-line">
+                                {line || ' '}
+                              </div>
+                            ))}
+                            <span className="crt-dos-cursor" />
+                          </div>
+                        )}
+                        {/* CRT power-off animation: white flash → collapse to line → dot → black */}
+                        {isPoweringOff && (
+                          <div className="crt-poweroff">
+                            <div className="crt-poweroff-flash" />
+                            <div className="crt-poweroff-line" />
+                          </div>
+                        )}
+                        {/* Startup video between DOS boot and the desktop.
+                            Its own audio plays; advances to desktop on `ended`. */}
+                        {isWindowsLoading && (
+                          <div className="crt-winsplash">
+                            <video
+                              className="crt-winsplash-video"
+                              src="/crt/video/startup.mp4"
+                              autoPlay
+                              playsInline
+                              preload="auto"
+                              onEnded={handleStartupVideoEnded}
+                              onError={handleStartupVideoEnded}
+                            />
+                          </div>
+                        )}
                         {/* Win95 desktop */}
                         <div className="crt-win95-desktop">
                           {/* Desktop icons */}
@@ -1399,12 +1613,6 @@ function App() {
                                    <span>{game.name}</span>
                                  </div>
                                ))}
-                               <div className="crt-desk-icon readme-icon" onClick={() => setShowInfoModal(true)}>
-                                 <div className="crt-desk-icon-img readme-file">
-                                   <FileText size={24} color="#000" />
-                                 </div>
-                                 <span>README.txt</span>
-                               </div>
                              </>
                            )}
                           {/* App Window */}
@@ -1434,9 +1642,43 @@ function App() {
                             </div>
                           )}
                         </div>
+                        {/* Start menu — Henry-style structure: dark vertical
+                            sidebar on the left (no branding text per Boden's
+                            preference), items list on the right. */}
+                        {isStartMenuOpen && (
+                          <div
+                            className="crt-start-menu"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <div className="crt-start-menu-inner">
+                              <div className="crt-start-menu-side" aria-hidden="true" />
+                              <div className="crt-start-menu-content">
+                                <div className="crt-start-menu-spacer" />
+                                <div className="crt-start-menu-rule" />
+                                <button
+                                  className="crt-start-menu-item"
+                                  onClick={() => { setIsStartMenuOpen(false); setShowCreditsModal(true); }}
+                                >
+                                  <span className="crt-menu-icon-monitor" />
+                                  <span><u>C</u>redits</span>
+                                </button>
+                                <button
+                                  className="crt-start-menu-item"
+                                  onClick={handleShutdown}
+                                >
+                                  <span className="crt-menu-icon-monitor" />
+                                  <span>Sh<u>u</u>t down...</span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                         {/* Taskbar */}
                         <div className="crt-taskbar">
-                          <button className="crt-start-btn" onClick={() => setShowStartModal(prev => !prev)}>
+                          <button
+                            className="crt-start-btn"
+                            onClick={() => setIsStartMenuOpen(prev => !prev)}
+                          >
                             <div className="win95-logo">
                               <span className="logo-r1" /><span className="logo-r2" />
                               <span className="logo-r3" /><span className="logo-r4" />
@@ -1460,9 +1702,10 @@ function App() {
                     <div className="crt-buttons-row">
                       {showGame && currentGame.controls?.includes('5:') && (
                         <>
-                          <div 
-                            className="crt-arcade-btn coin" 
+                          <div
+                            className="crt-arcade-btn coin"
                             onClick={() => {
+                              try { playMonitorClick(); } catch {}
                               const iframe = document.querySelector('.crt-game-iframe');
                               if (iframe) iframe.focus();
                               setStatusMessage('PRESS 5 ON KEYBOARD');
@@ -1472,9 +1715,10 @@ function App() {
                             <div className="arcade-inner" />
                             <span className="arcade-label">COIN</span>
                           </div>
-                          <div 
-                            className="crt-arcade-btn start-p1" 
+                          <div
+                            className="crt-arcade-btn start-p1"
                             onClick={() => {
+                              try { playMonitorClick(); } catch {}
                               const iframe = document.querySelector('.crt-game-iframe');
                               if (iframe) iframe.focus();
                               setStatusMessage('PRESS 1 ON KEYBOARD');
@@ -1486,9 +1730,32 @@ function App() {
                           </div>
                         </>
                       )}
-                      <div className="crt-ctrl-btn" />
-                      <div className="crt-ctrl-btn" />
-                      <div className="crt-power-btn" onClick={() => { setIsRetroMode(false); setShowGame(false); }}>
+                      <div
+                        className="crt-ctrl-btn"
+                        onClick={() => { try { playMonitorClick(); } catch {} }}
+                      />
+                      <div
+                        className="crt-ctrl-btn"
+                        onClick={() => { try { playMonitorClick(); } catch {} }}
+                      />
+                      <div
+                        className="crt-power-btn"
+                        onClick={() => {
+                          if (isPoweringOff) return;
+                          try { playMonitorClick(); } catch {}
+                          try { stopAmbient({ fade: 250 }); } catch {}
+                          setIsStartMenuOpen(false);
+                          setIsPoweringOff(true);
+                          // Animation duration is tuned to the ~1.03s click sound:
+                          // 80ms flash, 250ms collapse to line, 320ms shrink to dot,
+                          // 300ms fade out. Then exit retro mode.
+                          setTimeout(() => {
+                            setIsRetroMode(false);
+                            setIsPoweringOff(false);
+                            setShowGame(false);
+                          }, 1000);
+                        }}
+                      >
                         <div className="crt-power-led" />
                       </div>
                     </div>
@@ -1517,18 +1784,52 @@ function App() {
                   </div>
                 )}
 
-                {showStartModal && (
-                  <div className="win95-popup">
+                {showCreditsModal && (
+                  <div className="win95-popup credits-popup">
                     <div className="popup-title">
-                      <span>Message</span>
-                      <button className="popup-close" onClick={() => setShowStartModal(false)}>×</button>
+                      <span>Credits</span>
+                      <button className="popup-close" onClick={() => setShowCreditsModal(false)}>×</button>
                     </div>
-                    <div className="popup-body">
-                      <p>hope you are having a good day : )</p>
-                      <button className="popup-ok" onClick={() => setShowStartModal(false)}>: )</button>
+                    <div className="popup-body credits-body">
+                      <div className="credits-header">
+                        <h2 className="credits-title">BOTEK<sup>™</sup></h2>
+                        <p className="credits-subtitle">bodenholland.com — 2026</p>
+                      </div>
+                      <div className="credits-section">
+                        <h3>Idea &amp; Direction</h3>
+                        <div className="credits-row">
+                          <span>Boden Holland</span><span>All</span>
+                        </div>
+                      </div>
+                      <div className="credits-section">
+                        <h3>Inspiration</h3>
+                        <div className="credits-row">
+                          <span>Henry Heffernan</span><span>Desktop UI / smudge + glass / sound design palette</span>
+                        </div>
+                        <div className="credits-row">
+                          <span>henryheffernan.com</span><span>Original portfolio that started this</span>
+                        </div>
+                      </div>
+                      <div className="credits-section">
+                        <h3>Games</h3>
+                        <div className="credits-row">
+                          <span>archive.org</span><span>In-browser emulation</span>
+                        </div>
+                      </div>
+                      <div className="credits-section">
+                        <h3>Built With</h3>
+                        <div className="credits-row">
+                          <span>React 19 + Vite</span><span>Front end</span>
+                        </div>
+                        <div className="credits-row">
+                          <span>framer-motion / suncalc</span><span>Misc</span>
+                        </div>
+                      </div>
+                      <button className="popup-ok" onClick={() => setShowCreditsModal(false)}>OK</button>
                     </div>
                   </div>
                 )}
+
 
                 <div className="crt-game-manual">
                   {showGame && (

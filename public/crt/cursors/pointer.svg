@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- Classic Win-style hand pointer: extended index finger, folded fist -->
+  <path d="M11,1 L15,1 L15,13 L17,13 L17,11 L21,11 L21,13 L23,13 L23,15 L25,15 L25,17 L27,17 L27,28 L9,28 L9,14 L11,14 Z"
+        fill="#ffffff" stroke="#000000" stroke-width="2" stroke-linejoin="miter"/>
+  <!-- Knuckle lines -->
+  <line x1="13" y1="18" x2="13" y2="24" stroke="#000000" stroke-width="1"/>
+  <line x1="17" y1="18" x2="17" y2="24" stroke="#000000" stroke-width="1"/>
+  <line x1="21" y1="18" x2="21" y2="24" stroke="#000000" stroke-width="1"/>
+</svg>

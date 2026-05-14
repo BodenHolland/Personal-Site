@@ -465,6 +465,491 @@ section {
   box-shadow: inset 0 0 10px rgba(255,255,255,0.1);
 }
 
+/* Henry-style "glass" — soft inner shadow + fingerprint smudges overlaid on
+   top of the desktop, so the screen feels like a real CRT with grime. */
+.crt-shadow-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: url('/crt/textures/shadow.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 9000;
+}
+
+.crt-smudge-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: url('/crt/textures/smudges.jpg');
+  background-size: cover;
+  mix-blend-mode: screen;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 9001;
+}
+
+/* DOS-style boot + shutdown screen — black background, white monospace text,
+   sequential line reveal driven by JS. Subtle phosphor glow + scanline flicker. */
+.crt-dos-screen {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  color: #e8e8e8;
+  z-index: 9500;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  font-family: 'IBM Plex Mono', 'Courier New', Courier, monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 22px 28px;
+  text-shadow: 0 0 1px rgba(220, 240, 255, 0.45);
+  animation: crt-dos-flicker 1.4s steps(28) 1;
+  letter-spacing: 0.3px;
+  overflow: hidden;
+}
+
+.crt-dos-line {
+  white-space: pre;
+}
+
+.crt-dos-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  background: #e8e8e8;
+  margin-top: 2px;
+  animation: crt-cursor-blink 1s steps(2) infinite;
+  align-self: flex-start;
+}
+
+@keyframes crt-dos-flicker {
+  0% { opacity: 0; }
+  6% { opacity: 0.4; }
+  10% { opacity: 0; }
+  14% { opacity: 0.9; }
+  20% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+@keyframes crt-cursor-blink {
+  to { visibility: hidden; }
+}
+
+/* Custom pixelated cursors — apply only inside the CRT screen.
+   Hotspots: arrow/busy at top-left (0,0); pointer at fingertip (12,1). */
+.crt-screen,
+.crt-screen * {
+  cursor: url('/crt/cursors/arrow.svg') 0 0, default;
+}
+/* Pointer for any obviously clickable thing inside the CRT */
+.crt-screen a,
+.crt-screen button,
+.crt-screen .crt-desk-icon,
+.crt-screen .crt-start-btn,
+.crt-screen .crt-start-menu-item,
+.crt-screen .crt-power-btn,
+.crt-screen .crt-ctrl-btn,
+.crt-screen .crt-arcade-btn,
+.crt-screen .crt-taskbar-pill,
+.crt-screen .crt-game-iframe,
+.crt-screen .popup-ok,
+.crt-screen .popup-close {
+  cursor: url('/crt/cursors/pointer.svg') 12 1, pointer;
+}
+/* While Windows is loading, full hourglass everywhere */
+.crt-screen.crt-cursor-wait,
+.crt-screen.crt-cursor-wait * {
+  cursor: url('/crt/cursors/wait.svg') 16 16, wait !important;
+}
+/* Right after Windows finishes loading: arrow + small hourglass */
+.crt-screen.crt-cursor-busy,
+.crt-screen.crt-cursor-busy * {
+  cursor: url('/crt/cursors/busy.svg') 0 0, progress !important;
+}
+
+/* Windows startup video splash between DOS boot and the desktop.
+   Video plays full-cover; ends → handleStartupVideoEnded advances to desktop. */
+.crt-winsplash {
+  position: absolute;
+  inset: 0;
+  z-index: 9450;
+  background: #000;
+  overflow: hidden;
+}
+
+.crt-winsplash-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+  pointer-events: none;
+}
+
+.crt-winsplash-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.08) 0%, transparent 18%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.06) 0%, transparent 22%),
+    radial-gradient(circle at 50% 90%, rgba(80, 110, 200, 0.18) 0%, transparent 40%);
+}
+
+.crt-winsplash-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 28px;
+  z-index: 1;
+  transform: translateY(-10px);
+}
+
+/* The classic 4-pane Windows-style flag, faked with 4 colored squares
+   tilted on a perspective. */
+.crt-winflag {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 4px;
+  width: 84px;
+  height: 84px;
+  transform: perspective(180px) rotateY(-22deg) rotateX(6deg) skewY(-6deg);
+  filter: drop-shadow(2px 4px 8px rgba(0, 0, 0, 0.6));
+  animation: crt-winflag-wave 2.6s ease-in-out infinite alternate;
+}
+
+.crt-winflag-q {
+  display: block;
+  border-radius: 2px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.crt-winflag-q1 { background: linear-gradient(135deg, #ff5252 0%, #c81a1a 100%); }
+.crt-winflag-q2 { background: linear-gradient(135deg, #c8e95a 0%, #6cae12 100%); }
+.crt-winflag-q3 { background: linear-gradient(135deg, #6db9ff 0%, #1c63cc 100%); }
+.crt-winflag-q4 { background: linear-gradient(135deg, #ffe27a 0%, #d99a00 100%); }
+
+.crt-winsplash-titles {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.05;
+}
+.crt-winsplash-eyebrow {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  letter-spacing: 6px;
+  color: #b8c1d6;
+  margin-bottom: 4px;
+}
+.crt-winsplash-title {
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 38px;
+  letter-spacing: 1px;
+  color: #ffffff;
+  text-shadow: 0 1px 0 #5b6797, 0 0 18px rgba(120, 160, 230, 0.55);
+}
+.crt-winsplash-title sup {
+  font-size: 12px;
+  margin: 0 2px 0 2px;
+  font-style: normal;
+}
+
+.crt-winsplash-progress {
+  position: absolute;
+  bottom: 14%;
+  left: 22%;
+  right: 22%;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.crt-winsplash-progress-bar {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  bottom: 1px;
+  width: 16%;
+  background: linear-gradient(
+    90deg,
+    rgba(60, 110, 220, 0) 0%,
+    rgba(120, 170, 255, 0.95) 50%,
+    rgba(60, 110, 220, 0) 100%
+  );
+  animation: crt-winsplash-bar 1.4s ease-in-out infinite;
+}
+
+@keyframes crt-winsplash-in {
+  from { opacity: 0; transform: scale(1.02); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes crt-winflag-wave {
+  from { transform: perspective(180px) rotateY(-22deg) rotateX(6deg) skewY(-6deg); }
+  to   { transform: perspective(180px) rotateY(-16deg) rotateX(2deg) skewY(-3deg); }
+}
+@keyframes crt-winsplash-bar {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(540%); }
+}
+
+/* CRT power-off sequence: brief white flash, screen collapses vertically
+   to a thin horizontal line, line shrinks to a single dot, dot fades out.
+   Tuned to last ~1000ms to match the CRT button click sound. */
+.crt-poweroff {
+  position: absolute;
+  inset: 0;
+  z-index: 9700;
+  background: #000;
+  overflow: hidden;
+  pointer-events: none;
+  /* Brief white flash on the whole panel, then it stays black behind the line. */
+  animation: crt-poweroff-flash-bg 0.08s ease-out 1 forwards;
+}
+
+.crt-poweroff-flash {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  opacity: 0;
+  animation: crt-poweroff-flash 0.12s ease-out 1 forwards;
+}
+
+.crt-poweroff-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  margin-top: -2px;
+  height: 4px;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.95) 30%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(255, 255, 255, 0.95) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.85);
+  transform-origin: center center;
+  /* Start invisible-thin, expand to a bright line after the flash, then
+     shrink horizontally to a dot, then fade out. */
+  animation: crt-poweroff-line 1s ease-in-out 1 forwards;
+}
+
+@keyframes crt-poweroff-flash-bg {
+  0%   { background: #ffffff; }
+  100% { background: #000000; }
+}
+
+@keyframes crt-poweroff-flash {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes crt-poweroff-line {
+  /* 0-8%: flash, line not visible yet */
+  0%   { transform: scaleX(0) scaleY(0.6); opacity: 0; }
+  8%   { transform: scaleX(0) scaleY(0.6); opacity: 0; }
+  /* 8-30%: line opens horizontally */
+  30%  { transform: scaleX(1) scaleY(1); opacity: 1; }
+  /* 30-70%: line stays bright, ready to collapse */
+  70%  { transform: scaleX(1) scaleY(1); opacity: 1; }
+  /* 70-92%: line shrinks horizontally to a dot */
+  92%  { transform: scaleX(0.005) scaleY(1.4); opacity: 1; }
+  /* 92-100%: dot fades out */
+  100% { transform: scaleX(0.005) scaleY(1.4); opacity: 0; }
+}
+
+/* Start menu — Henry's structure: outer raised bevel containing a dark
+   vertical sidebar (kept as a decorative column, no branding text) and
+   the items column on the right. */
+.crt-start-menu {
+  position: absolute;
+  left: 4px;
+  bottom: 32px;
+  z-index: 10000;
+  display: flex;
+  min-width: 220px;
+  box-sizing: border-box;
+  border: 1px solid #ffffff;
+  border-bottom-color: #000;
+  border-right-color: #000;
+  background: #c3c6ca;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+}
+
+.crt-start-menu-inner {
+  display: flex;
+  flex: 1;
+  border: 1px solid #c3c6ca;
+  border-bottom-color: #86898d;
+  border-right-color: #86898d;
+}
+
+.crt-start-menu-side {
+  width: 22px;
+  background: linear-gradient(180deg, #86898d 0%, #5a5d61 100%);
+  border-right: 1px solid #4a4d51;
+  align-self: stretch;
+}
+
+.crt-start-menu-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 2px 2px 4px;
+  justify-content: flex-end;
+}
+
+/* Empty vertical breathing room above the items (mimics Henry's spacer). */
+.crt-start-menu-spacer {
+  flex: 1;
+  min-height: 80px;
+}
+
+.crt-start-menu-rule {
+  height: 1px;
+  background: #86898d;
+  border-bottom: 1px solid #ffffff;
+  margin: 2px 0 4px;
+}
+
+.crt-start-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px 8px 10px;
+  background: transparent;
+  border: none;
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  color: #000;
+}
+
+.crt-start-menu-item:hover {
+  background: #000080;
+  color: #fff;
+}
+
+/* Win95-style "My Computer"-ish icon — small CRT monitor on a base.
+   Built entirely with CSS so it doesn't depend on a sprite asset. */
+.crt-menu-icon-monitor {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 18px;
+  display: inline-block;
+  position: relative;
+  background:
+    /* base/stand */
+    linear-gradient(#c3c6ca, #c3c6ca) center 16px / 14px 2px no-repeat,
+    /* tower bottom strip */
+    linear-gradient(#c3c6ca, #c3c6ca) center 13px / 22px 3px no-repeat,
+    /* screen background */
+    linear-gradient(#0a4a4a, #0a4a4a) 2px 1px / 18px 11px no-repeat;
+  border-radius: 1px;
+}
+.crt-menu-icon-monitor::before {
+  /* outer monitor bezel */
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 0;
+  width: 20px;
+  height: 13px;
+  border: 1px solid #000;
+  background: #c3c6ca;
+  border-bottom: 1px solid #86898d;
+  z-index: -1;
+}
+.crt-menu-icon-monitor::after {
+  /* inner screen highlight */
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 2px;
+  width: 16px;
+  height: 9px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, transparent 35%),
+    #0a4a4a;
+  border: 1px solid #000;
+}
+
+/* Credits modal — matches the existing win95-popup vibe, with a
+   centered title block, sections, and right-aligned secondary text. */
+.credits-popup {
+  width: 460px;
+  max-width: 90%;
+}
+.credits-body {
+  padding: 16px 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.credits-header {
+  text-align: center;
+  margin-bottom: 4px;
+}
+.credits-title {
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 28px;
+  letter-spacing: 1px;
+  margin: 0;
+  color: #000080;
+}
+.credits-title sup {
+  font-size: 10px;
+  margin-left: 2px;
+}
+.credits-subtitle {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: #555;
+}
+.credits-section {
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #86898d;
+  padding: 6px 4px;
+}
+.credits-section h3 {
+  margin: 0 0 4px;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  color: #000080;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.credits-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 12px;
+  color: #000;
+  padding: 1px 0;
+}
+.credits-row > :last-child {
+  color: #333;
+  text-align: right;
+  max-width: 60%;
+}
+
 /* Win95 Desktop inside the screen */
 .crt-win95-desktop {
   flex: 1;
