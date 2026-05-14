@@ -1657,7 +1657,7 @@ function App() {
                             <div className="crt-start-menu-inner">
                               <div className="crt-start-menu-side" aria-hidden="true">
                                 <span className="crt-start-menu-side-text">
-                                  Windows<br />95
+                                  BOTEK<br />92
                                 </span>
                               </div>
                               <div className="crt-start-menu-content">
