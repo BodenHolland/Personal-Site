@@ -793,21 +793,20 @@ section {
 
 .crt-start-menu-side-text {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 8px;
-  text-align: center;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%) rotate(-90deg);
+  transform-origin: bottom center;
   font-family: 'Times New Roman', Georgia, serif;
   font-style: italic;
   font-weight: bold;
-  font-size: 18px;
-  letter-spacing: 1px;
-  line-height: 1.05;
+  font-size: 16px;
+  letter-spacing: 2px;
+  line-height: 1;
   color: #ffffff;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  white-space: pre;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 .crt-start-menu-content {

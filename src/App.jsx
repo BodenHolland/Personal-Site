@@ -1657,31 +1657,9 @@ function App() {
                           >
                             <div className="crt-start-menu-inner">
                               <div className="crt-start-menu-side" aria-hidden="true">
-                                <span className="crt-start-menu-side-text">
-                                  BOTEK<br />92
-                                </span>
+                                <span className="crt-start-menu-side-text">BOTEK 92</span>
                               </div>
                               <div className="crt-start-menu-content">
-                                <button className="crt-start-menu-item crt-menu-disabled" disabled>
-                                  <img className="crt-menu-icon" src="/crt/icons/programs.svg" alt="" />
-                                  <span className="crt-menu-label"><u>P</u>rograms</span>
-                                  <span className="crt-menu-arrow">▶</span>
-                                </button>
-                                <button className="crt-start-menu-item crt-menu-disabled" disabled>
-                                  <img className="crt-menu-icon" src="/crt/icons/documents.svg" alt="" />
-                                  <span className="crt-menu-label"><u>D</u>ocuments</span>
-                                  <span className="crt-menu-arrow">▶</span>
-                                </button>
-                                <button className="crt-start-menu-item crt-menu-disabled" disabled>
-                                  <img className="crt-menu-icon" src="/crt/icons/settings.svg" alt="" />
-                                  <span className="crt-menu-label"><u>S</u>ettings</span>
-                                  <span className="crt-menu-arrow">▶</span>
-                                </button>
-                                <button className="crt-start-menu-item crt-menu-disabled" disabled>
-                                  <img className="crt-menu-icon" src="/crt/icons/find.svg" alt="" />
-                                  <span className="crt-menu-label"><u>F</u>ind</span>
-                                  <span className="crt-menu-arrow">▶</span>
-                                </button>
                                 <button
                                   className="crt-start-menu-item"
                                   onClick={() => { setIsStartMenuOpen(false); setShowCreditsModal(true); }}
