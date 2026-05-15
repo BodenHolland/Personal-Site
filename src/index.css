@@ -3819,21 +3819,24 @@ section {
 .favorites-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
-  margin-top: 8px;
+  gap: 24px;
+  margin-top: 16px;
 }
 @media (min-width: 640px) {
   .favorites-grid { grid-template-columns: repeat(2, 1fr); }
 }
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
   .favorites-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1200px) {
+  .favorites-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
 .favorite-card {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  padding: 16px;
+  gap: 18px;
+  padding: 20px;
   border-radius: 16px;
   background: color-mix(in srgb, var(--panel-bg) 80%, transparent);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--text-main) 8%, transparent);
@@ -3883,9 +3886,9 @@ section {
   line-height: 1.25;
 }
 .favorite-card-desc {
-  margin: 6px 0 0 0;
+  margin: 8px 0 0 0;
   font-size: 13.5px;
-  line-height: 1.55;
+  line-height: 1.6;
   color: var(--text-muted);
   /* Truncate to 3 lines so cards stay uniform height */
   display: -webkit-box;
@@ -5789,7 +5792,13 @@ body, .container, .navbar, .content-wrapper, .panel {
               opacity 0.25s ease,
               background-color 0.3s ease,
               border-color 0.3s ease,
+              bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1),
               color 0.5s ease;
+}
+/* In retro/PC mode the mode-toggle hides itself, so the phase toggle
+   drops to the bottom-left corner instead of floating mid-page. */
+.container.retro-active .phase-toggle {
+  bottom: 20px;
 }
 .phase-toggle:hover {
   width: 120px;
@@ -6026,6 +6035,12 @@ body, .container, .navbar, .content-wrapper, .panel {
 .crt-desk-icon-img.crt-desk-icon-recyclebin {
   width: 48px;
   height: 48px;
+}
+
+/* Portfolio icon — Boden wants this one prominent on the desktop. */
+.crt-desk-icon-img.crt-desk-icon-portfolio {
+  width: 56px;
+  height: 56px;
 }
 
 .crt-webamp-mount {

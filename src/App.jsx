@@ -2097,16 +2097,16 @@ function App() {
     const ROW_H = 84;
     const M = 12;
     const next = {};
-    // Top-right corner: Recycle Bin
+    // Top-right column, top-to-bottom: Recycle Bin, Music, README
     next.recyclebin = { x: W - ICON_W - M, y: M };
+    next.music      = { x: W - ICON_W - M, y: M + ROW_H };
+    next.readme     = { x: W - ICON_W - M, y: M + 2 * ROW_H };
     // Top-left column: games, stacked
     retroGames.forEach((g, i) => {
       next[g.id] = { x: M, y: M + i * ROW_H };
     });
-    // Bottom-left, top-to-bottom: Music, README, Showcase
+    // Bottom-left: Portfolio (only desktop icon in that corner)
     next.showcase = { x: M, y: H - ROW_H - M };
-    next.readme   = { x: M, y: H - 2 * ROW_H - M };
-    next.music    = { x: M, y: H - 3 * ROW_H - M };
     setIconPositions(next);
     iconLayoutDoneRef.current = true;
   }, [isRetroMode]);
@@ -2465,7 +2465,7 @@ function App() {
       if (mode === 'retro') {
         // Reuse the existing Shift+P handler so the user sees the full
         // BIOS → Windows startup video → desktop sequence on first entry.
-        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'P', shiftKey: true }));
+        shiftPHandlerRef.current({ shiftKey: true, key: 'P', repeat: false });
       }
     }, delay);
   };
@@ -2567,6 +2567,13 @@ function App() {
     [120, ''],
     [240, 'It is now safe to turn off your computer.'],
   ]), []);
+
+  // Ref to the keyboard handler so non-keyboard entry points (e.g. the
+  // "Enter 90s mode" button, the landing chooser) can invoke the same
+  // boot pipeline directly without synthesizing a DOM keyboard event.
+  // Synthetic KeyboardEvents reach the listener, but dispatching from a
+  // click bound to a tab-specific subtree was unreliable.
+  const shiftPHandlerRef = React.useRef(() => {});
 
   React.useEffect(() => {
     const handleKeyDown = (e) => {
@@ -2672,7 +2679,13 @@ function App() {
       }
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    // Expose the handler so the "Enter 90s mode" click + landing chooser
+    // can invoke the exact same boot pipeline without dispatching DOM events.
+    shiftPHandlerRef.current = handleKeyDown;
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      shiftPHandlerRef.current = () => {};
+    };
   }, [isRetroMode, isBootingUp]);
 
   // Click sounds inside the CRT screen.
@@ -2937,7 +2950,7 @@ function App() {
                             };
                             return (
                               <>
-                                {renderIcon('showcase',   'Portfolio',     '/crt/icons/portfolio.png', () => openShowcase('home'))}
+                                {renderIcon('showcase',   'Portfolio',     '/crt/icons/portfolio.png', () => openShowcase('home'), 'crt-desk-icon-portfolio')}
                                 {renderIcon('readme',     'README.txt',    '/crt/icons/readme.svg',   openReadme)}
                                 {renderIcon('recyclebin', 'Recycle Bin',   '/crt/icons/recyclebin.png', () => setIsRecycleBinOpen(true), 'crt-desk-icon-recyclebin')}
                                 {renderIcon('music',      'Music',         '/wmp/icons/music-deck.png', openWebamp, 'crt-desk-icon-music')}
@@ -5350,7 +5363,9 @@ function App() {
         <button
           className="mode-toggle"
           onClick={() => {
-            window.dispatchEvent(new KeyboardEvent('keydown', { key: 'P', shiftKey: true }));
+            // Invoke the Shift+P handler directly via ref — works from any
+            // tab regardless of DOM event routing.
+            shiftPHandlerRef.current({ shiftKey: true, key: 'P', repeat: false });
           }}
           aria-label="Enter 90s mode"
           title="Enter 90s mode"
