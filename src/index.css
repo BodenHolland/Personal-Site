@@ -783,9 +783,9 @@ section {
    of the tube. Sits ABOVE the win95 desktop but BELOW the glass-texture
    overlays (shadow/smudge/vignette/scanlines) so the textures still show
    on top, giving the "off" screen the same grime as a real dusty monitor.
-   When .crt-screen-on-anim is added, the keyframes below animate the
-   "screen turning on" beat: thin bright line forms in the middle, flashes
-   outward, and the panel itself flashes white then fades to black. */
+   The DOS screen above (z=9500) fades in over it during the warming
+   phase, so the smudge/shadow gradually disappear as the phosphor lights
+   up — same effect as a real CRT warming from cold. */
 .crt-screen-off {
   position: absolute;
   inset: 0;
@@ -794,49 +794,22 @@ section {
   pointer-events: none;
   overflow: hidden;
 }
-.crt-screen-on-line {
-  position: absolute;
-  /* Fill the parent screen exactly with `inset: 0`. The previous
-     `top: 50%; margin-top: -50%; height: 100%` trick was buggy because
-     CSS resolves a percentage `margin-top` against the containing
-     block's WIDTH (not height) — on wide screens the line was pushed
-     above center, on tall ones below. Filling the parent and letting
-     transform-origin: center handle the symmetric scaleY shrink keeps
-     the animation correct at any aspect ratio. */
-  inset: 0;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.95) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  box-shadow: 0 0 18px rgba(255, 255, 255, 0.7);
-  transform-origin: center center;
-  transform: scaleY(0);
+
+/* DOS warm-up: phosphor fade-in instead of the previous flash + line.
+   `crt-dos-screen-hidden` keeps the screen at opacity 0 during the off
+   phase. `crt-dos-screen-warming` runs the fade keyframes; whatever's in
+   bootLines at that moment (we pre-load the first BIOS banner) appears
+   to bloom in along with the screen. After the animation ends, the
+   `forwards` fill keeps opacity at 1 for the rest of the boot. */
+.crt-dos-screen-hidden {
   opacity: 0;
 }
-.crt-screen-on-anim {
-  animation: crt-screen-on-bg 1.6s ease-out 1 forwards;
+.crt-dos-screen-warming {
+  animation: crt-dos-warming 1.6s ease-in 1 forwards;
 }
-.crt-screen-on-anim .crt-screen-on-line {
-  animation: crt-screen-on-line 1.6s ease-out 1 forwards;
-}
-@keyframes crt-screen-on-bg {
-  0%   { background: #2a2a2c; }
-  18%  { background: #f5f5f5; }
-  45%  { background: #1a1a1a; }
-  100% { background: #000000; }
-}
-@keyframes crt-screen-on-line {
-  /* 0-15%: nothing — the user has just heard the click */
-  0%   { transform: scaleY(0); opacity: 0; }
-  15%  { transform: scaleY(0); opacity: 0; }
-  /* 15-30%: thin bright line snaps in at the middle */
-  30%  { transform: scaleY(0.012); opacity: 1; }
-  /* 30-70%: line expands vertically to fill the screen */
-  70%  { transform: scaleY(1); opacity: 0.7; }
-  /* 70-100%: line fades, leaving black behind */
-  100% { transform: scaleY(1); opacity: 0; }
+@keyframes crt-dos-warming {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 @keyframes crt-poweroff-line {
@@ -3343,6 +3316,13 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* size container so .crt-game-iframe can resolve its scale relative to
+     the actual body box (cqi/cqb). Without this, archive.org's canvas-
+     holder (which is absolutely positioned at left:0, vertically centered,
+     and shrink-wraps the canvas at the game's NATIVE pixel size) anchored
+     the game to the left edge of the iframe — leaving big black space on
+     the right at any aspect ratio. */
+  container-type: size;
 }
 
 .crt-win-statusbar {
@@ -3379,17 +3359,32 @@ section {
 }
 
 .crt-game-iframe {
-  /* Keep the game's native aspect ratio so archive.org doesn't letterbox
-     it left-aligned with empty black bars on the right. Centered via the
-     parent .crt-win-body's flex centering. */
-  height: 100%;
-  width: auto;
-  max-width: 100%;
-  max-height: 100%;
-  aspect-ratio: 4 / 3; /* default — overridden inline per-game */
+  /* Render the iframe at the game's native pixel size and then visually
+     scale it via transform to fill the parent. Archive.org's embed places
+     the canvas at the iframe's left edge at native pixels (640×480 etc.);
+     if we left the iframe at parent-size, the game would sit anchored to
+     the left with empty space on the right. Matching the iframe to the
+     canvas's native pixel size makes the canvas fill the iframe, then
+     `transform: scale()` (via container queries on .crt-win-body) blows
+     the whole thing up uniformly to fit the available area.
+
+     --gw / --gh are unitless numbers set via inline style on the <iframe>
+     so different games (e.g. 320×200 vs 640×480) can use their own
+     native resolution without editing the stylesheet. Defaults below
+     match the most common DOS game native resolution (640×480 VGA). */
+  --gw: 640;
+  --gh: 480;
+  width: calc(var(--gw) * 1px);
+  height: calc(var(--gh) * 1px);
+  flex: 0 0 auto;
   border: none;
   display: block;
   background: #000;
+  transform-origin: center center;
+  transform: scale(min(
+    calc(100cqi / (var(--gw) * 1px)),
+    calc(100cqb / (var(--gh) * 1px))
+  ));
 }
 
 /* Bottom Control Panel */

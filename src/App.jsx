@@ -2647,16 +2647,24 @@ function App() {
           // the glass texture (shadow, smudge, vignette, scanlines) on top.
           setTimeout(() => setRetroCover(false), 300);
           // Beat 1: see the PC (gray off-screen) — cover fully gone ~+700ms.
-          // Beat 2: power-button click + screen-turning-on animation ~+1000ms.
-          // Beat 3: animation ends, DOS mounts black ~+2600ms (1600ms anim).
-          // Beat 4: first BIOS line types in ~+2880ms (~280ms settled beat).
+          // Beat 2: power-button click + screen warms up over 1.6s. The
+          //         first BIOS line is preloaded into bootLines so it
+          //         fades in along with the phosphor instead of typing
+          //         onto a blank black screen.
+          // Beat 3: warming ends ~+2600ms, screen fully on, first line
+          //         is solid.
+          // Beat 4: line 2 (CPU/RAM) starts typing ~+2880ms — ~280ms
+          //         "settled" beat after the screen is fully on.
           let powerOnNode = null;
           setTimeout(() => {
             if (!isRetroModeRef.current) return;
             try { powerOnNode = playPowerOn(); } catch {}
             setCrtScreenPoweringOn(true);
+            // Pre-load the first line so it appears bloom-in with the
+            // phosphor warm-up instead of materializing later.
+            setBootLines([BOOT_SCRIPT[0][1]]);
           }, 1000);
-          // Animation duration must match the CSS keyframes (.crt-screen-on-anim).
+          // Animation duration must match the .crt-dos-warming keyframes.
           setTimeout(() => {
             if (!isRetroModeRef.current) return;
             setCrtScreenPoweringOn(false);
@@ -2665,10 +2673,13 @@ function App() {
 
           // Boot line cadence — multiplier slows BIOS line-to-line gaps so
           // the boot feels period-correct (chunkier) rather than rushed.
+          // The first line is already on screen (faded in with the
+          // phosphor), so we start scheduling from BOOT_SCRIPT[1] onwards.
           const BOOT_SCALE = 1.35;
-          let acc = 2800;
-          BOOT_SCRIPT.forEach(([delay, text]) => {
-            acc += delay * BOOT_SCALE;
+          let acc = 2880;
+          BOOT_SCRIPT.forEach(([delay, text], i) => {
+            if (i === 0) return;          // pre-loaded during warm-up
+            if (i > 1) acc += delay * BOOT_SCALE;  // line 1 lands at +2880
             setTimeout(() => setBootLines(prev => [...prev, text]), acc);
           });
 
@@ -2946,18 +2957,22 @@ function App() {
                         {/* CRT off-state: gray panel sits below the glass-
                             texture overlays (shadow/smudge/vignette/scanlines)
                             so the "powered off" screen still carries the CRT
-                            grime. Toggling .crt-screen-on-anim triggers the
-                            flash + line "screen turning on" keyframes; once
-                            they finish we set crtScreenAwake=true, this panel
-                            unmounts and the DOS boot screen below takes over. */}
+                            grime. Stays mounted through the warming phase so
+                            the grime + gray are visible *under* the DOS layer
+                            as DOS fades in; unmounts once crtScreenAwake. */}
                         {isBootingUp && !crtScreenAwake && (
-                          <div className={`crt-screen-off${crtScreenPoweringOn ? ' crt-screen-on-anim' : ''}`}>
-                            <div className="crt-screen-on-line" />
-                          </div>
+                          <div className="crt-screen-off" />
                         )}
-                        {/* DOS-style boot-up screen */}
-                        {isBootingUp && crtScreenAwake && (
-                          <div className="crt-dos-screen">
+                        {/* DOS-style boot-up screen — always mounted during
+                            boot. Opacity is gated by class so the screen
+                            "warms up" (fade-in) from the off-panel beneath,
+                            instead of a hard cut. */}
+                        {isBootingUp && (
+                          <div className={`crt-dos-screen${
+                            crtScreenPoweringOn ? ' crt-dos-screen-warming'
+                            : !crtScreenAwake ? ' crt-dos-screen-hidden'
+                            : ''
+                          }`}>
                             {bootLines.map((line, i) => (
                               <div key={i} className="crt-dos-line">
                                 {line || ' '}
@@ -3056,7 +3071,15 @@ function App() {
                               <div className="crt-win-body">
                                 <iframe
                                   className="crt-game-iframe"
-                                  style={{ aspectRatio: (currentGame.aspectRatio || '4/3').replace('/', ' / ') }}
+                                  /* --gw / --gh feed the CSS transform that scales the
+                                     iframe up to fill the window body. Defaults match the
+                                     most common DOS native (640×480 VGA); override per
+                                     game if its emulator renders at a different
+                                     resolution (e.g. 320×200). */
+                                  style={{
+                                    '--gw': currentGame.nativeWidth || 640,
+                                    '--gh': currentGame.nativeHeight || 480,
+                                  }}
                                   src={`https://archive.org/embed/${currentGame.archiveId}?autoplay=1`}
                                   allowFullScreen
                                 />
@@ -5361,10 +5384,9 @@ function App() {
               <h1 className="landing-title">Hi, I'm Boden 👋</h1>
               <p className="landing-lede">
                 You have two choices when it comes to experiencing my site.
-                First, the modern clean version. Very easy to navigate. The
-                second, a love letter to the 90s. Old PCs, slower and weirder
-                but perhaps more fun. Pick whichever suits your mood. You can
-                always switch later.
+                The first, a modern clean version. The second, a love letter
+                to the 90s. Pick whichever suits your mood. You can always
+                switch later.
               </p>
 
               <div className="landing-grid">
