@@ -1989,23 +1989,44 @@ function App() {
   const [isAudioMuted, setIsAudioMuted] = useState(true);
   const [showGame, setShowGame] = useState(false);
   const [currentGame, setCurrentGame] = useState(retroGames.find(g => g.id === 'simcity') || retroGames[0]);
-  const [isRetroMode, setIsRetroMode] = useState(false);
+  // All three pieces of state below need to be correct on the FIRST render
+  // (not after a post-mount effect), otherwise mobile visitors see the
+  // landing chooser flash for a frame before being routed to the modern
+  // site. We compute the mobile check + localStorage choice synchronously
+  // inside each useState initializer so the very first paint already
+  // reflects the right mode.
+  const detectIsMobile = () => {
+    if (typeof window === 'undefined') return false;
+    const coarse = window.matchMedia?.('(pointer: coarse)').matches;
+    return !!coarse && window.innerWidth < 768;
+  };
+  const readSavedMode = () => {
+    if (typeof window === 'undefined') return null;
+    try { return window.localStorage.getItem('site-mode'); } catch { return null; }
+  };
+  const [isRetroMode, setIsRetroMode] = useState(() => {
+    // Mobile is forced to modern regardless of persisted choice.
+    if (detectIsMobile()) return false;
+    return readSavedMode() === 'retro';
+  });
   // Landing / mode chooser. First-time visitors see a fullscreen chooser
   // ("Modern site" vs "Enter the 90s"). The choice is persisted in
   // localStorage so returning visitors skip the landing. `landingLeaving`
   // tracks which mode is being entered so we can play a brief overlay
   // transition (fade for modern, flash for retro) before swapping the
   // body content underneath.
-  const [siteModeChosen, setSiteModeChosen] = useState(false);
+  const [siteModeChosen, setSiteModeChosen] = useState(() => {
+    // Mobile skips the chooser entirely — initialize to true so the
+    // landing JSX never renders even for one frame on phones.
+    if (detectIsMobile()) return true;
+    const saved = readSavedMode();
+    return saved === 'modern' || saved === 'retro';
+  });
   const [landingLeaving, setLandingLeaving] = useState(null);
   // Mobile = touch-primary device with a small viewport. The 90s desktop UI
   // (draggable windows, Start menu, BIOS boot) is unusable on phones, so we
   // force the modern site and hide the retro entry points entirely.
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const coarse = window.matchMedia?.('(pointer: coarse)').matches;
-    return !!coarse && window.innerWidth < 768;
-  });
+  const [isMobile, setIsMobile] = useState(detectIsMobile);
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
     const check = () => {
