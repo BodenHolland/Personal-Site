@@ -796,11 +796,14 @@ section {
 }
 .crt-screen-on-line {
   position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 100%;
-  margin-top: -50%;
+  /* Fill the parent screen exactly with `inset: 0`. The previous
+     `top: 50%; margin-top: -50%; height: 100%` trick was buggy because
+     CSS resolves a percentage `margin-top` against the containing
+     block's WIDTH (not height) — on wide screens the line was pushed
+     above center, on tall ones below. Filling the parent and letting
+     transform-origin: center handle the symmetric scaleY shrink keeps
+     the animation correct at any aspect ratio. */
+  inset: 0;
   background: linear-gradient(
     to right,
     rgba(255, 255, 255, 0) 0%,
