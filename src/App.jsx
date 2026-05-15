@@ -1810,6 +1810,8 @@ const projectsData = [
     icon: <HeartPulse size={32} />,
     color: '#ef4444',
     image: '/projects/ambulance_hero.png',
+    isAppIcon: true,
+    noOverlay: true,
     links: [
       { label: 'Visit Site', url: 'https://ambulancecost.com' }
     ]
@@ -1864,6 +1866,8 @@ const projectsData = [
     icon: <Smartphone size={32} />,
     color: '#2563eb',
     image: '/projects/copythat_hero.png',
+    isAppIcon: true,
+    noOverlay: true,
   },
   {
     id: 'yournyc',
@@ -1872,7 +1876,8 @@ const projectsData = [
     description: 'An ongoing open-source civic initiative making city data accessible and interactive. What started as a project to turn New York City\'s published documents into a dedicated application has since expanded to include San Francisco, helping citizens easily browse, filter, and find what\'s relevant to their neighborhood.',
     icon: <FileText size={32} />,
     color: '#0ea5e9',
-    image: '/projects/yournyc_hero.jpg',
+    image: '/projects/yournyc_hero.png',
+    isWordmark: true,
     noOverlay: true,
     links: [
       { label: 'Visit YourNYC', url: 'https://www.yournyc.app' },
@@ -4919,19 +4924,29 @@ function App() {
                   }}
                   style={{ cursor: project.expandable ? 'pointer' : 'default' }}
                 >
-                  {(project.image || project.iframe) && (
-                    <div className="project-card-image">
-                      {project.iframe ? (
-                        <iframe 
-                          src={project.iframe} 
-                          title={project.title} 
+                  {(project.image || project.iframe || project.useIconImage) && (
+                    <div
+                      className={`project-card-image${project.useIconImage ? ' is-icon' : ''}${project.isAppIcon ? ' is-app-icon' : ''}${project.isDarkIcon ? ' is-dark' : ''}${project.isWordmark ? ' is-wordmark' : ''}`}
+                      style={{ '--project-color': project.color }}
+                    >
+                      {project.useIconImage ? (
+                        <div
+                          className="project-icon-wrapper"
+                          style={{ '--project-color': project.color }}
+                        >
+                          {project.icon}
+                        </div>
+                      ) : project.iframe ? (
+                        <iframe
+                          src={project.iframe}
+                          title={project.title}
                           style={{ width: '100%', height: '100%', border: 'none', pointerEvents: 'none' }}
                           scrolling="no"
                         />
                       ) : (
                         <img src={project.image} alt={project.title} />
                       )}
-                      {!project.noOverlay && (
+                      {!project.noOverlay && !project.useIconImage && (
                         <div className="project-card-overlay" style={{ '--project-color': project.color }}></div>
                       )}
                     </div>
