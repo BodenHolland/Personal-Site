@@ -2741,8 +2741,6 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const isMobile = windowWidth < 850;
-
   // Keyboard navigation for lightbox
   React.useEffect(() => {
     const handleKeyDown = (e) => {
