@@ -5774,7 +5774,9 @@ body, .container, .navbar, .content-wrapper, .panel {
   position: fixed;
   bottom: 68px; /* sits above .mode-toggle (40px tall + 8px gap) */
   left: 20px;
-  z-index: 9999;
+  /* Above the landing overlay (z 12000) so visitors can cycle the
+     time-of-day palette from the chooser too. */
+  z-index: 12100;
   display: flex;
   align-items: center;
   justify-content: flex-start;

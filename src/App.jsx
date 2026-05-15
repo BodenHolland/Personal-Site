@@ -2520,7 +2520,9 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  React.useEffect(() => {
+  // Apply the phase class before first paint so the landing chooser
+  // doesn't flash white before the time-of-day palette kicks in.
+  React.useLayoutEffect(() => {
     const el = document.documentElement;
     PHASE_ORDER.forEach(p => el.classList.remove(`phase-${p}`));
     el.classList.add(`phase-${timePhase}`);
