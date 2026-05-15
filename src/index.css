@@ -1524,15 +1524,19 @@ section {
   color: #000;
   text-align: left;
 }
-/* Welcome block opens with the largest heading. */
+/* Subtitle under the big "Welcome" — sits like Henry's "I'm Henry
+   Heffernan" line beneath his Welcome display. */
 .about-title {
   font-family: Georgia, 'Times New Roman', Times, serif;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: bold;
-  margin: 0 0 14px 0;
+  margin: 0 0 22px 0;
   color: #000;
   text-align: left;
   letter-spacing: 0;
+}
+@container (max-width: 560px) {
+  .about-title { font-size: 20px; }
 }
 .about-kicker {
   display: none; /* Henry doesn't use a "Welcome" kicker — drop it */
@@ -1577,20 +1581,75 @@ section {
   max-width: 300px;
 }
 
-/* Inline Win9x-style icon next to a link (e.g. the LinkedIn line in the
-   Welcome block). Pixelated rendering keeps the 8-bit aesthetic crisp. */
-.about-linkedin-line {
+/* Big display "Welcome" headline above the page title. Cooper-Black-ish
+   chunky serif for that 90s magazine feel — mirrors Henry's intro. */
+.about-welcome {
+  font-family: 'Cooper Black', 'Cooper Std', 'Bookman Old Style',
+               Georgia, 'Times New Roman', Times, serif;
+  font-weight: 900;
+  font-size: 65px;
+  line-height: 0.92;
+  letter-spacing: -2px;
+  margin: -4px 0 6px 0;
+  color: #000;
+  text-align: left;
+  /* Fake extra ink so the glyphs render even chunkier than Cooper Black's
+     native weight — a 0.5–1px text-shadow in the same color thickens
+     strokes without aliasing. */
+  text-shadow: 0.6px 0 0 #000, -0.6px 0 0 #000, 0 0.4px 0 #000;
+  -webkit-text-stroke: 0.4px #000;
+}
+@container (max-width: 560px) {
+  .about-welcome { font-size: 50px; }
+}
+
+/* LinkedIn CTA block — Henry-style: thick black rules top + bottom,
+   icon on the left, big bold question stacked above a smaller link. */
+.about-cta-block {
   display: flex;
   align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 18px;
+  margin: 22px 0 0 0;
+  padding: 18px 4px;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
 }
-.about-inline-icon {
-  width: 56px;
-  height: 56px;
+.about-cta-icon {
+  width: 64px;
+  height: 64px;
   flex-shrink: 0;
   object-fit: contain;
   image-rendering: pixelated;
+}
+.about-cta-text {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+.about-cta-heading {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 1.2;
+  margin: 0 0 4px 0 !important;
+  color: #000;
+  text-align: left;
+  text-indent: 0;
+}
+.about-cta-link {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 17px;
+  color: #1f1faa;
+  text-decoration: underline;
+}
+.about-cta-link:hover {
+  color: #6b1f8a;
+}
+@container (max-width: 560px) {
+  .about-cta-block { gap: 12px; padding: 14px 2px; }
+  .about-cta-icon { width: 48px; height: 48px; }
+  .about-cta-heading { font-size: 18px; }
+  .about-cta-link { font-size: 15px; }
 }
 
 /* Full-bleed figure — sits in the document flow, not floated. Used for
@@ -1644,6 +1703,33 @@ section {
   padding-top: 16px;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+/* Outside of Work pair — vertically centered so the short prose aligns
+   with the middle of the portrait instead of clinging to the top. */
+.about-outside-pair {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 28px;
+  margin: 8px 0 0 0;
+}
+.about-outside-text {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+.about-outside-figure {
+  flex: 0 1 280px;
+  min-width: 200px;
+  max-width: 320px;
+}
+@container (max-width: 560px) {
+  .about-outside-pair { flex-direction: column; align-items: stretch; gap: 16px; }
+  .about-outside-figure {
+    align-self: center;
+    width: 70%;
+    max-width: 280px;
+  }
 }
 
 /* Side-by-side block — Henry's "My Hobbies" pattern: justified prose on
@@ -3714,6 +3800,93 @@ section {
   .card:hover {
     border-color: var(--text-main);
   }
+}
+
+/* === Favorite Card =========================================================
+   Compact horizontal tile for the Products section. Icon + name + short
+   description in a small panel. Sized to fit 3 across on desktop, 2 on
+   tablet, 1 on mobile. Uses theme vars so the panel tint follows the
+   time-of-day phase.
+   ========================================================================== */
+.favorites-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+@media (min-width: 640px) {
+  .favorites-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .favorites-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.favorite-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--panel-bg) 80%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--text-main) 8%, transparent);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.favorite-card:hover {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--text-main) 14%, transparent),
+    0 6px 18px color-mix(in srgb, var(--text-main) 8%, transparent);
+  transform: translateY(-1px);
+}
+
+.favorite-card-icon {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--bg-color);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-main) 8%, transparent);
+}
+.favorite-card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.favorite-card-text {
+  flex: 1;
+  min-width: 0;
+  padding-top: 2px;
+}
+.favorite-card-name {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  color: var(--text-main);
+  margin: 0;
+  line-height: 1.25;
+}
+.favorite-card-desc {
+  margin: 6px 0 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  /* Truncate to 3 lines so cards stay uniform height */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.favorite-card.is-expandable .favorite-card-desc {
+  -webkit-line-clamp: 2;
 }
 
 .product-card {

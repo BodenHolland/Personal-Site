@@ -3060,13 +3060,14 @@ function App() {
                                   <div className="showcase-content">
                                     {showcaseTab === 'about' && (
                                       <article className="showcase-section showcase-about">
-                                        {/* Page title (h3-sized in spirit, but biggest on the page) */}
-                                        <h3 className="about-title">I'm Boden Holland</h3>
+                                        {/* Big display "Welcome" headline + smaller name line. */}
+                                        <h2 className="about-welcome">Welcome</h2>
+                                        <h3 className="about-title">I'm Boden,</h3>
 
                                         <p>
-                                          I'm a product builder based in San Francisco. I'm
-                                          interested in civic tools, housing, public data, and the
-                                          systems that shape everyday life.
+                                          a product builder based in San Francisco. I'm interested
+                                          in civic tools, housing, public data, and the systems
+                                          that shape everyday life.
                                         </p>
                                         <p>
                                           This site is where I collect the things I'm building and
@@ -3074,20 +3075,27 @@ function App() {
                                           Most are attempts to make confusing systems easier to
                                           understand.
                                         </p>
-                                        <p className="about-linkedin-line">
+
+                                        {/* LinkedIn CTA — Henry-style bordered block with the
+                                            globe icon to the left, big bold question stacked
+                                            above the link. */}
+                                        <div className="about-cta-block">
                                           <img
-                                            className="about-inline-icon"
+                                            className="about-cta-icon"
                                             src="/about/internet.webp"
                                             alt=""
                                             aria-hidden="true"
                                           />
-                                          <b>Looking for my professional background?</b>{' '}
-                                          <a
-                                            href="https://www.linkedin.com/in/boden-holland/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                          >Visit my LinkedIn.</a>
-                                        </p>
+                                          <div className="about-cta-text">
+                                            <p className="about-cta-heading">Looking for my professional background?</p>
+                                            <a
+                                              className="about-cta-link"
+                                              href="https://www.linkedin.com/in/boden-holland/"
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                            >Visit my LinkedIn.</a>
+                                          </div>
+                                        </div>
 
                                         <br /><br />
                                         <h3>About Me</h3>
@@ -3159,22 +3167,27 @@ function App() {
                                         </p>
 
                                         <br /><br />
-                                        <h3>Outside of Work</h3>
-
-                                        {/* Figure 2 — floats right inside Outside of Work. The
-                                            short prose wraps along its left edge. */}
-                                        <div className="captioned-image about-figure about-figure-pro">
-                                          <img src="/about/professional.jpg" alt="Boden Holland — portrait" />
-                                          <p><sub><b>Figure 2:</b> Me, today</sub></p>
+                                        {/* Outside of Work — entire text block (heading + prose)
+                                            sits in a flex pair, vertically centered against the
+                                            portrait so the header isn't orphaned above. */}
+                                        <div className="about-outside-pair">
+                                          <div className="about-outside-text">
+                                            <h3>Outside of Work</h3>
+                                            <p>
+                                              Outside of product, I spend time with books, music,
+                                              film, design experiments, family history, and odd
+                                              little internet projects. I'm interested in cities,
+                                              public systems, and visual culture.
+                                            </p>
+                                            <p>This site is a place for that work and curiosity.</p>
+                                          </div>
+                                          <div className="about-outside-figure">
+                                            <div className="captioned-image about-figure about-figure-pro about-figure-inline">
+                                              <img src="/about/professional.jpg" alt="Boden Holland — portrait" />
+                                              <p><sub><b>Figure 2:</b> Me, today</sub></p>
+                                            </div>
+                                          </div>
                                         </div>
-
-                                        <p>
-                                          Outside of product, I spend time with books, music, film,
-                                          design experiments, family history, and odd little
-                                          internet projects. I'm interested in cities, public
-                                          systems, and visual culture.
-                                        </p>
-                                        <p>This site is a place for that work and curiosity.</p>
 
                                         <br /><br />
                                         <p className="about-signoff">
@@ -4681,12 +4694,12 @@ function App() {
                   })}
               </div>
             ) : libraryTab === 'products' ? (
-              <div className="grid">
+              <div className="favorites-grid">
                 {products.map(p => (
-                  <motion.div 
+                  <motion.div
                     layoutId={`product-${p.name}`}
-                    key={p.name} 
-                    className={`card product-card ${p.expandable ? 'expandable' : ''}`}
+                    key={p.name}
+                    className={`favorite-card${p.expandable ? ' is-expandable' : ''}`}
                     onClick={() => {
                       if (p.expandable) {
                         setExpandedProduct(p);
@@ -4695,15 +4708,18 @@ function App() {
                       }
                     }}
                     whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
-                    style={{ cursor: 'pointer' }}
                   >
-                    {p.iconUrl && (
-                      <img src={p.iconUrl} alt={`${p.name} icon`} className="product-icon" />
-                    )}
-                    <h3 style={{ marginBottom: '1rem' }}>{p.name}</h3>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6' }}>
-                      {p.desc}{p.expandable && '...'}
-                    </p>
+                    <div className="favorite-card-icon">
+                      {p.iconUrl && (
+                        <img src={p.iconUrl} alt={`${p.name} icon`} />
+                      )}
+                    </div>
+                    <div className="favorite-card-text">
+                      <h3 className="favorite-card-name">{p.name}</h3>
+                      <p className="favorite-card-desc">
+                        {p.desc}{p.expandable && '…'}
+                      </p>
+                    </div>
                   </motion.div>
                 ))}
               </div>
