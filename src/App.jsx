@@ -1,4 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
+
+// Webamp (Music app) is lazy-loaded so it only pulls webamp + butterchurn
+// into the bundle when the user actually clicks the Music desktop icon.
+const Webamp = lazy(() => import('./wmp/Webamp.jsx'));
+
+// ErrorBoundary specifically for the Webamp mount. Without this, if Webamp's
+// constructor or render throws (network failure on the .wsz skin, butterchurn
+// preset parse error, etc.), React 19 unmounts the entire root → the whole
+// page goes white. The boundary catches the error, logs it, and silently
+// closes the player so the rest of the site keeps working.
+class WebampErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { error: null }; }
+  static getDerivedStateFromError(error) { return { error }; }
+  componentDidCatch(error, info) {
+    console.error('[Webamp] crashed:', error, info);
+    if (this.props.onError) this.props.onError(error);
+  }
+  render() {
+    if (this.state.error) return null;
+    return this.props.children;
+  }
+}
 import { motion, AnimatePresence } from 'framer-motion';
 import SunCalc from 'suncalc';
 import {
@@ -1962,6 +1984,14 @@ function App() {
   const [showGame, setShowGame] = useState(false);
   const [currentGame, setCurrentGame] = useState(retroGames.find(g => g.id === 'simcity') || retroGames[0]);
   const [isRetroMode, setIsRetroMode] = useState(false);
+  // Landing / mode chooser. First-time visitors see a fullscreen chooser
+  // ("Modern site" vs "Enter the 90s"). The choice is persisted in
+  // localStorage so returning visitors skip the landing. `landingLeaving`
+  // tracks which mode is being entered so we can play a brief overlay
+  // transition (fade for modern, flash for retro) before swapping the
+  // body content underneath.
+  const [siteModeChosen, setSiteModeChosen] = useState(false);
+  const [landingLeaving, setLandingLeaving] = useState(null);
   const [isBootingUp, setIsBootingUp] = useState(false);
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
   const [isShuttingDown, setIsShuttingDown] = useState(false);
@@ -1972,12 +2002,444 @@ function App() {
   const [isCursorBusy, setIsCursorBusy] = useState(false);
   const [isShutdownConfirmOpen, setIsShutdownConfirmOpen] = useState(false);
   const [shutdownChoice, setShutdownChoice] = useState('shutdown');
+  // README window — explains the system + game controls.
+  const [isReadmeOpen, setIsReadmeOpen] = useState(false);
+  // Recycle Bin window + its full-size image viewer.
+  const [isRecycleBinOpen, setIsRecycleBinOpen] = useState(false);
+  const [isRecycleImgOpen, setIsRecycleImgOpen] = useState(false);
+
+  // Webamp (Music) — desktop app. Assets (tracks + skins) are loaded on
+  // first open; the Webamp lib + butterchurn presets lazy-import inside
+  // the wrapper component.
+  const [isWebampOpen, setIsWebampOpen] = useState(false);
+  const [webampAssets, setWebampAssets] = useState(null);
+  const openWebamp = async () => {
+    if (!webampAssets) {
+      const [tracksRes, skinsRes] = await Promise.all([
+        fetch('/wmp/audio/tracks.json').catch(() => null),
+        fetch('/wmp/skins/skins.json').catch(() => null),
+      ]);
+      const localTracks = tracksRes && tracksRes.ok ? (await tracksRes.json()).tracks || [] : [];
+      const skinsManifest = skinsRes && skinsRes.ok ? await skinsRes.json() : { initial: null, available: [] };
+      const spotifyTracks = audioData
+        .filter((t) => t.previewUrl)
+        .map((t) => ({
+          url: t.previewUrl,
+          metaData: { artist: t.artist || '', title: t.title || '', album: '' },
+        }));
+      setWebampAssets({
+        tracks: localTracks.length ? localTracks : spotifyTracks,
+        skins: skinsManifest.available || [],
+        initialSkin: skinsManifest.initial ? { url: skinsManifest.initial } : undefined,
+      });
+    }
+    setIsWebampOpen(true);
+  };
+
+  // Desktop icon positions (draggable). Each entry: { x, y } in px from
+  // the top-left of the .crt-win95-desktop. Defaults are seeded as a
+  // single column at boot, then re-laid-out the first time retro mode
+  // becomes active (once the desktop has real dimensions to measure
+  // against). After that, user drags are preserved.
+  const ICON_LIST = React.useMemo(() => ([
+    { id: 'showcase' },
+    { id: 'readme' },
+    { id: 'recyclebin' },
+    { id: 'music' },
+    ...retroGames.map((g) => ({ id: g.id })),
+  ]), []);
+  const [iconPositions, setIconPositions] = useState(() => {
+    const pos = {};
+    ICON_LIST.forEach((icon, i) => {
+      pos[icon.id] = { x: 8, y: 8 + i * 84 };
+    });
+    return pos;
+  });
+  const crtDesktopRef = React.useRef(null);
+  const iconLayoutDoneRef = React.useRef(false);
+
+  // Lay out icons once the desktop is mounted and has size:
+  //   - Recycle Bin: top-right corner; Music: just below it (right column)
+  //   - Games: top-left column, stacked downward
+  //   - README + Showcase: bottom-left (README above Showcase)
+  React.useLayoutEffect(() => {
+    if (!isRetroMode) return;
+    if (iconLayoutDoneRef.current) return;
+    const el = crtDesktopRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    if (rect.width < 200 || rect.height < 200) return;
+    const W = rect.width;
+    const H = rect.height;
+    const ICON_W = 64;
+    const ROW_H = 84;
+    const M = 12;
+    const next = {};
+    // Top-right corner: Recycle Bin
+    next.recyclebin = { x: W - ICON_W - M, y: M };
+    // Top-left column: games, stacked
+    retroGames.forEach((g, i) => {
+      next[g.id] = { x: M, y: M + i * ROW_H };
+    });
+    // Bottom-left, top-to-bottom: Music, README, Showcase
+    next.showcase = { x: M, y: H - ROW_H - M };
+    next.readme   = { x: M, y: H - 2 * ROW_H - M };
+    next.music    = { x: M, y: H - 3 * ROW_H - M };
+    setIconPositions(next);
+    iconLayoutDoneRef.current = true;
+  }, [isRetroMode]);
+
+  // Drag-or-click handler factory. Distinguishes a click (no movement
+  // past a 4px threshold) from a drag. Calls openHandler on click,
+  // updates iconPositions on drag.
+  const startIconDragOrClick = React.useCallback((id, openHandler) => (e) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const origPos = iconPositions[id] || { x: 0, y: 0 };
+    let moved = false;
+    const move = (ev) => {
+      const dx = ev.clientX - startX;
+      const dy = ev.clientY - startY;
+      if (!moved && Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+      if (moved) {
+        setIconPositions((prev) => ({
+          ...prev,
+          [id]: {
+            x: Math.max(0, origPos.x + dx),
+            y: Math.max(0, origPos.y + dy),
+          },
+        }));
+      }
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+      if (!moved) openHandler && openHandler();
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  }, [iconPositions]);
+  // Showcase window — Henry-style portfolio explorer inside the CRT.
+  // Full window-manager state: position, size, minimized, maximized, z-index.
+  const [isShowcaseOpen, setIsShowcaseOpen] = useState(false);
+  const [showcaseTab, setShowcaseTab] = useState('home');
+  const [showcaseMinimized, setShowcaseMinimized] = useState(false);
+  const [showcaseMaximized, setShowcaseMaximized] = useState(false);
+  // Win95 picture viewer for the Photography tab (null = no photo open).
+  const [showcasePhotoIndex, setShowcasePhotoIndex] = useState(null);
+  // Library sub-tab inside the showcase.
+  const [showcaseLibTab, setShowcaseLibTab] = useState('audio');
+  // Heads-up notice on the Audio tab — warns visitors that hovering an
+  // album triggers a 30s Spotify preview. Dismissed for the session once
+  // clicked.
+  const [audioPreviewNoticeOk, setAudioPreviewNoticeOk] = useState(false);
+  // Screens (movies/shows/games) detail viewer — index in screensData or null.
+  const [showcaseScreenIndex, setShowcaseScreenIndex] = useState(null);
+  // Products detail viewer — index in products or null.
+  const [showcaseProductIndex, setShowcaseProductIndex] = useState(null);
+  // Books accordion — index in booksData currently expanded, or null.
+  const [showcaseBookIndex, setShowcaseBookIndex] = useState(null);
+  // Experiments detail viewer — index in projectsData or null.
+  const [showcaseExperimentIndex, setShowcaseExperimentIndex] = useState(null);
+  // Whether the Light Fixtures sub-gallery is expanded inside that detail.
+  const [showcaseFixturesOpen, setShowcaseFixturesOpen] = useState(false);
+  // When set, shows a larger picture viewer for a fixture image: { src, alt }.
+  const [showcaseFixtureImage, setShowcaseFixtureImage] = useState(null);
+  // Screens sub-filter — mirrors the modern site's screensSubTab values.
+  const [showcaseScreensFilter, setShowcaseScreensFilter] = useState('all');
+  // Filter helper, identical to the matching the modern site uses.
+  const matchesScreensFilter = (item) => {
+    const s = (item.subtitle || '').toLowerCase();
+    switch (showcaseScreensFilter) {
+      case 'movies': return s.includes('movie');
+      case 'shows':  return s.includes('tv series') || s.includes('show');
+      case 'games':  return s.includes('game');
+      default:       return true;
+    }
+  };
+  // 30-second hover preview for audio tracks (Spotify previewUrl).
+  const showcasePreviewRef = React.useRef(null);
+  const playAudioPreview = (url) => {
+    if (!url) return;
+    if (showcasePreviewRef.current) {
+      showcasePreviewRef.current.pause();
+    }
+    const a = new Audio(url);
+    a.volume = isCrtMuted ? 0 : 0.45 * (volumeStep / 6);
+    a.play().catch(() => {});
+    showcasePreviewRef.current = a;
+  };
+  const stopAudioPreview = () => {
+    if (showcasePreviewRef.current) {
+      showcasePreviewRef.current.pause();
+      showcasePreviewRef.current = null;
+    }
+  };
+  const [showcasePos, setShowcasePos] = useState({ top: 40, left: 40 });
+  const [showcaseSize, setShowcaseSize] = useState({ width: 760, height: 520 });
+  const showcaseDragRef = React.useRef(null);
+
+  // Shared resize-handle factory. Wires a mousedown on a corner grip to a
+  // window-level mousemove that adjusts width/height via the given setter.
+  const makeResizeHandler = (size, setSize, min = { width: 360, height: 260 }) =>
+    React.useCallback((e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const origW = size.width;
+      const origH = size.height;
+      const move = (ev) => {
+        setSize({
+          width: Math.max(min.width, origW + (ev.clientX - startX)),
+          height: Math.max(min.height, origH + (ev.clientY - startY)),
+        });
+      };
+      const up = () => {
+        window.removeEventListener('mousemove', move);
+        window.removeEventListener('mouseup', up);
+      };
+      window.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', up);
+    }, [size.width, size.height, setSize, min.width, min.height]);
+  const onShowcaseResizeMouseDown = makeResizeHandler(showcaseSize, setShowcaseSize);
+
+  // README window — same chrome as Showcase: draggable, min/max/close.
+  const [readmePos, setReadmePos] = useState({ top: 60, left: 120 });
+  const [readmeSize, setReadmeSize] = useState({ width: 640, height: 540 });
+  const onReadmeResizeMouseDown = makeResizeHandler(readmeSize, setReadmeSize);
+  const [readmeMinimized, setReadmeMinimized] = useState(false);
+  const [readmeMaximized, setReadmeMaximized] = useState(false);
+  const readmeDragRef = React.useRef(null);
+  const onReadmeTitleMouseDown = React.useCallback((e) => {
+    if (readmeMaximized) return;
+    if (e.target.closest('.crt-win-btn')) return;
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const origTop = readmePos.top;
+    const origLeft = readmePos.left;
+    readmeDragRef.current = { startX, startY, origTop, origLeft };
+    const move = (ev) => {
+      const d = readmeDragRef.current;
+      if (!d) return;
+      setReadmePos({
+        top: Math.max(0, d.origTop + (ev.clientY - d.startY)),
+        left: Math.max(-200, d.origLeft + (ev.clientX - d.startX)),
+      });
+    };
+    const up = () => {
+      readmeDragRef.current = null;
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    e.preventDefault();
+  }, [readmePos.top, readmePos.left, readmeMaximized]);
+  const toggleReadmeMin = () => setReadmeMinimized((m) => !m);
+  const toggleReadmeMax = () => setReadmeMaximized((m) => !m);
+  const closeReadme = () => {
+    setIsReadmeOpen(false);
+    setReadmeMinimized(false);
+    setReadmeMaximized(false);
+  };
+  const openReadme = () => {
+    setIsReadmeOpen(true);
+    setReadmeMinimized(false);
+  };
+
+  const onShowcaseTitleMouseDown = React.useCallback((e) => {
+    if (showcaseMaximized) return;
+    // Ignore clicks on the window control buttons (min/max/close).
+    if (e.target.closest('.crt-win-btn')) return;
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const origTop = showcasePos.top;
+    const origLeft = showcasePos.left;
+    showcaseDragRef.current = { startX, startY, origTop, origLeft };
+    const move = (ev) => {
+      const d = showcaseDragRef.current;
+      if (!d) return;
+      setShowcasePos({
+        top: Math.max(0, d.origTop + (ev.clientY - d.startY)),
+        left: Math.max(-200, d.origLeft + (ev.clientX - d.startX)),
+      });
+    };
+    const up = () => {
+      showcaseDragRef.current = null;
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    e.preventDefault();
+  }, [showcasePos.top, showcasePos.left, showcaseMaximized]);
+
+  const openShowcase = (tab = 'about') => {
+    setShowcaseTab(tab);
+    setIsShowcaseOpen(true);
+    setShowcaseMinimized(false);
+  };
+  const toggleShowcaseMin = () => setShowcaseMinimized((m) => !m);
+  const toggleShowcaseMax = () => setShowcaseMaximized((m) => !m);
+  const closeShowcase = () => {
+    setIsShowcaseOpen(false);
+    setShowcaseMinimized(false);
+    setShowcaseMaximized(false);
+    setShowcasePhotoIndex(null);
+    setShowcaseScreenIndex(null);
+    setShowcaseProductIndex(null);
+    setShowcaseBookIndex(null);
+    setShowcaseExperimentIndex(null);
+    setShowcaseFixturesOpen(false);
+    setShowcaseFixtureImage(null);
+    stopAudioPreview();
+  };
+
+  // Fixture image picture-viewer keyboard handler.
+  React.useEffect(() => {
+    if (!showcaseFixtureImage) return;
+    const handler = (e) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        setShowcaseFixtureImage(null);
+      }
+    };
+    window.addEventListener('keydown', handler, true);
+    return () => window.removeEventListener('keydown', handler, true);
+  }, [showcaseFixtureImage]);
+
+  // Helpers to walk through only the filtered screens set.
+  const filteredScreenIndices = () =>
+    screensData.reduce((acc, item, i) => (matchesScreensFilter(item) ? acc.concat(i) : acc), []);
+  const stepScreenIndex = (delta) => {
+    const indices = filteredScreenIndices();
+    if (indices.length === 0) return showcaseScreenIndex;
+    const pos = indices.indexOf(showcaseScreenIndex);
+    if (pos === -1) return indices[0];
+    return indices[(pos + delta + indices.length) % indices.length];
+  };
+
+  // Screens detail: arrow-key navigation + Escape to close.
+  React.useEffect(() => {
+    if (showcaseScreenIndex === null) return;
+    const handler = (e) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        setShowcaseScreenIndex(null);
+      } else if (e.key === 'ArrowRight') {
+        setShowcaseScreenIndex(stepScreenIndex(1));
+      } else if (e.key === 'ArrowLeft') {
+        setShowcaseScreenIndex(stepScreenIndex(-1));
+      }
+    };
+    window.addEventListener('keydown', handler, true);
+    return () => window.removeEventListener('keydown', handler, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showcaseScreenIndex, showcaseScreensFilter]);
+
+  // Products detail: same keyboard pattern.
+  React.useEffect(() => {
+    if (showcaseProductIndex === null) return;
+    const handler = (e) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        setShowcaseProductIndex(null);
+      } else if (e.key === 'ArrowRight') {
+        setShowcaseProductIndex((i) => (i + 1) % products.length);
+      } else if (e.key === 'ArrowLeft') {
+        setShowcaseProductIndex(
+          (i) => (i - 1 + products.length) % products.length
+        );
+      }
+    };
+    window.addEventListener('keydown', handler, true);
+    return () => window.removeEventListener('keydown', handler, true);
+  }, [showcaseProductIndex]);
+
+  // Experiments detail: arrow-key nav + Escape to close.
+  React.useEffect(() => {
+    if (showcaseExperimentIndex === null) return;
+    const handler = (e) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        setShowcaseExperimentIndex(null);
+        setShowcaseFixturesOpen(false);
+      } else if (e.key === 'ArrowRight') {
+        setShowcaseExperimentIndex((i) => (i + 1) % projectsData.length);
+        setShowcaseFixturesOpen(false);
+      } else if (e.key === 'ArrowLeft') {
+        setShowcaseExperimentIndex(
+          (i) => (i - 1 + projectsData.length) % projectsData.length
+        );
+        setShowcaseFixturesOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handler, true);
+    return () => window.removeEventListener('keydown', handler, true);
+  }, [showcaseExperimentIndex]);
+
+  // Picture viewer: arrow-key nav + Escape to close.
+  React.useEffect(() => {
+    if (showcasePhotoIndex === null) return;
+    const handler = (e) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        setShowcasePhotoIndex(null);
+      } else if (e.key === 'ArrowRight') {
+        setShowcasePhotoIndex((i) => (i + 1) % photographyData.length);
+      } else if (e.key === 'ArrowLeft') {
+        setShowcasePhotoIndex(
+          (i) => (i - 1 + photographyData.length) % photographyData.length
+        );
+      }
+    };
+    window.addEventListener('keydown', handler, true);
+    return () => window.removeEventListener('keydown', handler, true);
+  }, [showcasePhotoIndex]);
   // CRT picture controls — 0..6 steps. 3 = neutral (1.0x).
   const [brightnessStep, setBrightnessStep] = useState(3);
   const [contrastStep, setContrastStep] = useState(3);
-  // Volume knob — 0..6, step 6 = full, step 0 = silent. Default at 4 (~67%).
-  const [volumeStep, setVolumeStep] = useState(4);
+  // Volume knob — 0..6, step 6 = full, step 0 = silent. Default at MAX so
+  // every click / keyboard / ambient / boot sound plays at its original
+  // level (same as before the knob was added). Turn the knob down from
+  // the bezel to reduce. The startup video has its own quieter baseline
+  // applied on top of this.
+  const [volumeStep, setVolumeStep] = useState(6);
   const [isCrtMuted, setIsCrtMuted] = useState(false);
+
+  // Landing mode chooser — on mount, honor any persisted choice from a
+  // previous visit. 'retro' goes straight to the desktop without replaying
+  // the boot sequence (the user already saw it the first time). 'modern'
+  // just shows the existing modern site.
+  React.useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem('site-mode');
+      if (saved === 'modern') {
+        setSiteModeChosen(true);
+      } else if (saved === 'retro') {
+        setSiteModeChosen(true);
+        setIsRetroMode(true);
+      }
+    } catch { /* localStorage disabled — fall through to landing */ }
+  }, []);
+
+  const handleLandingSelect = (mode) => {
+    if (landingLeaving) return;
+    setLandingLeaving(mode);
+    try { window.localStorage.setItem('site-mode', mode); } catch { /* ignore */ }
+    const delay = mode === 'retro' ? 700 : 500;
+    setTimeout(() => {
+      setSiteModeChosen(true);
+      setLandingLeaving(null);
+      if (mode === 'retro') {
+        // Reuse the existing Shift+P handler so the user sees the full
+        // BIOS → Windows startup video → desktop sequence on first entry.
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'P', shiftKey: true }));
+      }
+    }, delay);
+  };
 
   // Push volume + mute into the audio module whenever they change.
   React.useEffect(() => {
@@ -1986,6 +2448,17 @@ function App() {
   React.useEffect(() => {
     setAudioMuted(isCrtMuted);
   }, [isCrtMuted]);
+
+  // Defensive: whenever we leave retro mode (by ANY path — shutdown,
+  // power button, Shift+P toggle, etc.), force every CRT audio source
+  // off so nothing leaks into the modern site.
+  React.useEffect(() => {
+    if (!isRetroMode) {
+      try { stopAmbient({ fade: 0 }); } catch {}
+      try { stopAudioPreview(); } catch {}
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRetroMode]);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showCreditsModal, setShowCreditsModal] = useState(false);
   const [timePhase, setTimePhase] = useState(() => getPhaseFromHour(new Date().getHours()));
@@ -2073,6 +2546,10 @@ function App() {
       if (e.shiftKey && e.key.toLowerCase() === 'p') {
         const next = !isRetroMode;
         setIsRetroMode(next);
+        // Mark the landing as already chosen so it doesn't reappear, and
+        // keep localStorage in sync so refreshes honor the latest mode.
+        setSiteModeChosen(true);
+        try { window.localStorage.setItem('site-mode', next ? 'retro' : 'modern'); } catch { /* ignore */ }
         if (next) {
           // Boot chain: DOS BIOS → Windows startup video → desktop with busy cursor.
           // The video carries its own audio (no separate playPowerOn).
@@ -2082,6 +2559,7 @@ function App() {
           setIsCursorBusy(false);
           setIsShuttingDown(false);
           setShowGame(false);
+          setIsWebampOpen(false);
           setIsStartMenuOpen(false);
           // Play the power-on sfx during the DOS boot phase. Capture the
           // audio node so we can fade it out right when the startup video
@@ -2134,16 +2612,29 @@ function App() {
         }
       }
 
-      // Exit everything with Escape
-      if (e.key === 'Escape') {
-        setShowGame(false);
-        setIsRetroMode(false);
-        setIsBootingUp(false);
-        setIsWindowsLoading(false);
-        setIsCursorBusy(false);
-        setIsStartMenuOpen(false);
-        setIsShutdownConfirmOpen(false);
-        try { stopAmbient({ fade: 250 }); } catch {}
+      // Escape inside the OS — closes the topmost transient UI but
+      // NEVER exits retro mode. The only ways to power off are the
+      // monitor's power button or Start → Shut Down…
+      if (e.key === 'Escape' && isRetroMode) {
+        if (isShutdownConfirmOpen) { setIsShutdownConfirmOpen(false); return; }
+        if (isStartMenuOpen)       { setIsStartMenuOpen(false); return; }
+        if (isRecycleImgOpen)      { setIsRecycleImgOpen(false); return; }
+        if (isRecycleBinOpen)      { setIsRecycleBinOpen(false); return; }
+        if (isReadmeOpen)          { setIsReadmeOpen(false); return; }
+        if (showGame) {
+          // Release the archive.org game iframe focus and close the window.
+          try {
+            const ifr = document.querySelector('.crt-game-iframe');
+            if (ifr) ifr.blur();
+            if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
+              document.activeElement.blur();
+            }
+            window.focus();
+          } catch {}
+          setShowGame(false);
+          setIsWebampOpen(false);
+          return;
+        }
       }
 
       // Play a key click while the CRT is open.
@@ -2167,10 +2658,16 @@ function App() {
 
   // Called when the Windows startup video finishes (or errors). Reveals the
   // desktop with a brief busy/progress cursor before settling to normal.
+  // Boden's preference: open My Showcase by default after boot.
   const handleStartupVideoEnded = React.useCallback(() => {
     setIsWindowsLoading(false);
     setIsCursorBusy(true);
     try { startAmbient(0.3); } catch {}
+    // Auto-open the Showcase window on its home view.
+    setShowcaseTab('home');
+    setShowcaseMinimized(false);
+    setShowcaseMaximized(false);
+    setIsShowcaseOpen(true);
     setTimeout(() => setIsCursorBusy(false), 2400);
   }, []);
 
@@ -2191,6 +2688,8 @@ function App() {
       setIsRetroMode(false);
       setIsShuttingDown(false);
       setShowGame(false);
+      setIsWebampOpen(false);
+      try { window.localStorage.setItem('site-mode', 'modern'); } catch { /* ignore */ }
     }, acc + 2400);
   };
 
@@ -2301,16 +2800,6 @@ function App() {
                   If you’re looking for the professional side of things, feel free to head over to my <a href="https://www.linkedin.com/in/boden-holland/" target="_blank" rel="noopener noreferrer" className="linkedin-link">LinkedIn</a>. You can also visit <a href="https://www.openform.company" target="_blank" rel="noopener noreferrer" className="open-form-link">Open Form</a>, my independent product studio, to see the products I’ve been building.
                 </motion.p>
                 <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>I hope you find something you enjoy here, and please don’t hesitate to reach out!</motion.p>
-                
-                {!isMobile && (
-                  <motion.div 
-                    className="intro-ps"
-                    variants={{ hidden: { opacity: 0 }, visible: { opacity: 0.6 } }}
-                    transition={{ delay: 1 }}
-                  >
-                    PS: Want a quick break? Press Shift + P to launch a 1990s-era PC and play some of my favorite games from back in the day.
-                  </motion.div>
-                )}
               </div>
              ) : (
               <motion.div
@@ -2397,20 +2886,41 @@ function App() {
                           </div>
                         )}
                         {/* Win95 desktop */}
-                        <div className="crt-win95-desktop">
-                          {/* Desktop icons */}
-                          {!showGame && (
-                             <>
-                               {retroGames.map(game => (
-                                 <div key={game.id} className="crt-desk-icon" onClick={() => { setCurrentGame(game); setShowGame(true); }}>
-                                   <div className="crt-desk-icon-img">
-                                     <img src={game.coverArtUrl} alt={game.name} />
-                                   </div>
-                                   <span>{game.name}</span>
-                                 </div>
-                               ))}
-                             </>
-                           )}
+                        <div className="crt-win95-desktop" ref={crtDesktopRef}>
+                          {/* Desktop icons — absolutely positioned, draggable.
+                              Click without movement = open; drag = move. */}
+                          {!showGame && (() => {
+                            const renderIcon = (id, label, src, onOpen, imgClass = '') => {
+                              const pos = iconPositions[id] || { x: 0, y: 0 };
+                              return (
+                                <div
+                                  key={id}
+                                  className="crt-desk-icon"
+                                  style={{ position: 'absolute', left: pos.x, top: pos.y }}
+                                  onMouseDown={startIconDragOrClick(id, onOpen)}
+                                >
+                                  <div className={`crt-desk-icon-img${imgClass ? ` ${imgClass}` : ''}`}>
+                                    <img src={src} alt={label} />
+                                  </div>
+                                  <span>{label}</span>
+                                </div>
+                              );
+                            };
+                            return (
+                              <>
+                                {renderIcon('showcase',   'Portfolio',     '/crt/icons/portfolio.png', () => openShowcase('home'))}
+                                {renderIcon('readme',     'README.txt',    '/crt/icons/readme.svg',   openReadme)}
+                                {renderIcon('recyclebin', 'Recycle Bin',   '/crt/icons/recyclebin.png', () => setIsRecycleBinOpen(true), 'crt-desk-icon-recyclebin')}
+                                {renderIcon('music',      'Music',         '/wmp/icons/music-deck.png', openWebamp, 'crt-desk-icon-music')}
+                                {retroGames.map((game) =>
+                                  renderIcon(game.id, game.name, game.coverArtUrl, () => {
+                                    setCurrentGame(game);
+                                    setShowGame(true);
+                                  })
+                                )}
+                              </>
+                            );
+                          })()}
                           {/* App Window */}
                           {showGame && (
                             <div className={`crt-app-window ${currentGame.aspectRatio === '3/4' ? 'win-vertical' : ''}`}>
@@ -2438,6 +2948,1132 @@ function App() {
                               )}
                             </div>
                           )}
+                          {/* Webamp (Music) mount — its own chrome handles dragging.
+                              Lazy-loaded the first time the user opens it.
+                              ErrorBoundary prevents a Webamp crash from
+                              unmounting the entire React tree (which would
+                              show the white body background under #root). */}
+                          {isWebampOpen && (
+                            <WebampErrorBoundary onError={() => setIsWebampOpen(false)}>
+                              <Suspense fallback={null}>
+                                <Webamp
+                                  tracks={webampAssets?.tracks || []}
+                                  skins={webampAssets?.skins || []}
+                                  initialSkin={webampAssets?.initialSkin}
+                                  onClose={() => setIsWebampOpen(false)}
+                                />
+                              </Suspense>
+                            </WebampErrorBoundary>
+                          )}
+                          {/* Showcase window — Henry-style portfolio explorer.
+                              Draggable, minimizable, maximizable. */}
+                          {isShowcaseOpen && (
+                            <div
+                              className={`showcase-window${showcaseMaximized ? ' is-maximized' : ''}${showcaseMinimized ? ' is-minimized' : ''}`}
+                              style={showcaseMaximized || showcaseMinimized ? undefined : {
+                                top: showcasePos.top,
+                                left: showcasePos.left,
+                                width: showcaseSize.width,
+                                height: showcaseSize.height,
+                              }}
+                            >
+                              <div
+                                className="showcase-titlebar"
+                                onMouseDown={onShowcaseTitleMouseDown}
+                                onDoubleClick={toggleShowcaseMax}
+                              >
+                                <span className="showcase-titlebar-text">
+                                  <img className="showcase-titlebar-icon" src="/crt/icons/portfolio.png" alt="" />
+                                  Boden Holland — Portfolio 2026
+                                </span>
+                                <div className="crt-win-btns">
+                                  <div className="crt-win-btn" onClick={toggleShowcaseMin}>_</div>
+                                  <div className="crt-win-btn" onClick={toggleShowcaseMax}>□</div>
+                                  <div className="crt-win-btn crt-win-close" onClick={closeShowcase}>×</div>
+                                </div>
+                              </div>
+                              <div className={`showcase-body${showcaseTab === 'home' ? ' showcase-body-home' : ' showcase-body-section'}`}>
+                                {showcaseTab === 'home' ? (
+                                  // Home view — centered name + subtitle + horizontal nav
+                                  <div className="showcase-header">
+                                    <h1
+                                      className="showcase-name"
+                                      onClick={() => setShowcaseTab('home')}
+                                      title="Home"
+                                    >Boden Holland</h1>
+                                    <p className="showcase-sub">Product Manager</p>
+                                    <div className="showcase-nav">
+                                      {[
+                                        ['about',       'ABOUT'],
+                                        ['library',     'LIBRARY'],
+                                        ['projects',    'EXPERIMENTS'],
+                                        ['photography', 'PHOTOGRAPHY'],
+                                        ['contact',     'CONTACT'],
+                                      ].map(([key, label]) => (
+                                        <button
+                                          key={key}
+                                          className="showcase-nav-link"
+                                          onClick={() => setShowcaseTab(key)}
+                                        >
+                                          {label}
+                                        </button>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  // Section view — left sidebar nav + right content
+                                  <aside className="showcase-sidebar">
+                                    <h1
+                                      className="showcase-sidebar-name"
+                                      onClick={() => setShowcaseTab('home')}
+                                      title="Return home"
+                                    >Boden<br />Holland</h1>
+                                    <p className="showcase-sidebar-sub">Portfolio 2026</p>
+                                    <nav className="showcase-sidebar-nav">
+                                      {[
+                                        ['home',        'HOME'],
+                                        ['about',       'ABOUT'],
+                                        ['library',     'LIBRARY'],
+                                        ['projects',    'EXPERIMENTS'],
+                                        ['photography', 'PHOTOGRAPHY'],
+                                        ['contact',     'CONTACT'],
+                                      ].map(([key, label]) => {
+                                        const isActive = showcaseTab === key;
+                                        return (
+                                          <button
+                                            key={key}
+                                            className={`showcase-sidebar-link${isActive ? ' active' : ''}`}
+                                            onClick={() => setShowcaseTab(key)}
+                                          >
+                                            <span className="showcase-sidebar-bullet" aria-hidden="true">
+                                              {isActive ? '○' : ''}
+                                            </span>
+                                            <span>{label}</span>
+                                          </button>
+                                        );
+                                      })}
+                                    </nav>
+                                  </aside>
+                                )}
+
+                                {showcaseTab !== 'home' && (
+                                  <div className="showcase-content">
+                                    {showcaseTab === 'about' && (
+                                      <article className="showcase-section showcase-about">
+                                        {/* Page title (h3-sized in spirit, but biggest on the page) */}
+                                        <h3 className="about-title">I'm Boden Holland</h3>
+
+                                        <p>
+                                          I'm a product builder based in San Francisco. I'm
+                                          interested in civic tools, housing, public data, and the
+                                          systems that shape everyday life.
+                                        </p>
+                                        <p>
+                                          This site is where I collect the things I'm building and
+                                          exploring. Some are practical tools. Some are experiments.
+                                          Most are attempts to make confusing systems easier to
+                                          understand.
+                                        </p>
+                                        <p className="about-linkedin-line">
+                                          <img
+                                            className="about-inline-icon"
+                                            src="/about/internet.webp"
+                                            alt=""
+                                            aria-hidden="true"
+                                          />
+                                          <b>Looking for my professional background?</b>{' '}
+                                          <a
+                                            href="https://www.linkedin.com/in/boden-holland/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >Visit my LinkedIn.</a>
+                                        </p>
+
+                                        <br /><br />
+                                        <h3>About Me</h3>
+
+                                        <p>
+                                          I'm interested in problems that are useful but often
+                                          overlooked. I like working on products that help people
+                                          make sense of systems that are more confusing than they
+                                          need to be.
+                                        </p>
+                                        <p>
+                                          Much of my work has been in housing, civic infrastructure,
+                                          data, and complex workflows. I've worked on products for
+                                          virtual worlds, custom homebuilding, experimentation, and
+                                          AI assisted product development.
+                                        </p>
+                                        <p>
+                                          Lately, I've been building my own projects through{' '}
+                                          <a
+                                            href="https://www.openform.company"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >Open Form</a>, an independent product studio for small
+                                          tools with public value.
+                                        </p>
+
+                                        {/* Figure 1 — full-width hero between About Me and
+                                            Recent Work. Not floated; sits in the flow as a
+                                            section divider. */}
+                                        <figure className="about-figure-full">
+                                          <img src="/about/young.jpg" alt="A young Boden in a cowboy hat at the family computer" />
+                                          <figcaption><b>Figure 1:</b> Me at the family PC, c. 1998</figcaption>
+                                        </figure>
+
+                                        <br />
+                                        <h3>Recent Work</h3>
+
+                                        <p>
+                                          Lately, I've been building projects around the systems
+                                          people have to navigate in everyday life, including
+                                          money, healthcare, housing, neighborhoods, and public
+                                          information.
+                                        </p>
+                                        <p>
+                                          <b>kindshare</b> is an expense splitting app designed
+                                          to make shared finances feel more fair and easier to
+                                          talk about.
+                                        </p>
+                                        <p>
+                                          <b>AmbulanceCost.com</b> helps people estimate ambulance
+                                          charges by ZIP code using public rate data where
+                                          available.
+                                        </p>
+                                        <p>
+                                          <b>YourSF</b> and <b>YourNYC</b> are ongoing open source
+                                          civic projects focused on making city data more
+                                          accessible, interactive, and useful to regular people.
+                                        </p>
+                                        <p>
+                                          <b>localtake.app</b> is an early stage project that
+                                          builds in depth city profiles from civic data, then
+                                          helps people moving to a new city understand which
+                                          neighborhoods might fit their life.
+                                        </p>
+                                        <p>
+                                          There are more projects in progress, but the focus is
+                                          mostly the same: making confusing systems easier to
+                                          understand and act on.
+                                        </p>
+
+                                        <br /><br />
+                                        <h3>Outside of Work</h3>
+
+                                        {/* Figure 2 — floats right inside Outside of Work. The
+                                            short prose wraps along its left edge. */}
+                                        <div className="captioned-image about-figure about-figure-pro">
+                                          <img src="/about/professional.jpg" alt="Boden Holland — portrait" />
+                                          <p><sub><b>Figure 2:</b> Me, today</sub></p>
+                                        </div>
+
+                                        <p>
+                                          Outside of product, I spend time with books, music, film,
+                                          design experiments, family history, and odd little
+                                          internet projects. I'm interested in cities, public
+                                          systems, and visual culture.
+                                        </p>
+                                        <p>This site is a place for that work and curiosity.</p>
+
+                                        <br /><br />
+                                        <p className="about-signoff">
+                                          Thanks for reading. If something here catches your
+                                          attention, feel free to{' '}
+                                          <a
+                                            href="#"
+                                            onClick={(e) => { e.preventDefault(); setShowcaseTab('contact'); }}
+                                          >reach out</a>.
+                                        </p>
+                                      </article>
+                                    )}
+
+                                    {showcaseTab === 'contact' && (
+                                      <div className="showcase-section">
+                                        <h2 className="showcase-section-heading">Contact</h2>
+                                        {submitted ? (
+                                          <div className="showcase-contact-success">
+                                            <div className="showcase-contact-success-icon">
+                                              <img src="/crt/icons/about.png" alt="" />
+                                            </div>
+                                            <div>
+                                              <p style={{ fontWeight: 'bold', marginBottom: 6 }}>Message sent.</p>
+                                              <p>Thanks for reaching out — I'll get back to you soon.</p>
+                                              <button
+                                                type="button"
+                                                className="win95-button"
+                                                style={{ marginTop: 14 }}
+                                                onClick={() => setSubmitted(false)}
+                                              >Send another</button>
+                                            </div>
+                                          </div>
+                                        ) : (
+                                          <>
+                                            <p className="showcase-contact-intro">
+                                              I'm always open to new projects, collaborations, or just a friendly chat.
+                                              Drop me a message below and I'll get back to you as soon as I can.
+                                            </p>
+                                            <form className="showcase-contact-form" onSubmit={handleSubmit}>
+                                              <div className="showcase-field">
+                                                <label htmlFor="sc-name">Name:</label>
+                                                <input
+                                                  type="text"
+                                                  id="sc-name"
+                                                  name="name"
+                                                  required
+                                                  placeholder="Your name"
+                                                />
+                                              </div>
+                                              <div className="showcase-field">
+                                                <label htmlFor="sc-email">E-mail:</label>
+                                                <input
+                                                  type="email"
+                                                  id="sc-email"
+                                                  name="email"
+                                                  required
+                                                  placeholder="your@email.com"
+                                                />
+                                              </div>
+                                              <div className="showcase-field showcase-field-message">
+                                                <label htmlFor="sc-message">Message:</label>
+                                                <textarea
+                                                  id="sc-message"
+                                                  name="message"
+                                                  rows="7"
+                                                  required
+                                                  placeholder="What's on your mind?"
+                                                />
+                                              </div>
+                                              <div className="showcase-form-actions">
+                                                <button type="submit" className="win95-button win95-button-primary">
+                                                  Send Message
+                                                </button>
+                                                <button
+                                                  type="reset"
+                                                  className="win95-button"
+                                                  onClick={() => {/* native reset handles it */}}
+                                                >
+                                                  Clear
+                                                </button>
+                                              </div>
+                                            </form>
+                                          </>
+                                        )}
+                                      </div>
+                                    )}
+
+                                    {showcaseTab === 'photography' && (
+                                      <div className="showcase-section showcase-photography">
+                                        <h2 className="showcase-section-heading">Photography</h2>
+                                        <p className="showcase-photo-intro">
+                                          My first real hobby was photography.
+                                        </p>
+                                        <blockquote className="showcase-photo-quote">
+                                          "The camera is an instrument that teaches people how to see without a camera."
+                                          <span className="showcase-photo-cite">— Dorothea Lange</span>
+                                        </blockquote>
+                                        <div className="showcase-photo-grid">
+                                          {photographyData.map((photo, i) => (
+                                            <button
+                                              type="button"
+                                              key={i}
+                                              className="showcase-photo-thumb"
+                                              onClick={() => setShowcasePhotoIndex(i)}
+                                              title={photo.alt || `Photo ${i + 1}`}
+                                            >
+                                              <img
+                                                src={photo.src}
+                                                alt={photo.alt || ''}
+                                                loading="lazy"
+                                              />
+                                            </button>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+                                    {showcaseTab === 'library' && (
+                                      <div className="showcase-section showcase-library">
+                                        <h2 className="showcase-section-heading">Library</h2>
+                                        <div className="showcase-lib-tabs">
+                                          {[
+                                            ['audio',    'Audio'],
+                                            ['screens',  'Screens'],
+                                            ['pages',    'Pages'],
+                                            ['products', 'Products'],
+                                          ].map(([key, label]) => (
+                                            <button
+                                              key={key}
+                                              type="button"
+                                              className={`showcase-lib-tab${showcaseLibTab === key ? ' active' : ''}`}
+                                              onClick={() => { stopAudioPreview(); setShowcaseLibTab(key); }}
+                                            >{label}</button>
+                                          ))}
+                                        </div>
+                                        <div className="showcase-lib-body">
+                                          {showcaseLibTab === 'audio' && (
+                                            <>
+                                              {!audioPreviewNoticeOk && (
+                                                <button
+                                                  type="button"
+                                                  className="audio-preview-notice"
+                                                  onClick={() => setAudioPreviewNoticeOk(true)}
+                                                  title="Click to dismiss"
+                                                >
+                                                  <span className="audio-preview-notice-icon" aria-hidden="true">⚠</span>
+                                                  <span className="audio-preview-notice-text">
+                                                    <b>Heads up:</b> hovering over an album triggers a 30-second
+                                                    Spotify preview. Mute your speakers if you're somewhere quiet,
+                                                    or use the bezel volume / system-tray speaker icon.
+                                                  </span>
+                                                  <span className="audio-preview-notice-ok">OK</span>
+                                                </button>
+                                              )}
+                                              <p className="showcase-lib-blurb">
+                                                You can hover over each song for a preview, or experience the full Winamp-style mini-player I built and integrated into the BOTEK desktop. Click{' '}
+                                                <a
+                                                  href="#"
+                                                  className="showcase-link"
+                                                  onClick={(e) => { e.preventDefault(); openWebamp(); }}
+                                                ><b>Music</b></a>
+                                                {' '}for the full versions of every track on a Sony hi-fi skin with Milkdrop visuals. Full playlist also on{' '}
+                                                <a
+                                                  href="https://open.spotify.com/playlist/1Lk0XE8oOv6gkymTJBux7M?si=0f07ffbbb43c4d73"
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                  className="showcase-link"
+                                                >Spotify</a>.
+                                              </p>
+                                              <div className="showcase-lib-grid">
+                                                {audioData.map((track, i) => (
+                                                  <a
+                                                    key={i}
+                                                    href={track.spotifyUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="showcase-lib-cover"
+                                                    title={`${track.title} — ${track.artist}`}
+                                                    onMouseEnter={() => playAudioPreview(track.previewUrl)}
+                                                    onMouseLeave={stopAudioPreview}
+                                                  >
+                                                    <span className="showcase-lib-cover-frame">
+                                                      <img src={track.coverUrl} alt={track.title} loading="lazy" />
+                                                    </span>
+                                                    <span className="showcase-lib-cover-meta">
+                                                      <span className="showcase-lib-title">{track.title}</span>
+                                                      <span className="showcase-lib-sub">{track.artist}</span>
+                                                    </span>
+                                                  </a>
+                                                ))}
+                                              </div>
+                                            </>
+                                          )}
+                                          {showcaseLibTab === 'screens' && (
+                                            <>
+                                              <p className="showcase-lib-blurb">
+                                                A curated collection of movies, shows, and games that have left a lasting impression.
+                                                Click any tile for details and the trailer.
+                                              </p>
+                                              <div className="showcase-lib-filter">
+                                                {[
+                                                  ['all',    'All'],
+                                                  ['movies', 'Movies'],
+                                                  ['shows',  'Shows'],
+                                                  ['games',  'Games'],
+                                                ].map(([key, label]) => (
+                                                  <button
+                                                    key={key}
+                                                    type="button"
+                                                    className={`showcase-lib-filter-btn${showcaseScreensFilter === key ? ' active' : ''}`}
+                                                    onClick={() => setShowcaseScreensFilter(key)}
+                                                  >{label}</button>
+                                                ))}
+                                              </div>
+                                              <div className="showcase-lib-grid">
+                                                {screensData.map((item, i) => {
+                                                  if (!matchesScreensFilter(item)) return null;
+                                                  return (
+                                                    <button
+                                                      type="button"
+                                                      key={i}
+                                                      className="showcase-lib-cover"
+                                                      title={`${item.title} — ${item.subtitle}`}
+                                                      onClick={() => setShowcaseScreenIndex(i)}
+                                                    >
+                                                      <span className="showcase-lib-cover-frame">
+                                                        <img src={item.coverImageUrl} alt={item.title} loading="lazy" />
+                                                      </span>
+                                                      <span className="showcase-lib-cover-meta">
+                                                        <span className="showcase-lib-title">{item.title}</span>
+                                                        <span className="showcase-lib-sub">{item.subtitle}</span>
+                                                      </span>
+                                                    </button>
+                                                  );
+                                                })}
+                                                {screensData.filter(matchesScreensFilter).length === 0 && (
+                                                  <p className="showcase-lib-empty">No matches in this category.</p>
+                                                )}
+                                              </div>
+                                            </>
+                                          )}
+                                          {showcaseLibTab === 'pages' && (
+                                            <>
+                                              <p className="showcase-lib-blurb">
+                                                Mostly philosophy, psychology, and theory — plus the occasional fiction I'm
+                                                handed by people who keep me honest. Click any row to expand and read my notes.
+                                              </p>
+                                              <div className="showcase-lib-listview">
+                                                <div className="showcase-lib-list-header">
+                                                  <span className="col-toggle">{/* expand */}</span>
+                                                  <span className="col-cover">{/* */}</span>
+                                                  <span className="col-title">Title</span>
+                                                  <span className="col-author">Author</span>
+                                                </div>
+                                                {booksData.map((book, i) => {
+                                                  const expanded = showcaseBookIndex === i;
+                                                  return (
+                                                    <div
+                                                      key={i}
+                                                      className={`showcase-lib-list-group${expanded ? ' is-expanded' : ''}`}
+                                                    >
+                                                      <button
+                                                        type="button"
+                                                        className="showcase-lib-list-row"
+                                                        onClick={() => setShowcaseBookIndex(expanded ? null : i)}
+                                                        aria-expanded={expanded}
+                                                      >
+                                                        <span className="col-toggle">{expanded ? '−' : '+'}</span>
+                                                        <span className="col-cover">
+                                                          <img src={book.coverImageUrl} alt="" loading="lazy" />
+                                                        </span>
+                                                        <span className="col-title">{book.title}</span>
+                                                        <span className="col-author">{book.author}</span>
+                                                      </button>
+                                                      {expanded && (
+                                                        <div className="showcase-lib-list-detail">
+                                                          <div className="showcase-book-detail-meta">
+                                                            <div className="showcase-book-detail-cover">
+                                                              <img src={book.coverImageUrl} alt="" />
+                                                            </div>
+                                                            <div className="showcase-book-detail-text">
+                                                              <p className="showcase-book-detail-desc">{book.description}</p>
+                                                              {book.link && (
+                                                                <a
+                                                                  className="showcase-link"
+                                                                  href={book.link}
+                                                                  target="_blank"
+                                                                  rel="noopener noreferrer"
+                                                                >View publisher page →</a>
+                                                              )}
+                                                            </div>
+                                                          </div>
+                                                          {book.highlights && book.highlights.length > 0 && (
+                                                            <div className="showcase-book-notes">
+                                                              <div className="showcase-book-notes-header">
+                                                                <span className="showcase-book-notes-title">My Notes</span>
+                                                                <span className="showcase-book-notes-count">
+                                                                  {book.highlights.length} highlight{book.highlights.length === 1 ? '' : 's'}
+                                                                </span>
+                                                              </div>
+                                                              <div className="showcase-book-notes-body">
+                                                                {book.highlights.map((h, hi) => (
+                                                                  <div key={hi} className="showcase-book-note">
+                                                                    <p className="showcase-book-note-text">{h.text}</p>
+                                                                    {h.page != null && (
+                                                                      <p className="showcase-book-note-page">— p. {h.page}</p>
+                                                                    )}
+                                                                  </div>
+                                                                ))}
+                                                              </div>
+                                                            </div>
+                                                          )}
+                                                        </div>
+                                                      )}
+                                                    </div>
+                                                  );
+                                                })}
+                                              </div>
+                                            </>
+                                          )}
+                                          {showcaseLibTab === 'products' && (
+                                            <>
+                                              <p className="showcase-lib-blurb">
+                                                The tools I actually use, plus a few corners of the internet I keep returning to.
+                                                Click any tile for details.
+                                              </p>
+                                              <div className="showcase-lib-tile-grid">
+                                                {products.map((p, i) => (
+                                                  <button
+                                                    type="button"
+                                                    key={i}
+                                                    className="showcase-lib-tile"
+                                                    title={p.desc}
+                                                    onClick={() => setShowcaseProductIndex(i)}
+                                                  >
+                                                    <span className="showcase-lib-tile-icon">
+                                                      <img src={p.iconUrl} alt="" loading="lazy" />
+                                                    </span>
+                                                    <span className="showcase-lib-tile-name">{p.name}</span>
+                                                  </button>
+                                                ))}
+                                              </div>
+                                            </>
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
+                                    {showcaseTab === 'projects' && (
+                                      <div className="showcase-section showcase-experiments">
+                                        <h2 className="showcase-section-heading">Experiments</h2>
+                                        <p className="showcase-lib-blurb">
+                                          A handful of things I've built or am still tinkering with.
+                                          Click any tile for details.
+                                        </p>
+                                        <div className="showcase-exp-grid">
+                                          {projectsData.map((p, i) => (
+                                            <button
+                                              type="button"
+                                              key={p.id || i}
+                                              className="showcase-exp-tile"
+                                              title={`${p.title} — ${p.subtitle}`}
+                                              onClick={() => setShowcaseExperimentIndex(i)}
+                                              style={{ '--exp-accent': p.color || '#404040' }}
+                                            >
+                                              <span className="showcase-exp-tile-thumb">
+                                                {p.image ? (
+                                                  <img src={p.image} alt={p.title} loading="lazy" />
+                                                ) : (
+                                                  <span
+                                                    className="showcase-exp-tile-icon"
+                                                    style={{ background: p.color || '#404040' }}
+                                                  >
+                                                    {p.icon}
+                                                  </span>
+                                                )}
+                                              </span>
+                                              <span className="showcase-exp-tile-meta">
+                                                <span className="showcase-exp-tile-title">{p.title}</span>
+                                                <span className="showcase-exp-tile-sub">{p.subtitle}</span>
+                                              </span>
+                                            </button>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="showcase-statusbar">
+                                <div className="win95-status-inset">© 2026 Boden Holland</div>
+                                {showcaseTab === 'photography' && (
+                                  <div className="win95-status-inset">
+                                    {photographyData.length} item{photographyData.length === 1 ? '' : 's'}
+                                  </div>
+                                )}
+                                {showcaseTab === 'library' && (
+                                  <div className="win95-status-inset">
+                                    {(() => {
+                                      const screensCount = screensData.filter(matchesScreensFilter).length;
+                                      const count = {
+                                        audio: audioData.length,
+                                        screens: screensCount,
+                                        pages: booksData.length,
+                                        products: products.length,
+                                      }[showcaseLibTab] || 0;
+                                      const filtered = showcaseLibTab === 'screens' && showcaseScreensFilter !== 'all';
+                                      return `${count} item${count === 1 ? '' : 's'}${filtered ? ` (filtered)` : ''}`;
+                                    })()}
+                                  </div>
+                                )}
+                                {showcaseTab === 'projects' && (
+                                  <div className="win95-status-inset">
+                                    {projectsData.length} item{projectsData.length === 1 ? '' : 's'}
+                                  </div>
+                                )}
+                              </div>
+                              {!showcaseMaximized && !showcaseMinimized && (
+                                <div
+                                  className="crt-resize-grip"
+                                  onMouseDown={onShowcaseResizeMouseDown}
+                                  title="Drag to resize"
+                                />
+                              )}
+                            </div>
+                          )}
+                          {/* README window — same chrome as Showcase, lives inside the desktop */}
+                          {isReadmeOpen && (
+                            <div
+                              className={`showcase-window readme-window${readmeMaximized ? ' is-maximized' : ''}${readmeMinimized ? ' is-minimized' : ''}`}
+                              style={readmeMaximized || readmeMinimized ? undefined : {
+                                top: readmePos.top,
+                                left: readmePos.left,
+                                width: readmeSize.width,
+                                height: readmeSize.height,
+                              }}
+                            >
+                              <div
+                                className="showcase-titlebar"
+                                onMouseDown={onReadmeTitleMouseDown}
+                                onDoubleClick={toggleReadmeMax}
+                              >
+                                <span className="showcase-titlebar-text">
+                                  <img className="showcase-titlebar-icon" src="/crt/icons/readme.svg" alt="" />
+                                  README.txt — Notepad
+                                </span>
+                                <div className="crt-win-btns">
+                                  <div className="crt-win-btn" onClick={toggleReadmeMin}>_</div>
+                                  <div className="crt-win-btn" onClick={toggleReadmeMax}>□</div>
+                                  <div className="crt-win-btn crt-win-close" onClick={closeReadme}>×</div>
+                                </div>
+                              </div>
+                              <div className="showcase-body showcase-body-section readme-showcase-body">
+                                <div className="showcase-section">
+                                  <h2 className="showcase-section-heading">Read Me</h2>
+                                  <p className="showcase-section-body">
+                                    This is Boden Holland's personal site, rendered as a
+                                    1990s-era PC. The whole experience lives inside this
+                                    monitor — desktop icons, games, my showcase, and all.
+                                  </p>
+
+                                  <h3 className="readme-h3">Getting around</h3>
+                                  <ul className="readme-list">
+                                    <li><b>Portfolio</b> opens a full portfolio explorer (about, library, experiments, photography, contact).</li>
+                                    <li><b>The games</b> on the desktop run inside a real Internet Archive emulator. Double-click any to play.</li>
+                                    <li><b>The Start menu</b> (bottom-left) has Credits and Shut Down.</li>
+                                  </ul>
+
+                                  <h3 className="readme-h3">Bezel controls</h3>
+                                  <ul className="readme-list">
+                                    <li><b>BRIGHTNESS</b>, <b>CONTRAST</b>, <b>VOLUME</b> — click to step through 0–6.</li>
+                                    <li><b>POWER</b> — turns the PC off.</li>
+                                    <li><b>Speaker icon</b> in the system tray (next to the clock) mutes / unmutes.</li>
+                                  </ul>
+
+                                  <h3 className="readme-h3">Keyboard</h3>
+                                  <ul className="readme-list">
+                                    <li><b>Shift + P</b> — enter or exit the PC from anywhere on the site.</li>
+                                    <li><b>Esc</b> — releases input focus from a running game and closes its window. Won't power off the PC.</li>
+                                    <li>To fully exit, click the <b>power button</b> on the monitor or <b>Start → Shut Down…</b></li>
+                                  </ul>
+
+                                  <h3 className="readme-h3">Game controls</h3>
+                                  <table className="readme-table">
+                                    <thead>
+                                      <tr><th>Game</th><th>Controls</th><th>Notes</th></tr>
+                                    </thead>
+                                    <tbody>
+                                      {retroGames.map((g) => (
+                                        <tr key={g.id}>
+                                          <td><b>{g.name}</b></td>
+                                          <td>{g.controls}</td>
+                                          <td>{g.instructions}</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                  <p className="readme-fineprint">
+                                    Games are streamed from{' '}
+                                    <a className="showcase-link" href="https://archive.org" target="_blank" rel="noopener noreferrer">archive.org</a>.
+                                    If something won't load, their service is probably blinking — try again later.
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="showcase-statusbar">
+                                <div className="win95-status-inset">README.txt</div>
+                                <div className="win95-status-inset" style={{ marginLeft: 'auto' }}>© 2026 Boden Holland</div>
+                              </div>
+                              {!readmeMaximized && !readmeMinimized && (
+                                <div
+                                  className="crt-resize-grip"
+                                  onMouseDown={onReadmeResizeMouseDown}
+                                  title="Drag to resize"
+                                />
+                              )}
+                            </div>
+                          )}
+                          {/* Win95 Picture Viewer — overlays the showcase when a photo is open */}
+                          {isShowcaseOpen && showcasePhotoIndex !== null && (
+                            <div className="picture-viewer" onClick={() => setShowcasePhotoIndex(null)}>
+                              <div className="picture-viewer-window" onClick={(e) => e.stopPropagation()}>
+                                <div className="picture-viewer-titlebar">
+                                  <span className="showcase-titlebar-text">
+                                    <img className="showcase-titlebar-icon" src="/crt/icons/about.png" alt="" />
+                                    {photographyData[showcasePhotoIndex].alt || `Image ${showcasePhotoIndex + 1}`} — Picture Viewer
+                                  </span>
+                                  <div className="crt-win-btns">
+                                    <div
+                                      className="crt-win-btn crt-win-close"
+                                      onClick={() => setShowcasePhotoIndex(null)}
+                                    >×</div>
+                                  </div>
+                                </div>
+                                <div className="picture-viewer-body">
+                                  <img
+                                    className="picture-viewer-image"
+                                    src={photographyData[showcasePhotoIndex].src}
+                                    alt={photographyData[showcasePhotoIndex].alt || ''}
+                                  />
+                                </div>
+                                <div className="picture-viewer-toolbar">
+                                  <button
+                                    type="button"
+                                    className="win95-button picture-viewer-nav"
+                                    onClick={() => setShowcasePhotoIndex(
+                                      (showcasePhotoIndex - 1 + photographyData.length) % photographyData.length
+                                    )}
+                                    title="Previous (←)"
+                                  >‹ Prev</button>
+                                  <div className="picture-viewer-counter">
+                                    {showcasePhotoIndex + 1} / {photographyData.length}
+                                  </div>
+                                  <button
+                                    type="button"
+                                    className="win95-button picture-viewer-nav"
+                                    onClick={() => setShowcasePhotoIndex(
+                                      (showcasePhotoIndex + 1) % photographyData.length
+                                    )}
+                                    title="Next (→)"
+                                  >Next ›</button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          {/* Experiments detail viewer — Win95 properties-style window
+                              showing description, image or iframe, and link buttons. */}
+                          {isShowcaseOpen && showcaseExperimentIndex !== null && (() => {
+                            const p = projectsData[showcaseExperimentIndex];
+                            if (!p) return null;
+                            const paragraphs = p.longerDesc && p.longerDesc.length > 0
+                              ? p.longerDesc
+                              : [p.description];
+                            return (
+                              <div
+                                className="picture-viewer"
+                                onClick={() => setShowcaseExperimentIndex(null)}
+                              >
+                                <div className="screen-detail" onClick={(e) => e.stopPropagation()}>
+                                  <div className="picture-viewer-titlebar">
+                                    <span className="showcase-titlebar-text">
+                                      <img className="showcase-titlebar-icon" src="/crt/icons/about.png" alt="" />
+                                      {p.title} — Details
+                                    </span>
+                                    <div className="crt-win-btns">
+                                      <div
+                                        className="crt-win-btn crt-win-close"
+                                        onClick={() => setShowcaseExperimentIndex(null)}
+                                      >×</div>
+                                    </div>
+                                  </div>
+                                  <div className="screen-detail-body">
+                                    <div className="exp-detail-header" style={{ '--exp-accent': p.color || '#404040' }}>
+                                      <span className="exp-detail-icon">{p.icon}</span>
+                                      <div className="exp-detail-titles">
+                                        <h3 className="screen-detail-title">{p.title}</h3>
+                                        <p className="screen-detail-subtitle">{p.subtitle}</p>
+                                      </div>
+                                    </div>
+                                    {p.iframeDemo || p.iframe ? (
+                                      <div className="exp-detail-iframe">
+                                        <iframe
+                                          src={p.iframeDemo || p.iframe}
+                                          title={`${p.title} demo`}
+                                          allow="accelerometer; gyroscope"
+                                        />
+                                      </div>
+                                    ) : p.image ? (
+                                      <div className="exp-detail-image">
+                                        <img src={p.image} alt={p.title} />
+                                      </div>
+                                    ) : null}
+                                    <div className="exp-detail-text">
+                                      {paragraphs.map((para, idx) => (
+                                        <p key={idx} className="screen-detail-desc">{para}</p>
+                                      ))}
+                                    </div>
+                                    {(p.links?.length > 0 || p.id === 'lightfixtures') && (
+                                      <div className="exp-detail-links">
+                                        {p.links && p.links.map((link, li) => (
+                                          <a
+                                            key={li}
+                                            href={link.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="win95-button exp-detail-link"
+                                          >{link.label} →</a>
+                                        ))}
+                                        {p.id === 'lightfixtures' && (
+                                          <button
+                                            type="button"
+                                            className="win95-button exp-detail-link"
+                                            onClick={() => setShowcaseFixturesOpen((v) => !v)}
+                                          >
+                                            {showcaseFixturesOpen ? 'Hide Fixtures' : 'Explore Fixtures'} {showcaseFixturesOpen ? '▴' : '▾'}
+                                          </button>
+                                        )}
+                                      </div>
+                                    )}
+
+                                    {p.id === 'lightfixtures' && showcaseFixturesOpen && (
+                                      <div className="exp-detail-fixtures">
+                                        <div className="exp-detail-fixtures-header">
+                                          <span className="exp-detail-fixtures-label">Light Fixtures Portfolio</span>
+                                          <span className="exp-detail-fixtures-count">
+                                            {lightFixturesData.length} fixture{lightFixturesData.length === 1 ? '' : 's'}
+                                          </span>
+                                        </div>
+                                        <div className="exp-detail-fixtures-body">
+                                          {lightFixturesData.map((fix, fi) => (
+                                            <div key={fi} className="exp-detail-fixture">
+                                              <h4 className="exp-detail-fixture-title">{fix.title}</h4>
+                                              <p className="exp-detail-fixture-desc">{fix.description}</p>
+                                              {fix.images && fix.images.length > 0 && (
+                                                <div className="exp-detail-fixture-gallery">
+                                                  {fix.images.map((img, ii) => (
+                                                    <button
+                                                      type="button"
+                                                      key={ii}
+                                                      className="exp-detail-fixture-thumb"
+                                                      onClick={() => setShowcaseFixtureImage({
+                                                        src: img,
+                                                        alt: `${fix.title} ${ii + 1}`,
+                                                        title: fix.title,
+                                                      })}
+                                                      title="Click to enlarge"
+                                                    >
+                                                      <img src={img} alt={`${fix.title} ${ii + 1}`} loading="lazy" />
+                                                    </button>
+                                                  ))}
+                                                </div>
+                                              )}
+                                              {fix.videos && fix.videos.length > 0 && (
+                                                <div className="exp-detail-fixture-videos">
+                                                  {fix.videos.map((vid, vi) => (
+                                                    <div key={vi} className="exp-detail-fixture-video">
+                                                      <iframe
+                                                        src={`https://www.youtube.com/embed/${vid}?rel=0`}
+                                                        title={`${fix.title} clip ${vi + 1}`}
+                                                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowFullScreen
+                                                      />
+                                                    </div>
+                                                  ))}
+                                                </div>
+                                              )}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="screen-detail-toolbar">
+                                    <button
+                                      type="button"
+                                      className="win95-button"
+                                      onClick={() => setShowcaseExperimentIndex(
+                                        (showcaseExperimentIndex - 1 + projectsData.length) % projectsData.length
+                                      )}
+                                      title="Previous (←)"
+                                    >‹ Prev</button>
+                                    <div className="picture-viewer-counter">
+                                      {showcaseExperimentIndex + 1} / {projectsData.length}
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="win95-button"
+                                      onClick={() => setShowcaseExperimentIndex(
+                                        (showcaseExperimentIndex + 1) % projectsData.length
+                                      )}
+                                      title="Next (→)"
+                                    >Next ›</button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })()}
+                          {/* Fixture image picture viewer — opens over an Experiments modal */}
+                          {isShowcaseOpen && showcaseFixtureImage && (
+                            <div
+                              className="picture-viewer fixture-image-viewer"
+                              onClick={() => setShowcaseFixtureImage(null)}
+                            >
+                              <div className="picture-viewer-window" onClick={(e) => e.stopPropagation()}>
+                                <div className="picture-viewer-titlebar">
+                                  <span className="showcase-titlebar-text">
+                                    <img className="showcase-titlebar-icon" src="/crt/icons/about.png" alt="" />
+                                    {showcaseFixtureImage.title} — Picture Viewer
+                                  </span>
+                                  <div className="crt-win-btns">
+                                    <div
+                                      className="crt-win-btn crt-win-close"
+                                      onClick={() => setShowcaseFixtureImage(null)}
+                                    >×</div>
+                                  </div>
+                                </div>
+                                <div className="picture-viewer-body">
+                                  <img
+                                    className="picture-viewer-image"
+                                    src={showcaseFixtureImage.src}
+                                    alt={showcaseFixtureImage.alt}
+                                  />
+                                </div>
+                                <div className="picture-viewer-toolbar">
+                                  <button
+                                    type="button"
+                                    className="win95-button"
+                                    onClick={() => setShowcaseFixtureImage(null)}
+                                  >Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          {/* Products detail viewer — Win95 properties-style window */}
+                          {isShowcaseOpen && showcaseProductIndex !== null && (() => {
+                            const p = products[showcaseProductIndex];
+                            if (!p) return null;
+                            return (
+                              <div
+                                className="picture-viewer"
+                                onClick={() => setShowcaseProductIndex(null)}
+                              >
+                                <div className="screen-detail" onClick={(e) => e.stopPropagation()}>
+                                  <div className="picture-viewer-titlebar">
+                                    <span className="showcase-titlebar-text">
+                                      <img className="showcase-titlebar-icon" src="/crt/icons/about.png" alt="" />
+                                      {p.name} — Properties
+                                    </span>
+                                    <div className="crt-win-btns">
+                                      <div
+                                        className="crt-win-btn crt-win-close"
+                                        onClick={() => setShowcaseProductIndex(null)}
+                                      >×</div>
+                                    </div>
+                                  </div>
+                                  <div className="screen-detail-body">
+                                    <div className="screen-detail-meta">
+                                      <div className="screen-detail-cover product-detail-cover">
+                                        <img src={p.iconUrl} alt={p.name} />
+                                      </div>
+                                      <div className="screen-detail-text">
+                                        <h3 className="screen-detail-title">{p.name}</h3>
+                                        <p className="screen-detail-desc">{p.desc}</p>
+                                        {p.longerDesc && (
+                                          <p className="screen-detail-desc" style={{ marginTop: 10 }}>
+                                            {p.longerDesc}
+                                          </p>
+                                        )}
+                                        {p.link && (
+                                          <p style={{ marginTop: 12 }}>
+                                            <a
+                                              className="showcase-link"
+                                              href={p.link}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                            >{(() => {
+                                              try { return new URL(p.link).hostname.replace(/^www\./, ''); }
+                                              catch { return 'Open link'; }
+                                            })()} →</a>
+                                          </p>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="screen-detail-toolbar">
+                                    <button
+                                      type="button"
+                                      className="win95-button"
+                                      onClick={() => setShowcaseProductIndex(
+                                        (showcaseProductIndex - 1 + products.length) % products.length
+                                      )}
+                                      title="Previous (←)"
+                                    >‹ Prev</button>
+                                    <div className="picture-viewer-counter">
+                                      {showcaseProductIndex + 1} / {products.length}
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="win95-button"
+                                      onClick={() => setShowcaseProductIndex(
+                                        (showcaseProductIndex + 1) % products.length
+                                      )}
+                                      title="Next (→)"
+                                    >Next ›</button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })()}
+                          {/* Screens detail viewer — Win95 properties-style window
+                              with title, description, and embedded YouTube trailer */}
+                          {isShowcaseOpen && showcaseScreenIndex !== null && (() => {
+                            const item = screensData[showcaseScreenIndex];
+                            if (!item) return null;
+                            return (
+                              <div
+                                className="picture-viewer"
+                                onClick={() => setShowcaseScreenIndex(null)}
+                              >
+                                <div className="screen-detail" onClick={(e) => e.stopPropagation()}>
+                                  <div className="picture-viewer-titlebar">
+                                    <span className="showcase-titlebar-text">
+                                      <img className="showcase-titlebar-icon" src="/crt/icons/about.png" alt="" />
+                                      {item.title} — Details
+                                    </span>
+                                    <div className="crt-win-btns">
+                                      <div
+                                        className="crt-win-btn crt-win-close"
+                                        onClick={() => setShowcaseScreenIndex(null)}
+                                      >×</div>
+                                    </div>
+                                  </div>
+                                  <div className="screen-detail-body">
+                                    <div className="screen-detail-meta">
+                                      <div className="screen-detail-cover">
+                                        <img src={item.coverImageUrl} alt={item.title} />
+                                      </div>
+                                      <div className="screen-detail-text">
+                                        <h3 className="screen-detail-title">{item.title}</h3>
+                                        <p className="screen-detail-subtitle">{item.subtitle}</p>
+                                        <p className="screen-detail-desc">{item.description}</p>
+                                      </div>
+                                    </div>
+                                    {item.trailerId && (
+                                      <div className="screen-detail-trailer">
+                                        <div className="screen-detail-trailer-label">Trailer</div>
+                                        <div className="screen-detail-trailer-frame">
+                                          <iframe
+                                            src={`https://www.youtube.com/embed/${item.trailerId}?rel=0`}
+                                            title={`${item.title} trailer`}
+                                            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                          />
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="screen-detail-toolbar">
+                                    <button
+                                      type="button"
+                                      className="win95-button"
+                                      onClick={() => setShowcaseScreenIndex(stepScreenIndex(-1))}
+                                      title="Previous (←)"
+                                    >‹ Prev</button>
+                                    <div className="picture-viewer-counter">
+                                      {(() => {
+                                        const indices = filteredScreenIndices();
+                                        const pos = indices.indexOf(showcaseScreenIndex);
+                                        return `${pos === -1 ? '?' : pos + 1} / ${indices.length}`;
+                                      })()}
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="win95-button"
+                                      onClick={() => setShowcaseScreenIndex(stepScreenIndex(1))}
+                                      title="Next (→)"
+                                    >Next ›</button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>
                         {/* Start menu — Win95 reference 1:1: vertical
                             "Windows 95"-style sidebar, colorful icons, full
@@ -2488,6 +4124,41 @@ function App() {
                           {showGame && (
                             <div className="crt-taskbar-pill">
                               🖥 {currentGame.name}
+                            </div>
+                          )}
+                          {isShowcaseOpen && (
+                            <div
+                              className={`crt-taskbar-pill${showcaseMinimized ? '' : ' crt-taskbar-pill-active'}`}
+                              onClick={toggleShowcaseMin}
+                              title={showcaseMinimized ? 'Restore' : 'Minimize'}
+                            >
+                              <img
+                                src="/crt/icons/portfolio.png"
+                                alt=""
+                                style={{ width: 14, height: 14, imageRendering: 'pixelated', verticalAlign: 'middle' }}
+                              /> Portfolio
+                            </div>
+                          )}
+                          {isReadmeOpen && (
+                            <div
+                              className={`crt-taskbar-pill${readmeMinimized ? '' : ' crt-taskbar-pill-active'}`}
+                              onClick={toggleReadmeMin}
+                              title={readmeMinimized ? 'Restore' : 'Minimize'}
+                            >
+                              <img
+                                src="/crt/icons/readme.svg"
+                                alt=""
+                                style={{ width: 14, height: 14, imageRendering: 'pixelated', verticalAlign: 'middle' }}
+                              /> README.txt
+                            </div>
+                          )}
+                          {isWebampOpen && (
+                            <div
+                              className="crt-taskbar-pill crt-taskbar-pill-active"
+                              onClick={() => setIsWebampOpen(false)}
+                              title="Close Music"
+                            >
+                              🎵 Music
                             </div>
                           )}
                           {/* System tray — speaker mute + clock, period-correct */}
@@ -2614,6 +4285,8 @@ function App() {
                               setIsRetroMode(false);
                               setIsPoweringOff(false);
                               setShowGame(false);
+                              setIsWebampOpen(false);
+                              try { window.localStorage.setItem('site-mode', 'modern'); } catch { /* ignore */ }
                             }, 1000);
                           }}
                         >
@@ -2647,6 +4320,68 @@ function App() {
                   </div>
                 )}
 
+                {isRecycleBinOpen && (
+                  <div className="win95-popup recyclebin-popup">
+                    <div className="popup-title">
+                      <span>Recycle Bin</span>
+                      <button className="popup-close" onClick={() => setIsRecycleBinOpen(false)}>×</button>
+                    </div>
+                    <div className="popup-body recyclebin-body">
+                      <button
+                        type="button"
+                        className="recyclebin-image-btn"
+                        onClick={() => setIsRecycleImgOpen(true)}
+                        title="Click to enlarge"
+                      >
+                        <img
+                          src="/recyclebin/young_computers_great_fun.jpg"
+                          alt="A young Boden delighted by an early laptop"
+                        />
+                      </button>
+                      <p className="recyclebin-caption">computers have always been great fun</p>
+                    </div>
+                  </div>
+                )}
+
+                {isRecycleImgOpen && (
+                  <div
+                    className="picture-viewer recycle-img-viewer"
+                    onClick={() => setIsRecycleImgOpen(false)}
+                  >
+                    <div className="picture-viewer-window" onClick={(e) => e.stopPropagation()}>
+                      <div className="picture-viewer-titlebar">
+                        <span className="showcase-titlebar-text">
+                          <img className="showcase-titlebar-icon" src="/crt/icons/recyclebin.png" alt="" />
+                          computers have always been great fun
+                        </span>
+                        <div className="crt-win-btns">
+                          <div
+                            className="crt-win-btn crt-win-close"
+                            onClick={() => setIsRecycleImgOpen(false)}
+                          >×</div>
+                        </div>
+                      </div>
+                      <div className="picture-viewer-body">
+                        <img
+                          className="picture-viewer-image"
+                          src="/recyclebin/young_computers_great_fun.jpg"
+                          alt="A young Boden delighted by an early laptop"
+                        />
+                      </div>
+                      <div className="picture-viewer-toolbar">
+                        <div className="picture-viewer-counter" style={{ flex: 1, textAlign: 'left' }}>
+                          computers have always been great fun
+                        </div>
+                        <button
+                          type="button"
+                          className="win95-button"
+                          onClick={() => setIsRecycleImgOpen(false)}
+                        >Close</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {showCreditsModal && (
                   <div className="win95-popup credits-popup">
                     <div className="popup-title">
@@ -2668,9 +4403,6 @@ function App() {
                         <h3>Inspiration</h3>
                         <div className="credits-row">
                           <span>Henry Heffernan</span><span>Desktop UI / smudge + glass / sound design palette</span>
-                        </div>
-                        <div className="credits-row">
-                          <span>henryheffernan.com</span><span>Original portfolio that started this</span>
                         </div>
                       </div>
                       <div className="credits-section">
@@ -2781,23 +4513,8 @@ function App() {
                 )}
 
 
-                <div className="crt-game-manual">
-                  {showGame && (
-                    <div className="manual-content">
-                      <span className="manual-title">{currentGame.name} Manual</span>
-                      <div className="manual-row">
-                        <span className="manual-label">OBJECTIVE:</span>
-                        <p>{currentGame.instructions}</p>
-                      </div>
-                      <div className="manual-row">
-                        <span className="manual-label">CONTROLS:</span>
-                        <p>{currentGame.controls}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="crt-esc-hint">press esc or click power to exit</div>
+                {/* Under-monitor manual + esc hint removed — that content
+                    now lives in README.txt on the desktop. */}
               </motion.div>
             )}
           </motion.div>
@@ -3455,7 +5172,107 @@ function App() {
   };
 
   return (
-    <div className="container">
+    <div className={`container${isRetroMode ? ' retro-active' : ''}`}>
+      {/* Landing chooser — only shown on first visit (or after the user
+          clears localStorage). Picks between the modern site and the 90s
+          retro PC. Choice is persisted; returning visitors skip this. */}
+      <AnimatePresence>
+        {!siteModeChosen && (
+          <motion.div
+            key="landing"
+            className="landing-root"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: landingLeaving ? 0 : 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+          >
+            <motion.div
+              className="landing-card"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+            >
+              <h1 className="landing-title">Hi, I'm Boden 👋</h1>
+              <p className="landing-lede">
+                You have two choices when it comes to experiencing my site.
+                First, the modern clean version. Very easy to navigate. The
+                second, a love letter to the 90s. Old PCs, slower and weirder
+                but perhaps more fun. Pick whichever suits your mood. You can
+                always switch later.
+              </p>
+
+              <div className="landing-grid">
+                {/* Modern */}
+                <button
+                  type="button"
+                  className="landing-card-btn landing-card-btn-modern"
+                  onClick={() => handleLandingSelect('modern')}
+                  disabled={!!landingLeaving}
+                >
+                  <div className="landing-card-img">
+                    <img
+                      src="https://cdn.magicpatterns.com/uploads/jwXcbBUjWC1dTjcitqfWSF/tumblr_593fccb72033970ae12d9b8879f09bb6_75814253_540.png"
+                      alt="Modern computer"
+                    />
+                  </div>
+                  <div className="landing-card-row">
+                    <span className="landing-card-label">Modern site</span>
+                    <span className="landing-card-arrow" aria-hidden="true">→</span>
+                  </div>
+                  <p className="landing-card-sub">Clean &amp; calm</p>
+                </button>
+
+                {/* 90s */}
+                <button
+                  type="button"
+                  className="landing-card-btn landing-card-btn-retro"
+                  onClick={() => handleLandingSelect('retro')}
+                  disabled={!!landingLeaving}
+                >
+                  <div className="landing-card-img landing-card-img-retro">
+                    <img
+                      src="https://cdn.magicpatterns.com/uploads/dvcZrtiRWv8QcYmNDcUhmX/PNG_image.png"
+                      alt="Pixel PC"
+                    />
+                  </div>
+                  <div className="landing-card-row">
+                    <span className="landing-card-label landing-card-label-retro">
+                      Enter the 90s
+                    </span>
+                    <span className="landing-card-arrow landing-card-arrow-retro" aria-hidden="true">→</span>
+                  </div>
+                  <p className="landing-card-sub landing-card-sub-retro">
+                    Slower, weirder, fun
+                  </p>
+                </button>
+              </div>
+            </motion.div>
+
+            {/* Transition overlays — fade for modern, white-flash for retro. */}
+            <AnimatePresence>
+              {landingLeaving === 'modern' && (
+                <motion.div
+                  key="modern-fade"
+                  className="landing-overlay landing-overlay-modern"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4 }}
+                />
+              )}
+              {landingLeaving === 'retro' && (
+                <motion.div
+                  key="retro-flash"
+                  className="landing-overlay landing-overlay-retro"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0.2, 1] }}
+                  transition={{ duration: 0.6, times: [0, 0.15, 0.4, 1] }}
+                />
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {timePhase === 'evening' && <NightSky />}
       {(() => {
         const { label, Icon } = PHASE_META[timePhase];
@@ -3470,6 +5287,22 @@ function App() {
           </button>
         );
       })()}
+      {/* "Enter 90s mode" toggle — sits next to the phase toggle. Hidden in
+          retro mode (the user is already there). Dispatches Shift+P so the
+          existing boot pipeline runs. */}
+      {!isRetroMode && (
+        <button
+          className="mode-toggle"
+          onClick={() => {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: 'P', shiftKey: true }));
+          }}
+          aria-label="Enter 90s mode"
+          title="Enter 90s mode"
+        >
+          <span className="mode-toggle__icon" aria-hidden="true" />
+          <span className="mode-toggle__label">Enter 90s mode</span>
+        </button>
+      )}
       {/* Desktop sidebar — left */}
       <nav className="navbar">
         {sections.filter(s => !s.hidden).map(s => (
@@ -3757,6 +5590,25 @@ function App() {
         )}
 
       </AnimatePresence>
+
+      {/* Modern-site Webamp mount — when the user clicks "launch the Retro WIN
+          Media Player" from the Library/Audio page, open the player as a
+          floating window pinned to the viewport (no PC boot). When the CRT is
+          active, the retro mount inside .crt-win95-desktop handles it instead. */}
+      {isWebampOpen && !isRetroMode && (
+        <div className="webamp-floating-context">
+          <WebampErrorBoundary onError={() => setIsWebampOpen(false)}>
+            <Suspense fallback={null}>
+              <Webamp
+                tracks={webampAssets?.tracks || []}
+                skins={webampAssets?.skins || []}
+                initialSkin={webampAssets?.initialSkin}
+                onClose={() => setIsWebampOpen(false)}
+              />
+            </Suspense>
+          </WebampErrorBoundary>
+        </div>
+      )}
     </div>
   );
 }

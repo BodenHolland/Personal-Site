@@ -24,9 +24,25 @@ let masterVolume = 1;
 let muted = false;
 const effectiveScale = () => (muted ? 0 : masterVolume);
 
+// Subscriber pattern — external audio elements (e.g. Webamp) can follow
+// master volume + mute changes by registering a callback here.
+const subscribers = new Set();
+const notify = () => {
+  const s = effectiveScale();
+  subscribers.forEach((cb) => { try { cb(s); } catch { /* ignore */ } });
+};
+
+export const getEffectiveScale = () => effectiveScale();
+export const subscribeMaster = (cb) => {
+  subscribers.add(cb);
+  try { cb(effectiveScale()); } catch { /* ignore */ }
+  return () => subscribers.delete(cb);
+};
+
 export const setMasterVolume = (v) => {
   masterVolume = Math.max(0, Math.min(1, v));
   if (ambientNode) ambientNode.volume = ambientBaseVolume * effectiveScale();
+  notify();
 };
 export const setMuted = (m) => {
   muted = !!m;
@@ -34,6 +50,7 @@ export const setMuted = (m) => {
     ambientNode.volume = ambientBaseVolume * effectiveScale();
     // Don't pause/play — keep the loop position; volume of 0 is enough.
   }
+  notify();
 };
 export const isMuted = () => muted;
 

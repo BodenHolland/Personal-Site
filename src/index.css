@@ -41,6 +41,30 @@ h1, h2, h3 {
   display: flex;
 }
 
+/* Retro mode (Shift+P) — hide the modern site chrome so the CRT screen
+   is the only thing on the page. The .content-wrapper has to stay
+   mounted (that's where the CRT itself renders!), but we strip its
+   padding so the CRT can fill the viewport. */
+.container.retro-active .navbar,
+.container.retro-active .mobile-drawer,
+.container.retro-active .hamburger {
+  display: none !important;
+}
+/* The phase toggle stays visible in PC mode so the user can still cycle
+   time-of-day (controls the body bg behind the CRT). The mode toggle
+   ("Enter 90s mode") is rendered only when NOT in retro, so it hides
+   itself automatically — no rule needed. */
+.container.retro-active .content-wrapper {
+  /* The CRT lives inside this wrapper — keep it visible, just remove
+     the surrounding padding/centering so the monitor fills the viewport. */
+  flex: 1 1 100%;
+  width: 100vw;
+  max-width: 100vw;
+}
+.container.retro-active section {
+  padding: 0 !important;
+}
+
 /* Sidebar Navigation */
 .navbar {
   width: var(--sidebar-width);
@@ -347,16 +371,19 @@ section {
   margin: 0 auto;
   perspective: 2000px;
   width: 100%;
-  max-width: min(98%, 1400px);
+  max-width: min(99%, 1800px);
   position: relative;
-  height: min-content;
-  padding: 1rem 0;
+  height: 100vh;
+  padding: 0.5rem 0;
 }
 
 /* The thick outer plastic case (Beige/Retro White) */
 .crt-body {
   width: 100%;
-  max-width: calc((92vh - 80px) * (4 / 3.2));
+  /* Was capped to ~92vh - 80px to leave room for the under-monitor
+     manual/esc hint. That placeholder content moved to README.txt, so
+     the monitor can now use the full viewport. */
+  max-width: calc((98vh - 80px) * (4 / 3.2));
   aspect-ratio: 4 / 3.2;
   background: #e4e0d7;
   border-radius: 12px 12px 24px 24px;
@@ -459,7 +486,7 @@ section {
 .crt-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.4) 100%);
+  background: radial-gradient(circle at center, transparent 70%, rgba(0,0,0,0.2) 100%);
   pointer-events: none;
   z-index: 9998;
   box-shadow: inset 0 0 10px rgba(255,255,255,0.1);
@@ -1097,15 +1124,11 @@ section {
   max-width: 60%;
 }
 
-/* Win95 Desktop inside the screen */
+/* Win95 Desktop inside the screen — switched from grid to absolute
+   positioning so individual icons can be dragged. */
 .crt-win95-desktop {
   flex: 1;
-  padding: 8px;
-  display: grid;
-  grid-template-rows: repeat(auto-fill, minmax(65px, 1fr));
-  grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
-  grid-auto-flow: column;
-  gap: 8px 4px;
+  padding: 0;
   position: relative;
   z-index: 10;
   max-height: 100%;
@@ -1113,12 +1136,16 @@ section {
 }
 
 .crt-desk-icon {
-  width: 60px;
+  width: 64px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
   cursor: pointer;
+  user-select: none;
+}
+.crt-desk-icon:active {
+  filter: brightness(0.94);
 }
 
 .crt-desk-icon-img {
@@ -1259,6 +1286,1845 @@ section {
   font-size: 9px;
   padding: 0 4px;
   border: 1px inset #808080;
+}
+
+/* ============================================================
+   Showcase window — Henry-style portfolio explorer inside the CRT.
+   Fills the available desktop area with a classic Win95 application
+   window: title bar, content body with serif name + nav, status bar.
+   ============================================================ */
+/* Defensive: your modern site has `section { position: absolute; inset: 0 }`
+   and similar globals. Reset any block-level element inside the showcase
+   so it follows normal flow regardless of what's above it. */
+.showcase-window section,
+.showcase-window header,
+.showcase-window nav,
+.showcase-window article,
+.showcase-window aside,
+.showcase-window main {
+  position: static;
+  inset: auto;
+  padding: 0;
+  margin: 0;
+  height: auto;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+.showcase-window {
+  position: absolute;
+  /* default top/left/size set inline; overridden by .is-maximized */
+  background: #c3c6ca;
+  border: 2px solid #ffffff;
+  border-bottom-color: #404040;
+  border-right-color: #404040;
+  display: flex;
+  flex-direction: column;
+  z-index: 60;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  min-width: 420px;
+  min-height: 280px;
+}
+.showcase-window.is-maximized {
+  top: 4px !important;
+  left: 4px !important;
+  right: 4px !important;
+  bottom: 4px !important;
+  width: auto !important;
+  height: auto !important;
+}
+.showcase-window.is-minimized {
+  /* visually hidden but kept mounted so state (scroll position, tab, etc.) persists */
+  display: none;
+}
+
+.showcase-titlebar {
+  background: #000080;
+  color: #ffffff;
+  padding: 2px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: bold;
+  height: 20px;
+  flex-shrink: 0;
+  cursor: move;
+  user-select: none;
+}
+
+/* Visual cue on the taskbar pill for the currently-shown window */
+.crt-taskbar-pill-active {
+  background: #b5b8bc;
+  border-style: inset !important;
+}
+.showcase-titlebar-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.showcase-titlebar-icon {
+  width: 14px;
+  height: 14px;
+  image-rendering: pixelated;
+}
+
+.showcase-body {
+  flex: 1;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #404040;
+  border-right-color: #ffffff;
+  border-bottom-color: #ffffff;
+  margin: 2px;
+  padding: 28px 28px 24px;
+  position: relative;
+  color: #1a1a1a;
+  min-height: 0; /* allow flex child to shrink so overflow-y works */
+}
+
+.showcase-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+.showcase-name {
+  font-family: 'Cooper Black', 'Cooper Std', 'Times New Roman', Georgia, serif;
+  font-size: 44px;
+  letter-spacing: -1px;
+  margin: 0 0 2px 0;
+  color: #181818;
+  line-height: 1;
+}
+.showcase-sub {
+  font-family: 'Cooper Black', 'Cooper Std', 'Times New Roman', Georgia, serif;
+  font-size: 14px;
+  margin: 0 0 14px 0;
+  color: #2a2a2a;
+}
+
+.showcase-nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 10px;
+}
+.showcase-nav-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: 'Cooper Black', 'Cooper Std', 'Times New Roman', Georgia, serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #4a3aa0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.showcase-nav-link:hover {
+  color: #8a1a8a;
+}
+.showcase-nav-link.active {
+  color: #1a1a1a;
+}
+
+.showcase-content {
+  margin-top: 24px;
+}
+
+.showcase-section {
+  max-width: 720px;
+  margin: 0 auto;
+  /* Georgia across all in-window content for consistent readable serif.
+     Win9x chrome (titlebars, status bars, buttons) keeps MS Sans Serif
+     via its own scoped rules. */
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #000000;
+}
+.showcase-section p {
+  margin: 0 0 14px 0;
+}
+.showcase-section b,
+.showcase-section strong {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+}
+.showcase-section-heading {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 26px;
+  margin: 0 0 16px 0;
+  color: #000;
+  letter-spacing: 0;
+}
+.showcase-section-empty {
+  text-align: center;
+  padding: 24px 0;
+}
+.showcase-placeholder {
+  color: #555;
+  font-style: italic;
+}
+.showcase-link {
+  color: #4a3aa0;
+  text-decoration: underline;
+}
+.showcase-link:hover {
+  color: #8a1a8a;
+}
+
+/* Showcase content uses Georgia — designed by Matthew Carter in 1993
+   specifically for low-resolution screen reading, and shipped on every
+   modern OS. Period-authentic for the Win9x era and significantly easier
+   to read than the more pixelated period serifs (e.g. Millennium). */
+
+/* === About section — Henry-style ==========================================
+   Solid white backdrop, Georgia serif body. No horizontal rules — sections
+   separated by <br><br> just like Henry's text-block. Captions use
+   <sub><b>Figure N:</b> …</sub>.
+   ========================================================================== */
+.showcase-about {
+  max-width: 760px;
+  margin: -10px auto 0 auto;
+  padding: 32px 36px 40px 36px;
+  background-color: #ffffff;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 18px;
+  color: #000000;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+/* Paragraphs — 18px Georgia, no explicit line-height so the font's
+   natural metrics drive the rhythm. */
+.showcase-about p {
+  margin: 0 0 14px 0;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 18px;
+}
+/* Inline bold inside paragraphs uses the dedicated bold cut, not synthesized
+   bold — this is the key trick from Henry's CSS. */
+.showcase-about p b,
+.showcase-about b,
+.showcase-about strong {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+}
+
+/* Section headings — h3 across the board, no big page title with kicker. */
+.showcase-about h3,
+.about-heading {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 0;
+  margin: 0 0 12px 0;
+  color: #000;
+  text-align: left;
+}
+/* Welcome block opens with the largest heading. */
+.about-title {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0 0 14px 0;
+  color: #000;
+  text-align: left;
+  letter-spacing: 0;
+}
+.about-kicker {
+  display: none; /* Henry doesn't use a "Welcome" kicker — drop it */
+}
+
+/* Henry's site separates sections with plain <br><br>, not a rule. */
+.about-rule {
+  display: none;
+}
+
+/* Captioned image block — mirrors Henry's `.captioned-image` markup.
+   The caption uses <sub> sizing (smaller than body) with a bold "Figure N:"
+   prefix. Floated right by default; flex parent (.about-side-by-side)
+   forces inline behavior for the hobbies-style pairings. */
+.about-figure {
+  float: right;
+  width: 56%;
+  max-width: 380px;
+  margin: 6px 0 18px 24px;
+  padding: 0;
+  text-align: center;
+}
+.about-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.about-figure figcaption {
+  margin-top: 6px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 14px;     /* <sub>-equivalent — smaller than 18px body */
+  color: #000;
+  text-align: center;
+}
+.about-figure figcaption b {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+}
+.about-figure-pro {
+  /* Vertical portrait — narrower, taller aspect, like Henry's Figure 2. */
+  width: 44%;
+  max-width: 300px;
+}
+
+/* Inline Win9x-style icon next to a link (e.g. the LinkedIn line in the
+   Welcome block). Pixelated rendering keeps the 8-bit aesthetic crisp. */
+.about-linkedin-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.about-inline-icon {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* Full-bleed figure — sits in the document flow, not floated. Used for
+   Figure 1 between sections so the photo gets full visual weight without
+   trying to fight prose for column space. */
+.about-figure-full {
+  display: block;
+  float: none;
+  clear: both;
+  width: 100%;
+  max-width: 100%;
+  margin: 18px 0 22px 0;
+  padding: 0;
+  text-align: center;
+}
+.about-figure-full img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+.about-figure-full figcaption {
+  margin-top: 8px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 14px;
+  color: #000;
+  text-align: center;
+}
+.about-figure-full figcaption b {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+}
+
+/* Links — blue underlined, matching Henry's default anchor styling
+   inside his .text-block. */
+.showcase-about a,
+.showcase-about .about-link {
+  color: #1f1faa;
+  text-decoration: underline;
+}
+.showcase-about a:hover,
+.showcase-about .about-link:hover {
+  color: #6b1f8a;
+}
+
+.about-signoff {
+  /* Force the sign-off below any floated figures (e.g. Figure 2 in
+     "Outside of Work") and span the full content width. */
+  clear: both;
+  margin-top: 24px !important;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+/* Side-by-side block — Henry's "My Hobbies" pattern: justified prose on
+   the left, vertical portrait inset on the right. Wraps to stacked when
+   the *container* (not viewport) gets narrow, since the Showcase window
+   is resizable and the user can shrink it on any screen size. */
+.showcase-about {
+  container-type: inline-size;
+}
+.about-side-by-side {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
+}
+.about-side-text {
+  /* min 280px before wrapping — below that, justify + hyphens produce
+     hideous rivers, so the figure drops underneath instead. */
+  flex: 1 1 280px;
+  min-width: 0;
+  text-align: justify;
+}
+.about-side-figure {
+  flex: 0 1 220px;
+  min-width: 180px;
+  max-width: 260px;
+  align-self: flex-start;
+}
+.about-figure-inline {
+  /* Inside the flex pair, drop the float and let the container size. */
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+/* When the showcase window is narrow, stack the pair so prose gets full
+   width and the photo sits centered above/below it. Drop justification
+   so the prose doesn't get rivers. */
+@container (max-width: 560px) {
+  .about-side-by-side {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .about-side-text {
+    text-align: left;
+    hyphens: none;
+    -webkit-hyphens: none;
+  }
+  .about-side-figure {
+    flex: 1 1 auto;
+    align-self: center;
+    width: 60%;
+    min-width: 0;
+    max-width: 260px;
+  }
+}
+
+/* Same protection on the lone Figure 1 (kid photo). Its float ratio
+   needs to shrink when the container is narrow, and disappear when very
+   narrow so the photo doesn't squeeze prose into a 60-pixel column. */
+@container (max-width: 560px) {
+  .about-figure:not(.about-figure-inline) {
+    float: none;
+    width: 70%;
+    max-width: 320px;
+    margin: 8px auto 18px auto;
+    display: block;
+  }
+  .showcase-about {
+    text-align: left;
+    hyphens: none;
+    -webkit-hyphens: none;
+  }
+}
+
+/* Narrow Showcase window — tighter padding + smaller headings. Width
+   matched to the @container breakpoint above so the responsive behavior
+   stays in sync. */
+@container (max-width: 560px) {
+  .showcase-about {
+    padding: 22px 20px 28px 20px;
+  }
+  .about-title { font-size: 26px; }
+  .showcase-about h3,
+  .about-heading { font-size: 20px; }
+}
+
+/* Home (landing) view — center the header block vertically so the
+   nav appears in the middle of the window, like Henry's home screen. */
+.showcase-body-home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.showcase-body-home .showcase-header {
+  margin-bottom: 0;
+}
+.showcase-body-home .showcase-name {
+  font-size: 56px;
+}
+.showcase-body-home .showcase-nav {
+  margin-top: 28px;
+  gap: 32px;
+}
+
+/* Section view — two-column: left sidebar nav, right content. */
+.showcase-body-section {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  padding: 0;
+  background: #ffffff;
+  align-items: stretch;
+}
+.showcase-sidebar {
+  flex: 0 0 200px;
+  padding: 36px 22px 28px 24px;
+  background: #ffffff;
+  border-right: 1px solid #b8b8b0;
+  display: flex;
+  flex-direction: column;
+}
+.showcase-sidebar-name {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 1.08;
+  letter-spacing: 0;
+  margin: 0 0 6px 0;
+  color: #000;
+  cursor: pointer;
+}
+.showcase-sidebar-sub {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-size: 14px;
+  color: #444;
+  margin: 0 0 32px 0;
+}
+.showcase-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: flex-start;
+}
+.showcase-sidebar-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: 'Cooper Black', 'Cooper Std', 'Times New Roman', Georgia, serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #4a3aa0;
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-align: left;
+}
+.showcase-sidebar-link:hover {
+  color: #8a1a8a;
+}
+.showcase-sidebar-link.active {
+  color: #1a1a1a;
+}
+.showcase-sidebar-bullet {
+  display: inline-block;
+  width: 12px;
+  text-align: center;
+  font-family: 'Cooper Black', serif;
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Right-side content gets a horizontal rule above to mirror Henry's layout */
+.showcase-body-section .showcase-content {
+  flex: 1;
+  margin-top: 0;
+  padding: 28px 32px 32px;
+  overflow-y: auto;
+  min-width: 0;
+  border-top: 2px solid #1a1a1a;
+  border-bottom: 2px solid #1a1a1a;
+  border-left: none;
+  border-right: none;
+  margin: 18px 18px 18px 0;
+}
+
+/* Clickable name (returns to home) */
+.showcase-name {
+  cursor: pointer;
+}
+
+/* === Win95 contact form === */
+.showcase-contact-intro {
+  margin: 0 0 18px 0;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #1a1a1a;
+}
+
+.showcase-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 13px;
+  color: #000;
+}
+
+/* Each field: label + input pair. Two-column on wider widths. */
+.showcase-field {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+.showcase-field-message {
+  align-items: flex-start;
+}
+.showcase-field label {
+  font-size: 13px;
+  color: #000;
+  text-align: right;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+}
+
+/* Win95 sunken input field — required look: white bg, inset bevel,
+   black ridge so it reads as "data entry slot". */
+.showcase-field input,
+.showcase-field textarea {
+  font: inherit;
+  font-size: 13px;
+  background: #ffffff;
+  color: #000;
+  padding: 4px 6px;
+  border: 2px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  outline: none;
+  box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #efefef;
+  border-radius: 0;
+}
+.showcase-field textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.45;
+}
+.showcase-field input::placeholder,
+.showcase-field textarea::placeholder {
+  color: #888;
+}
+.showcase-field input:focus,
+.showcase-field textarea:focus {
+  outline: 1px dotted #404040;
+  outline-offset: -4px;
+}
+
+.showcase-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.win95-button-primary {
+  font-weight: bold;
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
+.showcase-contact-success {
+  display: flex;
+  gap: 16px;
+  background: #f1f1f1;
+  border: 1px solid #404040;
+  padding: 16px;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+.showcase-contact-success-icon img {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+}
+.showcase-contact-success p {
+  margin: 0 0 6px 0;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 13px;
+  color: #000;
+}
+
+/* === Photography section === */
+.showcase-photography {
+  max-width: none; /* let the grid use the full content width */
+}
+.showcase-photo-intro {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 13px;
+  margin: 0 0 8px 0;
+}
+.showcase-photo-quote {
+  font-family: 'Cooper Black', 'Cooper Std', 'Times New Roman', Georgia, serif;
+  font-style: italic;
+  font-size: 14px;
+  color: #2a2a2a;
+  margin: 0 0 22px 0;
+  padding: 0;
+  border-left: 3px solid #86898d;
+  padding-left: 12px;
+}
+.showcase-photo-cite {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  margin-top: 6px;
+  color: #555;
+}
+
+.showcase-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Each thumb sits in a sunken-bevel slot, like Win98's thumbnail view. */
+.showcase-photo-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: 4px;
+  background: #c3c6ca;
+  border: 2px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  cursor: pointer;
+  position: relative;
+  transition: filter 0.12s;
+}
+.showcase-photo-thumb:hover {
+  filter: brightness(1.05);
+}
+.showcase-photo-thumb:active {
+  border: 2px solid #ffffff;
+  border-bottom-color: #404040;
+  border-right-color: #404040;
+}
+.showcase-photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border: 1px solid #404040;
+  background: #000;
+  pointer-events: none;
+}
+
+/* === Win95 Picture Viewer (lightbox) === */
+.picture-viewer {
+  position: absolute;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.picture-viewer-window {
+  background: #c3c6ca;
+  border: 2px solid #ffffff;
+  border-bottom-color: #404040;
+  border-right-color: #404040;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  max-width: min(92%, 1100px);
+  max-height: 90%;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+}
+.picture-viewer-titlebar {
+  background: #000080;
+  color: #ffffff;
+  padding: 2px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: bold;
+  height: 20px;
+  flex-shrink: 0;
+}
+.picture-viewer-body {
+  flex: 1;
+  background: #000;
+  border: 1px solid #404040;
+  border-right-color: #ffffff;
+  border-bottom-color: #ffffff;
+  margin: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-width: 320px;
+  min-height: 240px;
+}
+.picture-viewer-image {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  object-fit: contain;
+}
+.picture-viewer-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px 8px;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.picture-viewer-counter {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 12px;
+  color: #1a1a1a;
+  border: 1px inset #808080;
+  padding: 2px 12px;
+  background: #ffffff;
+  min-width: 80px;
+  text-align: center;
+}
+.picture-viewer-nav {
+  min-width: 70px;
+}
+
+/* === Library section === */
+.showcase-library {
+  max-width: none;
+}
+
+/* Win95-style tab strip — chunky raised tabs sitting on a divider rule */
+.showcase-lib-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid #86898d;
+  margin-bottom: 0;
+  padding-left: 8px;
+}
+.showcase-lib-tab {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 12px;
+  padding: 6px 16px 5px;
+  background: #c3c6ca;
+  border: 1px solid #ffffff;
+  border-bottom: none;
+  border-right-color: #404040;
+  cursor: pointer;
+  color: #1a1a1a;
+  margin-bottom: -1px;
+  position: relative;
+}
+.showcase-lib-tab.active {
+  background: #e8e8e8;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  z-index: 2;
+  font-weight: bold;
+}
+.showcase-lib-tab:not(.active):hover {
+  background: #cccfd3;
+}
+
+.showcase-lib-body {
+  border: 1px solid #404040;
+  border-top: none;
+  border-right-color: #ffffff;
+  border-bottom-color: #ffffff;
+  background: #ffffff;
+  padding: 14px 16px 18px;
+  min-height: 240px;
+}
+.showcase-lib-blurb {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 12px;
+  color: #444;
+  margin: 0 0 14px 0;
+}
+
+/* === Audio preview notice ==================================================
+   Win9x dialog-style heads-up shown above the Audio tile grid. The whole
+   thing is one button: clicking anywhere on it dismisses the warning. The
+   right side shows an OK pill, the left a yellow ⚠ alert glyph.
+   ========================================================================== */
+.audio-preview-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0 0 14px 0;
+  padding: 10px 12px;
+  background: #fffce6;
+  border: 2px solid #ffffff;
+  border-right-color: #6e6e6e;
+  border-bottom-color: #6e6e6e;
+  box-shadow: inset -1px -1px #9a9a9a, inset 1px 1px #ffffff, 1px 1px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: #1a1a1a;
+}
+.audio-preview-notice:hover {
+  background: #fff7c4;
+}
+.audio-preview-notice:active {
+  background: #fef5b8;
+  border-color: #6e6e6e #ffffff #ffffff #6e6e6e;
+  box-shadow: inset 1px 1px #9a9a9a, inset -1px -1px #ffffff;
+}
+.audio-preview-notice-icon {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f4c81a;
+  color: #1a1300;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #8a6800;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.5);
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+}
+.audio-preview-notice-text {
+  flex: 1;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #1a1a1a;
+}
+.audio-preview-notice-text b {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-weight: bold;
+}
+.audio-preview-notice-ok {
+  flex: 0 0 auto;
+  align-self: stretch;
+  min-width: 64px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #c3c6ca;
+  border: 2px solid #ffffff;
+  border-right-color: #404040;
+  border-bottom-color: #404040;
+  box-shadow: inset -1px -1px #9a9a9a, inset 1px 1px #ffffff;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: #1a1a1a;
+}
+.audio-preview-notice:active .audio-preview-notice-ok {
+  border-color: #404040 #ffffff #ffffff #404040;
+  box-shadow: inset 1px 1px #9a9a9a, inset -1px -1px #ffffff;
+}
+
+/* Win95-style filter chip row — toolbar buttons that look like raised
+   tool palette buttons, depressing when active. */
+.showcase-lib-filter {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 20px 0;
+  padding: 6px 8px;
+  background: #c3c6ca;
+  border: 1px solid #ffffff;
+  border-bottom-color: #404040;
+  border-right-color: #404040;
+}
+.showcase-lib-filter-btn {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 12px;
+  padding: 4px 18px;
+  background: #c3c6ca;
+  border: 1px solid #ffffff;
+  border-bottom-color: #404040;
+  border-right-color: #404040;
+  cursor: pointer;
+  color: #1a1a1a;
+  min-width: 72px;
+}
+.showcase-lib-filter-btn:hover {
+  background: #cccfd3;
+}
+.showcase-lib-filter-btn.active {
+  background: #b5b8bc;
+  border: 1px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  font-weight: bold;
+}
+.showcase-lib-filter-btn:active {
+  border: 1px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+}
+
+.showcase-lib-empty {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+  padding: 16px;
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+/* Cover grid — Audio + Screens */
+.showcase-lib-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+.showcase-lib-cover {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-decoration: none;
+  color: #1a1a1a;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+}
+.showcase-lib-cover-frame {
+  display: block;
+  padding: 4px;
+  background: #c3c6ca;
+  border: 2px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+.showcase-lib-cover-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 1px solid #404040;
+  background: #000;
+  display: block;
+}
+.showcase-lib-cover:hover .showcase-lib-cover-frame {
+  filter: brightness(1.06);
+}
+.showcase-lib-cover:active .showcase-lib-cover-frame {
+  border: 2px solid #ffffff;
+  border-bottom-color: #404040;
+  border-right-color: #404040;
+}
+.showcase-lib-cover-meta {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 2px 0;
+  line-height: 1.25;
+}
+.showcase-lib-title {
+  font-size: 12px;
+  color: #111;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.showcase-lib-sub {
+  font-size: 11px;
+  color: #666;
+  margin-top: 1px;
+}
+
+/* List view — Pages (Win95 Explorer "Details" view) */
+.showcase-lib-listview {
+  border: 1px inset #808080;
+  background: #ffffff;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 12px;
+}
+.showcase-lib-list-header {
+  display: grid;
+  grid-template-columns: 22px 56px 1.6fr 1fr;
+  gap: 8px;
+  align-items: center;
+  background: #c3c6ca;
+  border-bottom: 1px solid #86898d;
+  padding: 4px 8px;
+  font-weight: bold;
+  color: #1a1a1a;
+}
+.showcase-lib-list-header > span {
+  border-right: 1px solid #ffffff;
+  box-shadow: 1px 0 0 #86898d;
+  padding-right: 6px;
+}
+.showcase-lib-list-header > span:last-child {
+  border-right: none;
+  box-shadow: none;
+}
+
+.showcase-lib-list-group {
+  border-bottom: 1px solid #ececec;
+}
+.showcase-lib-list-group.is-expanded {
+  background: #f7f7f4;
+  border-bottom: 1px solid #86898d;
+}
+
+.showcase-lib-list-row {
+  display: grid;
+  grid-template-columns: 22px 56px 1.6fr 1fr;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  padding: 4px 8px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font: inherit;
+  color: #1a1a1a;
+  cursor: pointer;
+}
+.showcase-lib-list-row:hover {
+  background: #d0d8f0;
+}
+.is-expanded > .showcase-lib-list-row {
+  background: #c8d2ee;
+}
+.showcase-lib-list-row .col-toggle {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  color: #1a1a1a;
+  border: 1px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  background: #c3c6ca;
+  width: 18px;
+  height: 18px;
+  line-height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.is-expanded .col-toggle {
+  border: 1px solid #ffffff;
+  border-bottom-color: #404040;
+  border-right-color: #404040;
+}
+.showcase-lib-list-row .col-cover img {
+  width: 36px;
+  height: 50px;
+  object-fit: cover;
+  display: block;
+  border: 1px solid #404040;
+  background: #c3c6ca;
+}
+.showcase-lib-list-row .col-title {
+  font-weight: bold;
+  color: #111;
+}
+.showcase-lib-list-row .col-author {
+  color: #555;
+}
+
+/* === Book row expanded detail === */
+.showcase-lib-list-detail {
+  padding: 12px 14px 16px 44px;
+  background: #f7f7f4;
+  border-top: 1px dashed #b8b8b0;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  color: #1a1a1a;
+}
+.showcase-book-detail-meta {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.showcase-book-detail-cover {
+  background: #c3c6ca;
+  border: 2px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  padding: 3px;
+  align-self: start;
+}
+.showcase-book-detail-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #404040;
+  background: #000;
+}
+.showcase-book-detail-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.showcase-book-detail-desc {
+  font-size: 12px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* === My Notes panel (highlights) === */
+.showcase-book-notes {
+  border: 1px inset #808080;
+  background: #ffffff;
+}
+.showcase-book-notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  background: #000080;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: bold;
+}
+.showcase-book-notes-title {
+  letter-spacing: 0.5px;
+}
+.showcase-book-notes-count {
+  font-weight: normal;
+  font-style: italic;
+  opacity: 0.85;
+}
+.showcase-book-notes-body {
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  background: #ffffff;
+}
+.showcase-book-note {
+  padding: 10px 0;
+  border-bottom: 1px dotted #b8b8b0;
+}
+.showcase-book-note:last-child {
+  border-bottom: none;
+}
+.showcase-book-note-text {
+  margin: 0;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #111;
+}
+.showcase-book-note-page {
+  margin: 4px 0 0 0;
+  font-size: 11px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Product detail cover behaves like a square icon (not a poster) */
+.product-detail-cover img {
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  background: #ffffff;
+}
+
+/* === Experiments grid + detail === */
+.showcase-exp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+.showcase-exp-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: #ffffff;
+  /* Uniform dark border on all four sides — the previous raised-bevel
+     trick (white top/left, dark bottom/right) was invisible against the
+     showcase's white content background. Pair with a small Win95-style
+     drop shadow for elevation. */
+  border: 1px solid #404040;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.18);
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  color: #1a1a1a;
+  cursor: pointer;
+  /* exp-accent set inline per project */
+  --exp-accent: #404040;
+  position: relative;
+  transition: box-shadow 0.08s ease-out, transform 0.08s ease-out;
+}
+.showcase-exp-tile:hover {
+  filter: brightness(1.03);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.22);
+}
+.showcase-exp-tile:active {
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  transform: translate(1px, 1px);
+}
+.showcase-exp-tile-thumb {
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--exp-accent);
+  border-bottom: 3px solid var(--exp-accent);
+}
+.showcase-exp-tile-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.showcase-exp-tile-icon {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+.showcase-exp-tile-meta {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px 10px;
+  background: #ffffff;
+}
+.showcase-exp-tile-title {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  color: #111;
+}
+.showcase-exp-tile-sub {
+  font-size: 11px;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* Experiments detail extensions (reuses .screen-detail chrome) */
+.exp-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 0 14px;
+  border-bottom: 1px dashed #b8b8b0;
+  margin-bottom: 14px;
+}
+.exp-detail-icon {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  background: var(--exp-accent, #404040);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+}
+.exp-detail-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.exp-detail-image {
+  margin: 0 0 14px 0;
+  background: #c3c6ca;
+  border: 2px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  padding: 3px;
+}
+.exp-detail-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid #404040;
+  background: #000;
+}
+
+.exp-detail-iframe {
+  margin: 0 0 14px 0;
+  background: #c3c6ca;
+  border: 2px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  padding: 3px;
+  aspect-ratio: 16 / 10;
+}
+.exp-detail-iframe iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 1px solid #404040;
+  background: #ffffff;
+}
+
+.exp-detail-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.exp-detail-text .screen-detail-desc {
+  margin: 0;
+}
+
+.exp-detail-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #ffffff;
+  box-shadow: inset 0 1px 0 #86898d;
+}
+.exp-detail-link {
+  text-decoration: none;
+  color: #1a1a1a;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* Light Fixtures sub-gallery — inline expanded portfolio inside the
+   Experiments detail modal. Win95 panel with title bar + scroll body. */
+.exp-detail-fixtures {
+  margin-top: 16px;
+  border: 1px inset #808080;
+  background: #ffffff;
+}
+.exp-detail-fixtures-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 10px;
+  background: #000080;
+  color: #ffffff;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+}
+.exp-detail-fixtures-label {
+  letter-spacing: 0.5px;
+}
+.exp-detail-fixtures-count {
+  font-weight: normal;
+  font-style: italic;
+  opacity: 0.85;
+}
+.exp-detail-fixtures-body {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.exp-detail-fixture {
+  padding-bottom: 16px;
+  border-bottom: 1px dotted #b8b8b0;
+}
+.exp-detail-fixture:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.exp-detail-fixture-title {
+  margin: 0 0 6px 0;
+  font-family: 'Cooper Black', 'Cooper Std', 'Times New Roman', Georgia, serif;
+  font-size: 16px;
+  color: #111;
+}
+.exp-detail-fixture-desc {
+  margin: 0 0 10px 0;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #1a1a1a;
+}
+
+.exp-detail-fixture-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.exp-detail-fixture-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #c3c6ca;
+  border: 2px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  padding: 3px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.exp-detail-fixture-thumb:hover {
+  filter: brightness(1.06);
+}
+.exp-detail-fixture-thumb:active {
+  border: 2px solid #ffffff;
+  border-bottom-color: #404040;
+  border-right-color: #404040;
+}
+
+/* Stacked on top of the Experiments detail modal */
+.fixture-image-viewer {
+  z-index: 220;
+}
+
+/* === Resize grip ===========================================================
+   Diagonal hash in the bottom-right corner of resizable windows. Matches the
+   Win9x sizing-grip glyph. Sits above the statusbar's right edge. The cursor
+   becomes the diagonal arrow on hover so it reads as "drag to resize".
+   ========================================================================== */
+.crt-resize-grip {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  z-index: 5;
+  /* Win9x sizing handle: three diagonal lines of dots */
+  background-image:
+    linear-gradient(135deg,
+      transparent 0%, transparent 40%,
+      #ffffff 40%, #ffffff 50%,
+      #808080 50%, #808080 60%,
+      transparent 60%, transparent 70%,
+      #ffffff 70%, #ffffff 80%,
+      #808080 80%, #808080 90%,
+      transparent 90%);
+  background-size: 100% 100%;
+}
+
+/* === README.txt window =====================================================
+   Reuses the .showcase-window chrome (titlebar / body / statusbar). This block
+   only styles the README's inner content so it matches the showcase aesthetic
+   without inventing a new frame.
+   ========================================================================== */
+.readme-window {
+  z-index: 80; /* above the showcase window when both are open */
+  min-width: 360px;
+  min-height: 280px;
+}
+.readme-showcase-body {
+  padding: 28px 32px 28px !important;
+}
+.readme-showcase-body .showcase-section {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.readme-showcase-body .showcase-section-body {
+  margin: 0 0 14px 0;
+}
+.readme-h3 {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  margin: 18px 0 6px 0;
+  color: #000080;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.readme-list {
+  margin: 0 0 12px 20px;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #1a1a1a;
+}
+.readme-list li {
+  margin-bottom: 4px;
+}
+.readme-table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12px;
+  margin: 6px 0 12px;
+  border: 1px solid #86898d;
+  background: #ffffff;
+}
+.readme-table th,
+.readme-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 6px 8px;
+  border-bottom: 1px dotted #b8b8b0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.readme-table th {
+  background: #c3c6ca;
+  border-bottom: 1px solid #86898d;
+  font-weight: bold;
+  color: #111;
+}
+.readme-table th:nth-child(1),
+.readme-table td:nth-child(1) { width: 32%; }
+.readme-table th:nth-child(2),
+.readme-table td:nth-child(2) { width: 26%; color: #444; }
+.readme-table th:nth-child(3),
+.readme-table td:nth-child(3) { width: 42%; }
+.readme-fineprint {
+  font-size: 11px;
+  font-style: italic;
+  color: #555;
+  margin: 6px 0 0 0;
+}
+
+/* === Recycle Bin window === */
+.recyclebin-popup {
+  width: 520px;
+  max-width: 94%;
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11000;
+  background: #c3c6ca;
+  border: 2px solid #ffffff;
+  border-bottom-color: #404040;
+  border-right-color: #404040;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.45);
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+}
+.recyclebin-body {
+  padding: 16px;
+  background: #c3c6ca;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+.recyclebin-image-btn {
+  display: block;
+  padding: 4px;
+  background: #ffffff;
+  border: 2px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  cursor: pointer;
+  max-width: 100%;
+  width: 100%;
+}
+.recyclebin-image-btn:hover {
+  filter: brightness(1.04);
+}
+.recyclebin-image-btn:active {
+  border: 2px solid #ffffff;
+  border-bottom-color: #404040;
+  border-right-color: #404040;
+}
+.recyclebin-image-btn img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 60vh;
+  object-fit: contain;
+  background: #000;
+}
+.recyclebin-caption {
+  margin: 0;
+  font-family: 'Cooper Black', 'Cooper Std', 'Times New Roman', Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.recycle-img-viewer {
+  z-index: 230;
+}
+.exp-detail-fixture-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border: 1px solid #404040;
+  background: #000;
+}
+
+.exp-detail-fixture-videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+}
+.exp-detail-fixture-video {
+  background: #c3c6ca;
+  border: 2px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  padding: 3px;
+  aspect-ratio: 16 / 9;
+}
+.exp-detail-fixture-video iframe {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #404040;
+  background: #000;
+  display: block;
+}
+
+/* Tile grid — Products (Win95 desktop-icon feel) */
+.showcase-lib-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 6px;
+}
+.showcase-lib-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  text-decoration: none;
+  color: #111;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 11px;
+  text-align: center;
+  border: 1px solid transparent;
+}
+.showcase-lib-tile:hover {
+  background: #e2e9f8;
+  border: 1px dotted #4a5a8a;
+}
+.showcase-lib-tile-icon {
+  width: 48px;
+  height: 48px;
+  background: #ffffff;
+  border: 1px solid #404040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.showcase-lib-tile-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.showcase-lib-tile-name {
+  line-height: 1.2;
+  max-width: 86px;
+  word-break: break-word;
+}
+
+/* === Screens detail viewer === */
+.screen-detail {
+  background: #c3c6ca;
+  border: 2px solid #ffffff;
+  border-bottom-color: #404040;
+  border-right-color: #404040;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  width: min(720px, 94%);
+  max-height: 92%;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+}
+.screen-detail-body {
+  flex: 1;
+  background: #c3c6ca;
+  padding: 14px 16px 10px;
+  overflow-y: auto;
+  min-height: 0;
+}
+.screen-detail-meta {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.screen-detail-cover {
+  background: #c3c6ca;
+  border: 2px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  padding: 3px;
+  align-self: start;
+}
+.screen-detail-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #404040;
+  background: #000;
+}
+.screen-detail-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.screen-detail-title {
+  margin: 0 0 2px 0;
+  font-family: 'Cooper Black', 'Cooper Std', 'Times New Roman', Georgia, serif;
+  font-size: 20px;
+  color: #111;
+  line-height: 1.1;
+}
+.screen-detail-subtitle {
+  margin: 0 0 10px 0;
+  font-size: 12px;
+  color: #555;
+  font-style: italic;
+}
+.screen-detail-desc {
+  margin: 0;
+  font-size: 13px;
+  color: #1a1a1a;
+  line-height: 1.55;
+}
+.screen-detail-trailer {
+  margin-top: 8px;
+}
+.screen-detail-trailer-label {
+  font-size: 11px;
+  font-weight: bold;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.screen-detail-trailer-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border: 2px solid #404040;
+  border-bottom-color: #ffffff;
+  border-right-color: #ffffff;
+  padding: 2px;
+}
+.screen-detail-trailer-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #404040;
+  background: #000;
+  display: block;
+}
+.screen-detail-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px 10px;
+  gap: 10px;
+  border-top: 1px solid #ffffff;
+  box-shadow: 0 -1px 0 #86898d;
+  flex-shrink: 0;
+}
+
+.showcase-statusbar {
+  height: 20px;
+  background: #c3c6ca;
+  border-top: 1px solid #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.showcase-statusbar .win95-status-inset {
+  flex: 1;
 }
 
 /* Game Window Overlay */
@@ -3641,7 +5507,7 @@ body, .container, .navbar, .content-wrapper, .panel {
 /* --- Phase toggle button ---------------------------- */
 .phase-toggle {
   position: fixed;
-  bottom: 20px;
+  bottom: 68px; /* sits above .mode-toggle (40px tall + 8px gap) */
   left: 20px;
   z-index: 9999;
   display: flex;
@@ -3689,6 +5555,73 @@ body, .container, .navbar, .content-wrapper, .panel {
   transform: translateX(0);
 }
 .phase-toggle:active svg { transform: rotate(-15deg) scale(0.92); }
+
+/* === Mode toggle ("Enter 90s mode") =======================================
+   Mirrors .phase-toggle visually — sits to its right at the bottom-left of
+   the viewport. Hover expands to reveal the label, click triggers the
+   existing Shift+P boot pipeline.
+   ========================================================================== */
+.mode-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px; /* stacked under .phase-toggle in the bottom-left corner */
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 40px;
+  height: 40px;
+  padding: 0 0 0 10px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-main);
+  opacity: 0.55;
+  cursor: pointer;
+  overflow: hidden;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease,
+              background-color 0.3s ease,
+              border-color 0.3s ease,
+              color 0.5s ease;
+  font: inherit;
+}
+.mode-toggle:hover {
+  width: 178px;
+  opacity: 1;
+  backdrop-filter: blur(8px);
+}
+.mode-toggle__icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  /* Mask the SVG so the icon takes on currentColor (which resolves to
+     var(--text-main) via the parent button) and adapts to each phase. */
+  background-color: currentColor;
+  -webkit-mask: url('/icons/monitor.svg') no-repeat center / contain;
+          mask: url('/icons/monitor.svg') no-repeat center / contain;
+  transition: transform 0.35s ease;
+}
+.mode-toggle:active .mode-toggle__icon {
+  transform: scale(0.92);
+}
+.mode-toggle__label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0;
+  margin-left: 10px;
+  white-space: nowrap;
+  transform: translateX(-8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.mode-toggle:hover .mode-toggle__label {
+  opacity: 1;
+  transform: translateX(0);
+}
 
 /* Night Sky Container */
 .night-sky-container {
@@ -3810,3 +5743,218 @@ body, .container, .navbar, .content-wrapper, .panel {
   box-shadow: 0 0 2px 1px rgba(255, 255, 255, 0.6);
 }
 .star-4::before { width: 60px; background: linear-gradient(to right, rgba(255,255,255,0.5), rgba(255,255,255,0)); }
+
+/* === Webamp (Music) ========================================================
+   The Music desktop icon uses a wide Sony-deck PNG, so its image slot is
+   horizontally biased rather than the default square. The Webamp player
+   itself manages its own chrome — we just give it a pass-through layer
+   that fills the desktop so its windows can sit anywhere inside the CRT.
+   ========================================================================== */
+.crt-desk-icon-img.crt-desk-icon-music {
+  width: 56px;
+  height: 24px;
+  image-rendering: pixelated;
+}
+.crt-desk-icon-img.crt-desk-icon-music img {
+  object-fit: contain;
+}
+
+/* Recycle Bin icon — sized up from the default 32px so it reads at desktop
+   scale (matches the visual weight of the Recycle Bin in Win95 properly). */
+.crt-desk-icon-img.crt-desk-icon-recyclebin {
+  width: 48px;
+  height: 48px;
+}
+
+.crt-webamp-mount {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.crt-webamp-mount * {
+  pointer-events: auto;
+}
+
+/* Floating Webamp on the modern site (no CRT). The Webamp wrapper component
+   hardcodes its mount class to `.crt-webamp-mount`; we wrap it in a context
+   div so we can override positioning via a descendant selector without
+   editing the handoff file. Pinned to the viewport so Webamp's own
+   draggable windows can roam across the page. */
+.webamp-floating-context .crt-webamp-mount {
+  position: fixed;
+  z-index: 9000;
+}
+
+/* Webamp's CSS scopes its box-sizing reset to `#webamp *` so it doesn't
+   leak out. No global defense needed. */
+
+/* === Landing chooser =======================================================
+   First-visit fullscreen overlay offering Modern site vs. Enter the 90s.
+   Pinned to viewport at top z-index. Persists choice in localStorage so it
+   only appears once per visitor (until cache is cleared).
+   ========================================================================== */
+.landing-root {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  /* Respect the time-of-day phase: pulls from --bg-color set by
+     .phase-dawn / .phase-day / .phase-sunset / .phase-evening on <html>. */
+  background: var(--bg-color, #ffffff);
+  color: var(--text-main, #111);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.landing-card {
+  width: 100%;
+  max-width: 460px;
+}
+
+.landing-title {
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.25;
+  color: var(--text-main, #111);
+  margin: 0 0 22px 0;
+  letter-spacing: -0.3px;
+}
+@media (min-width: 768px) {
+  .landing-title { font-size: 32px; }
+}
+
+.landing-lede {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-muted, #555);
+  font-weight: 300;
+  margin: 0 0 36px 0;
+}
+
+.landing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 520px) {
+  .landing-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.landing-card-btn {
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--panel-bg, #ffffff);
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font: inherit;
+  color: var(--text-main, inherit);
+}
+.landing-card-btn:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* Modern card — soft rounded outline that darkens on hover, with a tiny lift. */
+.landing-card-btn-modern {
+  border: 1px solid var(--panel-border, #e5e5e5);
+  border-radius: 12px;
+}
+.landing-card-btn-modern:hover:not(:disabled) {
+  border-color: var(--text-main, #111);
+  transform: translateY(-2px);
+}
+
+/* Retro card — Win9x raised bevel. No border-radius, sharp corners. */
+.landing-card-btn-retro {
+  border: 2px solid;
+  border-top-color: #d4d4d4;
+  border-left-color: #d4d4d4;
+  border-right-color: #6e6e6e;
+  border-bottom-color: #6e6e6e;
+  box-shadow: inset -1px -1px #9a9a9a, inset 1px 1px #ffffff;
+  border-radius: 0;
+}
+.landing-card-btn-retro:hover:not(:disabled) {
+  background: #f6f6f6;
+}
+.landing-card-btn-retro:active:not(:disabled) {
+  border-top-color: #6e6e6e;
+  border-left-color: #6e6e6e;
+  border-right-color: #d4d4d4;
+  border-bottom-color: #d4d4d4;
+  box-shadow: inset 1px 1px #9a9a9a, inset -1px -1px #ffffff;
+}
+
+.landing-card-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  margin-bottom: 16px;
+}
+.landing-card-img img {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+}
+.landing-card-img-retro img {
+  image-rendering: pixelated;
+}
+
+.landing-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.landing-card-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-main, #111);
+}
+.landing-card-label-retro {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  font-weight: bold;
+  color: #111;
+}
+
+.landing-card-arrow {
+  color: var(--text-muted, #999);
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+.landing-card-btn-modern:hover:not(:disabled) .landing-card-arrow {
+  color: var(--text-main, #111);
+  transform: translateX(2px);
+}
+.landing-card-arrow-retro {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  color: #333;
+}
+
+.landing-card-sub {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  color: var(--text-muted, #999);
+  font-weight: 300;
+}
+.landing-card-sub-retro {
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  color: #555;
+}
+
+.landing-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #ffffff;
+}

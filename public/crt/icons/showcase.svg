@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- Folder tab -->
+  <path d="M2,7 H12 L14,9 H30 V11 H2 Z" fill="#a07814"/>
+  <!-- Folder body -->
+  <path d="M2,10 H30 V28 H2 Z" fill="#dca820" stroke="#000" stroke-width="1"/>
+  <!-- Manila document peeking up out of folder -->
+  <path d="M6,12 H21 L24,15 V25 H6 Z" fill="#fffaf0" stroke="#000" stroke-width="1"/>
+  <path d="M21,12 V15 H24" fill="none" stroke="#000" stroke-width="1"/>
+  <!-- Document lines -->
+  <line x1="9"  y1="17" x2="21" y2="17" stroke="#666" stroke-width="1"/>
+  <line x1="9"  y1="19" x2="21" y2="19" stroke="#666" stroke-width="1"/>
+  <line x1="9"  y1="21" x2="17" y2="21" stroke="#666" stroke-width="1"/>
+  <line x1="9"  y1="23" x2="19" y2="23" stroke="#666" stroke-width="1"/>
+</svg>
