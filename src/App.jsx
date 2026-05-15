@@ -2860,25 +2860,38 @@ function App() {
     };
   }, [isRetroMode, isBootingUp]);
 
-  // Click sounds + period-correct 1s loading-cursor blip on every press
-  // inside the CRT screen. The shared timer ref lets back-to-back clicks
-  // collapse cleanly — we always reset to the most recent press instead
-  // of stacking timeouts and flickering the cursor in/out.
-  const cursorBusyTimerRef = React.useRef(null);
+  // Click sounds inside the CRT screen.
   const handleCrtMouseDown = () => {
     if (!isRetroMode || isBootingUp) return;
     try { playMouseDown(); } catch {}
-    if (cursorBusyTimerRef.current) clearTimeout(cursorBusyTimerRef.current);
-    setIsCursorBusy(true);
-    cursorBusyTimerRef.current = setTimeout(() => {
-      setIsCursorBusy(false);
-      cursorBusyTimerRef.current = null;
-    }, 1000);
   };
   const handleCrtMouseUp = () => {
     if (!isRetroMode || isBootingUp) return;
     try { playMouseUp(); } catch {}
   };
+
+  // Best-effort click sound for the browser iframe. Cross-origin iframes
+  // (theoldnet.com) DON'T propagate their internal mousedown events to
+  // the parent — that's a hard browser security boundary, no workaround.
+  // We CAN observe when the user clicks INTO the iframe though: focus
+  // moves out of our window, firing `blur`, and `document.activeElement`
+  // becomes the iframe. So we play the click sound on entry. Subsequent
+  // clicks while already inside the iframe will stay silent.
+  React.useEffect(() => {
+    if (!isRetroMode || !isBrowserOpen || browserMinimized) return;
+    const onBlur = () => {
+      // Defer one tick so document.activeElement reflects the new focus.
+      setTimeout(() => {
+        const ifr = document.querySelector('.crt-browser-iframe');
+        if (document.activeElement === ifr) {
+          try { playMouseDown(); } catch {}
+          setTimeout(() => { try { playMouseUp(); } catch {} }, 70);
+        }
+      }, 0);
+    };
+    window.addEventListener('blur', onBlur);
+    return () => window.removeEventListener('blur', onBlur);
+  }, [isRetroMode, isBrowserOpen, browserMinimized]);
 
   // Called when the Windows startup video finishes (or errors). Reveals the
   // desktop with a brief busy/progress cursor before settling to normal.

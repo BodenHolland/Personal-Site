@@ -1257,7 +1257,10 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  /* Pulled in from 4 → 0 so the label sits closer to the icon art.
+     The .crt-desk-icon span already has its own 2px top padding which
+     gives enough breathing room. */
+  gap: 0;
   cursor: pointer;
   user-select: none;
 }
@@ -1271,7 +1274,10 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2px;
+  /* Was margin-bottom: 2 — combined with the parent gap it pushed the
+     label visibly far below icons that have whitespace at the bottom
+     of their PNG source (e.g. Internet). */
+  margin-bottom: 0;
 }
 
 .crt-desk-icon-img img {
