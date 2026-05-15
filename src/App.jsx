@@ -1997,6 +1997,23 @@ function App() {
   // body content underneath.
   const [siteModeChosen, setSiteModeChosen] = useState(false);
   const [landingLeaving, setLandingLeaving] = useState(null);
+  // Mobile = touch-primary device with a small viewport. The 90s desktop UI
+  // (draggable windows, Start menu, BIOS boot) is unusable on phones, so we
+  // force the modern site and hide the retro entry points entirely.
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const coarse = window.matchMedia?.('(pointer: coarse)').matches;
+    return !!coarse && window.innerWidth < 768;
+  });
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const check = () => {
+      const coarse = window.matchMedia?.('(pointer: coarse)').matches;
+      setIsMobile(!!coarse && window.innerWidth < 768);
+    };
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
   const [isBootingUp, setIsBootingUp] = useState(false);
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
   const [isShuttingDown, setIsShuttingDown] = useState(false);
@@ -2419,6 +2436,13 @@ function App() {
   // the boot sequence (the user already saw it the first time). 'modern'
   // just shows the existing modern site.
   React.useEffect(() => {
+    // On mobile, skip the landing entirely and force the modern site —
+    // even if a previous desktop visit persisted 'retro' to localStorage.
+    if (isMobile) {
+      setSiteModeChosen(true);
+      setIsRetroMode(false);
+      return;
+    }
     try {
       const saved = window.localStorage.getItem('site-mode');
       if (saved === 'modern') {
@@ -2428,7 +2452,7 @@ function App() {
         setIsRetroMode(true);
       }
     } catch { /* localStorage disabled — fall through to landing */ }
-  }, []);
+  }, [isMobile]);
 
   const handleLandingSelect = (mode) => {
     if (landingLeaving) return;
@@ -5305,7 +5329,7 @@ function App() {
       </AnimatePresence>
 
       {timePhase === 'evening' && <NightSky />}
-      {(() => {
+      {!isMobile && (() => {
         const { label, Icon } = PHASE_META[timePhase];
         return (
           <button
@@ -5319,9 +5343,10 @@ function App() {
         );
       })()}
       {/* "Enter 90s mode" toggle — sits next to the phase toggle. Hidden in
-          retro mode (the user is already there). Dispatches Shift+P so the
-          existing boot pipeline runs. */}
-      {!isRetroMode && (
+          retro mode (the user is already there) and on mobile (the retro UI
+          isn't usable on phones). Dispatches Shift+P so the existing boot
+          pipeline runs. */}
+      {!isRetroMode && !isMobile && (
         <button
           className="mode-toggle"
           onClick={() => {
@@ -5368,6 +5393,19 @@ function App() {
                 {s.label}
               </motion.button>
             ))}
+            {(() => {
+              const { label, Icon } = PHASE_META[timePhase];
+              return (
+                <button
+                  className="phase-toggle phase-toggle--in-drawer"
+                  onClick={cyclePhase}
+                  aria-label={`Current phase: ${label}. Tap to cycle.`}
+                >
+                  <Icon size={18} strokeWidth={1.5} />
+                  <span className="phase-toggle__label">{label}</span>
+                </button>
+              );
+            })()}
           </motion.div>
         )}
       </AnimatePresence>
