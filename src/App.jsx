@@ -2036,12 +2036,31 @@ function App() {
   const [isWindowsLoading, setIsWindowsLoading] = useState(false);
   const [isCursorBusy, setIsCursorBusy] = useState(false);
   const [isShutdownConfirmOpen, setIsShutdownConfirmOpen] = useState(false);
+  const [isShutdownHelpOpen, setIsShutdownHelpOpen] = useState(false);
   const [shutdownChoice, setShutdownChoice] = useState('shutdown');
   // README window — explains the system + game controls.
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
   // Recycle Bin window + its full-size image viewer.
   const [isRecycleBinOpen, setIsRecycleBinOpen] = useState(false);
   const [isRecycleImgOpen, setIsRecycleImgOpen] = useState(false);
+
+  // Period-style browser app. iframe points at theoldnet.com (a curated
+  // 90s archive that allows CORS + iframe embedding — protoweb.org itself
+  // sends X-Frame-Options: SAMEORIGIN and can't be embedded directly).
+  // browserHistory + browserHistoryIdx implement a manual back/forward
+  // stack — we can't read iframe history cross-origin, so the stack
+  // tracks every explicit URL the user submits via the address bar.
+  const BROWSER_HOME = 'https://theoldnet.com/';
+  const [isBrowserOpen, setIsBrowserOpen] = useState(false);
+  const [browserMinimized, setBrowserMinimized] = useState(false);
+  const [browserMaximized, setBrowserMaximized] = useState(false);
+  const [browserUrl, setBrowserUrl] = useState(BROWSER_HOME);
+  const [browserAddressInput, setBrowserAddressInput] = useState(BROWSER_HOME);
+  const [browserHistory, setBrowserHistory] = useState([BROWSER_HOME]);
+  const [browserHistoryIdx, setBrowserHistoryIdx] = useState(0);
+  const [browserReloadKey, setBrowserReloadKey] = useState(0);
+  const [browserPos, setBrowserPos] = useState({ top: 50, left: 60 });
+  const [browserSize, setBrowserSize] = useState({ width: 820, height: 580 });
 
   // Webamp (Music) — desktop app. Assets (tracks + skins) are loaded on
   // first open; the Webamp lib + butterchurn presets lazy-import inside
@@ -2081,6 +2100,7 @@ function App() {
     { id: 'readme' },
     { id: 'recyclebin' },
     { id: 'music' },
+    { id: 'browser' },
     ...retroGames.map((g) => ({ id: g.id })),
   ]), []);
   const [iconPositions, setIconPositions] = useState(() => {
@@ -2091,37 +2111,53 @@ function App() {
     return pos;
   });
   const crtDesktopRef = React.useRef(null);
-  const iconLayoutDoneRef = React.useRef(false);
 
-  // Lay out icons once the desktop is mounted and has size:
-  //   - Recycle Bin: top-right corner; Music: just below it (right column)
-  //   - Games: top-left column, stacked downward
-  //   - README + Showcase: bottom-left (README above Showcase)
-  React.useLayoutEffect(() => {
+  // Lay out icons relative to the desktop's current width/height. The
+  // previous version ran once and froze the positions, so resizing the
+  // browser stranded the right-column icons off-screen or left huge
+  // empty space. A ResizeObserver re-computes positions every time the
+  // .crt-win95-desktop element changes size — initial mount, window
+  // resize, or the min-width kick-in below. Layout:
+  //   - Recycle Bin / Music / README: top-right column
+  //   - Games: top-left column, stacked
+  //   - Portfolio: bottom-left
+  React.useEffect(() => {
     if (!isRetroMode) return;
-    if (iconLayoutDoneRef.current) return;
     const el = crtDesktopRef.current;
     if (!el) return;
-    const rect = el.getBoundingClientRect();
-    if (rect.width < 200 || rect.height < 200) return;
-    const W = rect.width;
-    const H = rect.height;
-    const ICON_W = 64;
-    const ROW_H = 84;
-    const M = 12;
-    const next = {};
-    // Top-right column, top-to-bottom: Recycle Bin, Music, README
-    next.recyclebin = { x: W - ICON_W - M, y: M };
-    next.music      = { x: W - ICON_W - M, y: M + ROW_H };
-    next.readme     = { x: W - ICON_W - M, y: M + 2 * ROW_H };
-    // Top-left column: games, stacked
-    retroGames.forEach((g, i) => {
-      next[g.id] = { x: M, y: M + i * ROW_H };
-    });
-    // Bottom-left: Portfolio (only desktop icon in that corner)
-    next.showcase = { x: M, y: H - ROW_H - M };
-    setIconPositions(next);
-    iconLayoutDoneRef.current = true;
+    const computeLayout = () => {
+      const rect = el.getBoundingClientRect();
+      if (rect.width < 200 || rect.height < 200) return;
+      const W = rect.width;
+      const H = rect.height;
+      const ICON_W = 64;
+      const ROW_H = 84;
+      const M = 12;
+      const next = {};
+      next.recyclebin = { x: W - ICON_W - M, y: M };
+      next.music      = { x: W - ICON_W - M, y: M + ROW_H };
+      next.readme     = { x: W - ICON_W - M, y: M + 2 * ROW_H };
+      next.browser    = { x: W - ICON_W - M, y: M + 3 * ROW_H };
+      retroGames.forEach((g, i) => {
+        next[g.id] = { x: M, y: M + i * ROW_H };
+      });
+      // Portfolio sits at the bottom of the left column, directly under
+      // the last game icon — feels more natural than floating at the
+      // bottom-left corner of the desktop. Clamped to (H - ROW_H - M)
+      // as a safety: with the CRT's min size in place the natural
+      // position fits, but the clamp ensures Portfolio never drops off
+      // the bottom of the desktop during transient mounts or any
+      // edge case where the desktop is briefly shorter than expected.
+      next.showcase = {
+        x: M,
+        y: Math.min(M + retroGames.length * ROW_H, H - ROW_H - M),
+      };
+      setIconPositions(next);
+    };
+    computeLayout();
+    const ro = new ResizeObserver(computeLayout);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, [isRetroMode]);
 
   // Drag-or-click handler factory. Distinguishes a click (no movement
@@ -2169,6 +2205,14 @@ function App() {
   // album triggers a 30s Spotify preview. Dismissed for the session once
   // clicked.
   const [audioPreviewNoticeOk, setAudioPreviewNoticeOk] = useState(false);
+  // Section-scoped mute for the hover audio previews in the Library →
+  // Audio tab. Independent of the CRT's system mute (isCrtMuted) and
+  // master volume — toggling this does NOT silence ambient, clicks, the
+  // Webamp player, or any other audio on the desktop. When true,
+  // playAudioPreview short-circuits before creating the <Audio> node.
+  // Default: muted, so first-time visitors don't get surprise audio on
+  // hover before they've found the toggle.
+  const [audioPreviewMuted, setAudioPreviewMuted] = useState(true);
   // Screens (movies/shows/games) detail viewer — index in screensData or null.
   const [showcaseScreenIndex, setShowcaseScreenIndex] = useState(null);
   // Products detail viewer — index in products or null.
@@ -2197,6 +2241,9 @@ function App() {
   const showcasePreviewRef = React.useRef(null);
   const playAudioPreview = (url) => {
     if (!url) return;
+    // Section-scoped mute — skip creating the <Audio> node entirely so
+    // nothing leaks even if the global mute changes later.
+    if (audioPreviewMuted) return;
     if (showcasePreviewRef.current) {
       showcasePreviewRef.current.pause();
     }
@@ -2318,6 +2365,56 @@ function App() {
   };
   const toggleShowcaseMin = () => setShowcaseMinimized((m) => !m);
   const toggleShowcaseMax = () => setShowcaseMaximized((m) => !m);
+
+  // Browser navigation helpers. We maintain a manual history stack since
+  // we can't read the iframe's own history cross-origin.
+  const normalizeBrowserInput = (raw) => {
+    const v = (raw || '').trim();
+    if (!v) return BROWSER_HOME;
+    if (/^https?:\/\//i.test(v)) return v;
+    // Bare-domain or path — assume https. Period browsers would have
+    // assumed http://, but our embed has to use https to avoid mixed
+    // content blocks from the parent page.
+    if (/^[a-z0-9-]+\.[a-z]/i.test(v)) return 'https://' + v;
+    // Anything else: treat as a search via theoldnet's archive.
+    return BROWSER_HOME;
+  };
+  const browserNavigate = (raw) => {
+    const next = normalizeBrowserInput(raw);
+    setBrowserUrl(next);
+    setBrowserAddressInput(next);
+    setBrowserHistory((h) => {
+      const trimmed = h.slice(0, browserHistoryIdx + 1);
+      const last = trimmed[trimmed.length - 1];
+      if (last === next) return trimmed;
+      const out = [...trimmed, next];
+      setBrowserHistoryIdx(out.length - 1);
+      return out;
+    });
+  };
+  const browserBack = () => {
+    if (browserHistoryIdx <= 0) return;
+    const i = browserHistoryIdx - 1;
+    setBrowserHistoryIdx(i);
+    setBrowserUrl(browserHistory[i]);
+    setBrowserAddressInput(browserHistory[i]);
+  };
+  const browserForward = () => {
+    if (browserHistoryIdx >= browserHistory.length - 1) return;
+    const i = browserHistoryIdx + 1;
+    setBrowserHistoryIdx(i);
+    setBrowserUrl(browserHistory[i]);
+    setBrowserAddressInput(browserHistory[i]);
+  };
+  const browserRefresh = () => setBrowserReloadKey((k) => k + 1);
+  const browserGoHome = () => browserNavigate(BROWSER_HOME);
+  const toggleBrowserMin = () => setBrowserMinimized((m) => !m);
+  const toggleBrowserMax = () => setBrowserMaximized((m) => !m);
+  const closeBrowser = () => {
+    setIsBrowserOpen(false);
+    setBrowserMinimized(false);
+    setBrowserMaximized(false);
+  };
   const closeShowcase = () => {
     setIsShowcaseOpen(false);
     setShowcaseMinimized(false);
@@ -2726,6 +2823,7 @@ function App() {
       // NEVER exits retro mode. The only ways to power off are the
       // monitor's power button or Start → Shut Down…
       if (e.key === 'Escape' && isRetroMode) {
+        if (isShutdownHelpOpen)    { setIsShutdownHelpOpen(false); return; }
         if (isShutdownConfirmOpen) { setIsShutdownConfirmOpen(false); return; }
         if (isStartMenuOpen)       { setIsStartMenuOpen(false); return; }
         if (isRecycleImgOpen)      { setIsRecycleImgOpen(false); return; }
@@ -2762,10 +2860,20 @@ function App() {
     };
   }, [isRetroMode, isBootingUp]);
 
-  // Click sounds inside the CRT screen.
+  // Click sounds + period-correct 1s loading-cursor blip on every press
+  // inside the CRT screen. The shared timer ref lets back-to-back clicks
+  // collapse cleanly — we always reset to the most recent press instead
+  // of stacking timeouts and flickering the cursor in/out.
+  const cursorBusyTimerRef = React.useRef(null);
   const handleCrtMouseDown = () => {
     if (!isRetroMode || isBootingUp) return;
     try { playMouseDown(); } catch {}
+    if (cursorBusyTimerRef.current) clearTimeout(cursorBusyTimerRef.current);
+    setIsCursorBusy(true);
+    cursorBusyTimerRef.current = setTimeout(() => {
+      setIsCursorBusy(false);
+      cursorBusyTimerRef.current = null;
+    }, 1000);
   };
   const handleCrtMouseUp = () => {
     if (!isRetroMode || isBootingUp) return;
@@ -3048,6 +3156,7 @@ function App() {
                                 {renderIcon('readme',     'README.txt',    '/crt/icons/readme.svg',   openReadme)}
                                 {renderIcon('recyclebin', 'Recycle Bin',   '/crt/icons/recyclebin.png', () => setIsRecycleBinOpen(true), 'crt-desk-icon-recyclebin')}
                                 {renderIcon('music',      'Music',         '/wmp/icons/music-deck.png', openWebamp, 'crt-desk-icon-music')}
+                                {renderIcon('browser',    'Internet',      '/crt/icons/browser.png',  () => { setIsBrowserOpen(true); setBrowserMinimized(false); }, 'crt-desk-icon-browser')}
                                 {retroGames.map((game) =>
                                   renderIcon(game.id, game.name, game.coverArtUrl, () => {
                                     setCurrentGame(game);
@@ -3108,6 +3217,90 @@ function App() {
                                 />
                               </Suspense>
                             </WebampErrorBoundary>
+                          )}
+
+                          {/* Internet Explorer-style browser app. Iframes
+                              theoldnet.com (a curated 90s web archive that
+                              permits embedding) and adds period-correct
+                              chrome: back / forward / refresh / home + a
+                              working address bar. Back/forward use a manual
+                              history stack because the iframe is cross-
+                              origin and its real history isn't readable. */}
+                          {isBrowserOpen && !browserMinimized && (
+                            <div
+                              className={`crt-app-window crt-browser-window${browserMaximized ? ' is-maximized' : ''}`}
+                              style={browserMaximized ? undefined : {
+                                top: browserPos.top,
+                                left: browserPos.left,
+                                width: browserSize.width,
+                                height: browserSize.height,
+                                bottom: 'auto',
+                                right: 'auto',
+                              }}
+                            >
+                              <div className="crt-win-titlebar crt-browser-titlebar">
+                                <span><img src="/crt/icons/browser.png" alt="" />The Internet</span>
+                                <div className="crt-win-btns">
+                                  <div className="crt-win-btn" onClick={toggleBrowserMin}>_</div>
+                                  <div className="crt-win-btn" onClick={toggleBrowserMax}>□</div>
+                                  <div className="crt-win-btn crt-win-close" onClick={closeBrowser}>×</div>
+                                </div>
+                              </div>
+                              <div className="crt-browser-toolbar">
+                                <button
+                                  type="button"
+                                  className="crt-browser-tool-btn"
+                                  onClick={browserBack}
+                                  disabled={browserHistoryIdx <= 0}
+                                  title="Back"
+                                >◀ Back</button>
+                                <button
+                                  type="button"
+                                  className="crt-browser-tool-btn"
+                                  onClick={browserForward}
+                                  disabled={browserHistoryIdx >= browserHistory.length - 1}
+                                  title="Forward"
+                                >Forward ▶</button>
+                                <button
+                                  type="button"
+                                  className="crt-browser-tool-btn"
+                                  onClick={browserRefresh}
+                                  title="Reload"
+                                >⟳ Refresh</button>
+                                <button
+                                  type="button"
+                                  className="crt-browser-tool-btn"
+                                  onClick={browserGoHome}
+                                  title="Home"
+                                >⌂ Home</button>
+                              </div>
+                              <form
+                                className="crt-browser-address"
+                                onSubmit={(e) => { e.preventDefault(); browserNavigate(browserAddressInput); }}
+                              >
+                                <label className="crt-browser-address-label">Address</label>
+                                <input
+                                  type="text"
+                                  className="crt-browser-address-input"
+                                  value={browserAddressInput}
+                                  onChange={(e) => setBrowserAddressInput(e.target.value)}
+                                  spellCheck="false"
+                                  autoComplete="off"
+                                />
+                                <button type="submit" className="crt-browser-go">Go</button>
+                              </form>
+                              <div className="crt-browser-body">
+                                <iframe
+                                  key={browserReloadKey}
+                                  className="crt-browser-iframe"
+                                  src={browserUrl}
+                                  title="The Old Net"
+                                />
+                              </div>
+                              <div className="crt-browser-statusbar">
+                                <span>theoldnet.com — period archive</span>
+                              </div>
+                            </div>
                           )}
                           {/* Showcase window — Henry-style portfolio explorer.
                               Draggable, minimizable, maximizable. */}
@@ -3469,6 +3662,28 @@ function App() {
                                         <div className="showcase-lib-body">
                                           {showcaseLibTab === 'audio' && (
                                             <>
+                                              {/* Section-scoped mute toggle.
+                                                  Stays visible whether or not the warning above is
+                                                  dismissed; flipping it ONLY affects this section's
+                                                  hover previews — system mute, ambient, clicks, and
+                                                  the Webamp player are untouched. */}
+                                              <button
+                                                type="button"
+                                                className={`audio-preview-mute${audioPreviewMuted ? ' is-muted' : ''}`}
+                                                aria-pressed={audioPreviewMuted}
+                                                onClick={() => {
+                                                  // If turning ON the mute, cut any in-flight preview.
+                                                  if (!audioPreviewMuted) stopAudioPreview();
+                                                  setAudioPreviewMuted((m) => !m);
+                                                }}
+                                                title={audioPreviewMuted ? 'Unmute previews' : 'Mute previews'}
+                                              >
+                                                <img
+                                                  src={audioPreviewMuted ? '/crt/icons/speaker_off.svg' : '/crt/icons/speaker_on.svg'}
+                                                  alt=""
+                                                />
+                                                <span>{audioPreviewMuted ? 'Previews muted' : 'Mute previews'}</span>
+                                              </button>
                                               {!audioPreviewNoticeOk && (
                                                 <button
                                                   type="button"
@@ -4265,7 +4480,13 @@ function App() {
                             </div>
                           </div>
                         )}
-                        {/* Taskbar */}
+                        {/* Taskbar — only after the screen has fully booted
+                            to the desktop. The taskbar sits at z-index 9100,
+                            ABOVE the gray off-state panel (8000) and visible
+                            through the DOS layer while its opacity is < 1,
+                            so without this gate the Start button + tray
+                            would peek through during the warm-up. */}
+                        {crtScreenAwake && !isBootingUp && !isWindowsLoading && !isShuttingDown && (
                         <div className="crt-taskbar">
                           <button
                             className="crt-start-btn"
@@ -4318,6 +4539,19 @@ function App() {
                               🎵 Music
                             </div>
                           )}
+                          {isBrowserOpen && (
+                            <div
+                              className={`crt-taskbar-pill${browserMinimized ? '' : ' crt-taskbar-pill-active'}`}
+                              onClick={toggleBrowserMin}
+                              title={browserMinimized ? 'Restore' : 'Minimize'}
+                            >
+                              <img
+                                src="/crt/icons/browser.png"
+                                alt=""
+                                style={{ width: 14, height: 14, verticalAlign: 'middle', imageRendering: 'pixelated' }}
+                              /> The Internet
+                            </div>
+                          )}
                           {/* System tray — speaker mute + clock, period-correct */}
                           <div className="crt-system-tray">
                             <button
@@ -4337,6 +4571,7 @@ function App() {
                             <Win95Clock />
                           </div>
                         </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -4663,8 +4898,40 @@ function App() {
                         className="win95-button"
                         onMouseDown={() => { try { playMouseDown(); } catch {} }}
                         onMouseUp={() => { try { playMouseUp(); } catch {} }}
-                        onClick={() => setIsShutdownConfirmOpen(false)}
+                        onClick={() => setIsShutdownHelpOpen(true)}
                       >Help</button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Help modal — opens from the Shut Down dialog's Help button.
+                    Win95-styled like the other popups; only action is dismiss. */}
+                {isShutdownHelpOpen && (
+                  <div
+                    className="win95-popup shutdown-help-popup"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="popup-title">
+                      <span>Help</span>
+                      <button
+                        className="popup-close"
+                        onClick={() => setIsShutdownHelpOpen(false)}
+                      >×</button>
+                    </div>
+                    <div className="popup-body shutdown-help-body">
+                      <p className="shutdown-help-text">
+                        Sorry to hear you&rsquo;re having an issue. To contact
+                        support, please email{' '}
+                        <a href="mailto:hello@bodenholland.com">hello@bodenholland.com</a>.
+                      </p>
+                    </div>
+                    <div className="shutdown-confirm-buttons">
+                      <button
+                        className="win95-button"
+                        onMouseDown={() => { try { playMouseDown(); } catch {} }}
+                        onMouseUp={() => { try { playMouseUp(); } catch {} }}
+                        onClick={() => setIsShutdownHelpOpen(false)}
+                      >OK</button>
                     </div>
                   </div>
                 )}
@@ -5383,10 +5650,10 @@ function App() {
             >
               <h1 className="landing-title">Hi, I'm Boden 👋</h1>
               <p className="landing-lede">
-                You have two choices when it comes to experiencing my site.
-                The first, a modern clean version. The second, a love letter
-                to the 90s. Pick whichever suits your mood. You can always
-                switch later.
+                Thanks for stopping by. You have two choices when it comes to
+                experiencing my site. The first, a modern clean version. The
+                second, a love letter to the 90s. Pick whichever suits your
+                mood. You can always switch later.
               </p>
 
               <div className="landing-grid">
