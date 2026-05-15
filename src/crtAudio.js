@@ -12,6 +12,7 @@ const MOUSE_UP = '/crt/audio/mouse/mouse_up.mp3';
 const POWER_ON = '/crt/audio/power_on.mp3';
 const POWER_OFF = '/crt/audio/poweroff.mp3';
 const MONITOR_CLICK = '/crt/audio/monitor_click.mp3';
+const KNOB_CLICK = '/crt/audio/knob_click.mp3';
 const AMBIENT = '/crt/audio/ambient.mp3';
 const SHUTDOWN = '/crt/audio/shutdown.mp3';
 
@@ -70,6 +71,7 @@ const preload = (src) => {
   POWER_ON,
   POWER_OFF,
   MONITOR_CLICK,
+  KNOB_CLICK,
   AMBIENT,
   SHUTDOWN,
 ].forEach(preload);
@@ -104,6 +106,7 @@ export const playKeyboard = () => {
 export const playPowerOn = () => playFresh(POWER_ON, 0.7);
 export const playPowerOff = () => playFresh(POWER_OFF, 0.85);
 export const playMonitorClick = () => playFresh(MONITOR_CLICK, 0.65);
+export const playKnobClick = () => playFresh(KNOB_CLICK, 0.65);
 export const playShutdown = () => playFresh(SHUTDOWN, 0.7);
 
 // Looping ambient — singleton, so toggling it on/off doesn't stack.

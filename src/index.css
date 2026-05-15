@@ -388,11 +388,12 @@ section {
 /* The thick outer plastic case (Beige/Retro White) */
 .crt-body {
   width: 100%;
-  /* Was capped to ~92vh - 80px to leave room for the under-monitor
-     manual/esc hint. That placeholder content moved to README.txt, so
-     the monitor can now use the full viewport. */
-  max-width: calc((98vh - 80px) * (4 / 3.2));
-  aspect-ratio: 4 / 3.2;
+  /* Aspect ratio drives both the rendered shape and the max-width cap:
+     dropping the divisor from 3.2 → 2.85 makes the case ~12% wider at
+     the same viewport height, filling some of the side margin without
+     pushing the case taller. */
+  max-width: calc((98vh - 80px) * (4 / 2.85));
+  aspect-ratio: 4 / 2.85;
   background: #e4e0d7;
   border-radius: 12px 12px 24px 24px;
   box-shadow: 
@@ -526,7 +527,10 @@ section {
 }
 
 /* DOS-style boot + shutdown screen — black background, white monospace text,
-   sequential line reveal driven by JS. Subtle phosphor glow + scanline flicker. */
+   sequential line reveal driven by JS. The screen-turning-on flash + line
+   animation lives on .crt-screen-off, so this layer mounts solid black —
+   if it had its own opacity flicker, the CRT's teal background would peek
+   through during the first ~200ms of the keyframes. */
 .crt-dos-screen {
   position: absolute;
   inset: 0;
@@ -542,7 +546,6 @@ section {
   line-height: 1.45;
   padding: 22px 28px;
   text-shadow: 0 0 1px rgba(220, 240, 255, 0.45);
-  animation: crt-dos-flicker 1.4s steps(28) 1;
   letter-spacing: 0.3px;
   overflow: hidden;
 }
@@ -774,6 +777,63 @@ section {
   0%   { opacity: 0; }
   20%  { opacity: 1; }
   100% { opacity: 0; }
+}
+
+/* CRT screen-off panel — gray sheet that simulates the powered-off state
+   of the tube. Sits ABOVE the win95 desktop but BELOW the glass-texture
+   overlays (shadow/smudge/vignette/scanlines) so the textures still show
+   on top, giving the "off" screen the same grime as a real dusty monitor.
+   When .crt-screen-on-anim is added, the keyframes below animate the
+   "screen turning on" beat: thin bright line forms in the middle, flashes
+   outward, and the panel itself flashes white then fades to black. */
+.crt-screen-off {
+  position: absolute;
+  inset: 0;
+  background: #2a2a2c;
+  z-index: 8000;
+  pointer-events: none;
+  overflow: hidden;
+}
+.crt-screen-on-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 100%;
+  margin-top: -50%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.7);
+  transform-origin: center center;
+  transform: scaleY(0);
+  opacity: 0;
+}
+.crt-screen-on-anim {
+  animation: crt-screen-on-bg 1.6s ease-out 1 forwards;
+}
+.crt-screen-on-anim .crt-screen-on-line {
+  animation: crt-screen-on-line 1.6s ease-out 1 forwards;
+}
+@keyframes crt-screen-on-bg {
+  0%   { background: #2a2a2c; }
+  18%  { background: #f5f5f5; }
+  45%  { background: #1a1a1a; }
+  100% { background: #000000; }
+}
+@keyframes crt-screen-on-line {
+  /* 0-15%: nothing — the user has just heard the click */
+  0%   { transform: scaleY(0); opacity: 0; }
+  15%  { transform: scaleY(0); opacity: 0; }
+  /* 15-30%: thin bright line snaps in at the middle */
+  30%  { transform: scaleY(0.012); opacity: 1; }
+  /* 30-70%: line expands vertically to fill the screen */
+  70%  { transform: scaleY(1); opacity: 0.7; }
+  /* 70-100%: line fades, leaving black behind */
+  100% { transform: scaleY(1); opacity: 0; }
 }
 
 @keyframes crt-poweroff-line {
@@ -5828,6 +5888,12 @@ body, .container, .navbar, .content-wrapper, .panel {
   transform: translateX(0);
 }
 .phase-toggle:active svg { transform: rotate(-15deg) scale(0.92); }
+/* In retro mode the .mode-toggle is hidden ({!isRetroMode && …}), so drop
+   the phase toggle into its slot at the very bottom-left of the viewport
+   instead of leaving it floating above an empty 48px gap. */
+.container.retro-active .phase-toggle {
+  bottom: 20px;
+}
 
 /* === Mode toggle ("Enter 90s mode") =======================================
    Mirrors .phase-toggle visually — sits to its right at the bottom-left of
@@ -6236,4 +6302,15 @@ body, .container, .navbar, .content-wrapper, .panel {
   inset: 0;
   pointer-events: none;
   background: #ffffff;
+}
+
+/* Full-screen white sheet that covers the modern→CRT swap and the brief
+   teal flash through the DOS-screen flicker. Sits above the landing chooser
+   (z-index 12000) so the transition is always clean. */
+.retro-cover {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 13000;
+  pointer-events: none;
 }

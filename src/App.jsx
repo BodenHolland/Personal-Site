@@ -30,6 +30,7 @@ import {
   playPowerOn,
   playPowerOff,
   playMonitorClick,
+  playKnobClick,
   playShutdown,
   startAmbient,
   stopAmbient,
@@ -2014,6 +2015,18 @@ function App() {
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
+  // Top-level white cover that hides the modern→CRT swap and the brief
+  // teal flash through the DOS-screen flicker. Mounted at full opacity so
+  // the user only ever sees a clean white → DOS-boot fade.
+  const [retroCover, setRetroCover] = useState(false);
+  // CRT "screen turning on" beat. `crtScreenAwake=false` shows a gray off-
+  // state panel with the usual CRT glass texture (shadow/smudge/vignette/
+  // scanlines) on top — this is what the user sees right after the cover
+  // lifts. `crtScreenPoweringOn` triggers the flash+line animation. Once
+  // the animation finishes we set `crtScreenAwake=true`, which unmounts
+  // the off-state and mounts the DOS boot screen underneath.
+  const [crtScreenAwake, setCrtScreenAwake] = useState(false);
+  const [crtScreenPoweringOn, setCrtScreenPoweringOn] = useState(false);
   const [isBootingUp, setIsBootingUp] = useState(false);
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
   const [isShuttingDown, setIsShuttingDown] = useState(false);
@@ -2460,6 +2473,13 @@ function App() {
     try { window.localStorage.setItem('site-mode', mode); } catch { /* ignore */ }
     const delay = mode === 'retro' ? 700 : 500;
     setTimeout(() => {
+      if (mode === 'retro') {
+        // Raise the white cover BEFORE the swap so the landing→CRT
+        // transition (and the DOS-screen flicker over the teal background)
+        // happen entirely behind a clean white screen. The Shift+P handler
+        // will schedule the fade-out once the boot screen is stable.
+        setRetroCover(true);
+      }
       setSiteModeChosen(true);
       setLandingLeaving(null);
       if (mode === 'retro') {
@@ -2488,6 +2508,13 @@ function App() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRetroMode]);
+  // Ref mirror of isRetroMode so deferred callbacks scheduled during a
+  // retro session (notably the startup-video safety timeout) can check
+  // the current mode without recreating the callback on every toggle.
+  // Without this, exiting retro before the ~12s safety net fires leaks
+  // the ambient CRT loop into the modern site.
+  const isRetroModeRef = React.useRef(isRetroMode);
+  React.useEffect(() => { isRetroModeRef.current = isRetroMode; }, [isRetroMode]);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showCreditsModal, setShowCreditsModal] = useState(false);
   const [timePhase, setTimePhase] = useState(() => getPhaseFromHour(new Date().getHours()));
@@ -2589,6 +2616,17 @@ function App() {
         setSiteModeChosen(true);
         try { window.localStorage.setItem('site-mode', next ? 'retro' : 'modern'); } catch { /* ignore */ }
         if (next) {
+          // The CRT lives inside the `intro` switch case. If retro is
+          // entered from another tab (About, Products, etc.), force the
+          // active tab back to intro so the CRT actually mounts — without
+          // this, .retro-active styling strips the sidebar/padding but the
+          // user stays on their original page with PC sounds in the void.
+          setActiveTab('intro');
+          // Cover the screen in white during the modern→CRT swap and the
+          // DOS-screen flicker so neither the swap nor the CRT's teal
+          // background ever flashes through. Idempotent when the cover is
+          // already up (engaged by handleLandingSelect on first entry).
+          setRetroCover(true);
           // Boot chain: DOS BIOS → Windows startup video → desktop with busy cursor.
           // The video carries its own audio (no separate playPowerOn).
           setBootLines([]);
@@ -2599,15 +2637,38 @@ function App() {
           setShowGame(false);
           setIsWebampOpen(false);
           setIsStartMenuOpen(false);
-          // Play the power-on sfx during the DOS boot phase. Capture the
-          // audio node so we can fade it out right when the startup video
-          // takes over (the video carries its own audio).
+          // Reset the screen-on beat for this boot. The off-panel covers
+          // DOS until the power-on animation completes.
+          setCrtScreenAwake(false);
+          setCrtScreenPoweringOn(false);
+          // Cover sits at opacity 1 for ~300ms (long enough to hide the
+          // mount-time flicker on the off-panel) then fades out. After
+          // the cover lifts, the user sees the PC's gray off-screen with
+          // the glass texture (shadow, smudge, vignette, scanlines) on top.
+          setTimeout(() => setRetroCover(false), 300);
+          // Beat 1: see the PC (gray off-screen) — cover fully gone ~+700ms.
+          // Beat 2: power-button click + screen-turning-on animation ~+1000ms.
+          // Beat 3: animation ends, DOS mounts black ~+2600ms (1600ms anim).
+          // Beat 4: first BIOS line types in ~+2880ms (~280ms settled beat).
           let powerOnNode = null;
-          try { powerOnNode = playPowerOn(); } catch {}
+          setTimeout(() => {
+            if (!isRetroModeRef.current) return;
+            try { powerOnNode = playPowerOn(); } catch {}
+            setCrtScreenPoweringOn(true);
+          }, 1000);
+          // Animation duration must match the CSS keyframes (.crt-screen-on-anim).
+          setTimeout(() => {
+            if (!isRetroModeRef.current) return;
+            setCrtScreenPoweringOn(false);
+            setCrtScreenAwake(true);
+          }, 2600);
 
-          let acc = 0;
+          // Boot line cadence — multiplier slows BIOS line-to-line gaps so
+          // the boot feels period-correct (chunkier) rather than rushed.
+          const BOOT_SCALE = 1.35;
+          let acc = 2800;
           BOOT_SCRIPT.forEach(([delay, text]) => {
-            acc += delay;
+            acc += delay * BOOT_SCALE;
             setTimeout(() => setBootLines(prev => [...prev, text]), acc);
           });
 
@@ -2704,6 +2765,12 @@ function App() {
   // desktop with a brief busy/progress cursor before settling to normal.
   // Boden's preference: open My Showcase by default after boot.
   const handleStartupVideoEnded = React.useCallback(() => {
+    // The boot sequence schedules a safety setTimeout that calls this
+    // ~12s in, in case the video never fires `ended`. If the user has
+    // already exited retro mode by then (shutdown, power button, Shift+P),
+    // that timer still fires — and without this guard would start the
+    // ambient CRT loop on the modern site. Bail unconditionally.
+    if (!isRetroModeRef.current) return;
     setIsWindowsLoading(false);
     setIsCursorBusy(true);
     try { startAmbient(0.3); } catch {}
@@ -2876,8 +2943,20 @@ function App() {
                         {/* Glass overlays — smudge + inner shadow */}
                         <div className="crt-shadow-overlay" />
                         <div className="crt-smudge-overlay" />
+                        {/* CRT off-state: gray panel sits below the glass-
+                            texture overlays (shadow/smudge/vignette/scanlines)
+                            so the "powered off" screen still carries the CRT
+                            grime. Toggling .crt-screen-on-anim triggers the
+                            flash + line "screen turning on" keyframes; once
+                            they finish we set crtScreenAwake=true, this panel
+                            unmounts and the DOS boot screen below takes over. */}
+                        {isBootingUp && !crtScreenAwake && (
+                          <div className={`crt-screen-off${crtScreenPoweringOn ? ' crt-screen-on-anim' : ''}`}>
+                            <div className="crt-screen-on-line" />
+                          </div>
+                        )}
                         {/* DOS-style boot-up screen */}
-                        {isBootingUp && (
+                        {isBootingUp && crtScreenAwake && (
                           <div className="crt-dos-screen">
                             {bootLines.map((line, i) => (
                               <div key={i} className="crt-dos-line">
@@ -4279,7 +4358,7 @@ function App() {
                           title="Brightness"
                           aria-label={`Brightness ${brightnessStep}/6`}
                           onClick={() => {
-                            try { playMonitorClick(); } catch {}
+                            try { playKnobClick(); } catch {}
                             setBrightnessStep((s) => (s + 1) % 7);
                           }}
                           style={{ transform: `rotate(${(brightnessStep - 3) * 36}deg)` }}
@@ -4296,7 +4375,7 @@ function App() {
                           title="Contrast"
                           aria-label={`Contrast ${contrastStep}/6`}
                           onClick={() => {
-                            try { playMonitorClick(); } catch {}
+                            try { playKnobClick(); } catch {}
                             setContrastStep((s) => (s + 1) % 7);
                           }}
                           style={{ transform: `rotate(${(contrastStep - 3) * 36}deg)` }}
@@ -4313,7 +4392,7 @@ function App() {
                           title="Volume"
                           aria-label={`Volume ${volumeStep}/6`}
                           onClick={() => {
-                            try { playMonitorClick(); } catch {}
+                            try { playKnobClick(); } catch {}
                             setVolumeStep((s) => (s + 1) % 7);
                           }}
                           style={{ transform: `rotate(${(volumeStep - 3) * 36}deg)` }}
@@ -5241,6 +5320,25 @@ function App() {
 
   return (
     <div className={`container${isRetroMode ? ' retro-active' : ''}`}>
+      {/* Retro entry cover — a full-screen white sheet that mounts at full
+          opacity BEFORE the swap into retro mode. Hides the landing→CRT
+          transition and the brief teal flash through the DOS flicker, so
+          the user only ever sees a clean fade into the running boot screen.
+          Driven by setRetroCover from handleLandingSelect and the Shift+P
+          handler; fades out once the DOS boot is stable. */}
+      <AnimatePresence>
+        {retroCover && (
+          <motion.div
+            key="retro-cover"
+            className="retro-cover"
+            aria-hidden="true"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+          />
+        )}
+      </AnimatePresence>
       {/* Landing chooser — only shown on first visit (or after the user
           clears localStorage). Picks between the modern site and the 90s
           retro PC. Choice is persisted; returning visitors skip this. */}
