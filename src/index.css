@@ -71,6 +71,27 @@ h1, h2, h3 {
   overflow: auto;
 }
 
+/* Disable text/element selection inside retro mode — accidental drags
+   were leaving the CRT in a sticky highlighted state that's hard to
+   clear. Inputs/textareas/contenteditable opt back in so the browser
+   address bar and any retro forms still work. */
+.container.retro-active,
+.container.retro-active * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.container.retro-active input,
+.container.retro-active textarea,
+.container.retro-active [contenteditable="true"] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
 /* Sidebar Navigation */
 .navbar {
   width: var(--sidebar-width);

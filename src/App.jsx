@@ -2283,6 +2283,22 @@ function App() {
   const [showcaseSize, setShowcaseSize] = useState({ width: 760, height: 520 });
   const showcaseDragRef = React.useRef(null);
 
+  // Fresh-open defaults for the Portfolio window — sized as ~85% of the CRT
+  // desktop so the About-page portrait (Figure 2) has room to breathe.
+  // Clamped to sensible min/max and never overflows the desktop.
+  const computeShowcaseDefaults = React.useCallback(() => {
+    const el = crtDesktopRef.current;
+    if (!el) return { size: { width: 760, height: 520 }, pos: { top: 40, left: 40 } };
+    const { width: dw, height: dh } = el.getBoundingClientRect();
+    const targetW = Math.round(dw * 0.85);
+    const targetH = Math.round(dh * 0.85);
+    const width = Math.min(1100, Math.min(Math.max(720, targetW), Math.max(420, dw - 16)));
+    const height = Math.min(720, Math.min(Math.max(500, targetH), Math.max(280, dh - 16)));
+    const left = Math.max(8, Math.round((dw - width) / 2));
+    const top = Math.max(8, Math.round((dh - height) / 2 - 12));
+    return { size: { width, height }, pos: { top, left } };
+  }, []);
+
   // Shared resize-handle factory. Wires a mousedown on a corner grip to a
   // window-level mousemove that adjusts width/height via the given setter.
   const makeResizeHandler = (size, setSize, min = { width: 360, height: 260 }) =>
@@ -2380,6 +2396,9 @@ function App() {
   }, [showcasePos.top, showcasePos.left, showcaseMaximized]);
 
   const openShowcase = (tab = 'about') => {
+    const { size, pos } = computeShowcaseDefaults();
+    setShowcaseSize(size);
+    setShowcasePos(pos);
     setShowcaseTab(tab);
     setIsShowcaseOpen(true);
     setShowcaseMinimized(false);
@@ -2928,12 +2947,15 @@ function App() {
     setIsCursorBusy(true);
     try { startAmbient(0.3); } catch {}
     // Auto-open the Showcase window on its home view.
+    const { size: scSize, pos: scPos } = computeShowcaseDefaults();
+    setShowcaseSize(scSize);
+    setShowcasePos(scPos);
     setShowcaseTab('home');
     setShowcaseMinimized(false);
     setShowcaseMaximized(false);
     setIsShowcaseOpen(true);
     setTimeout(() => setIsCursorBusy(false), 2400);
-  }, []);
+  }, [computeShowcaseDefaults]);
 
   const handleShutdown = () => {
     setIsStartMenuOpen(false);
@@ -3511,22 +3533,43 @@ function App() {
                                           information.
                                         </p>
                                         <p>
-                                          <b>kindshare</b> is an expense splitting app designed
+                                          <a
+                                            href="https://www.kindshare.app"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          ><b>kindshare</b></a> is an expense splitting app designed
                                           to make shared finances feel more fair and easier to
                                           talk about.
                                         </p>
                                         <p>
-                                          <b>AmbulanceCost.com</b> helps people estimate ambulance
+                                          <a
+                                            href="https://www.ambulancecost.com"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          ><b>AmbulanceCost</b></a> helps people estimate ambulance
                                           charges by ZIP code using public rate data where
                                           available.
                                         </p>
                                         <p>
-                                          <b>YourSF</b> and <b>YourNYC</b> are ongoing open source
+                                          <a
+                                            href="https://www.yoursf.us"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          ><b>YourSF</b></a> and{' '}
+                                          <a
+                                            href="https://www.yournyc.com"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          ><b>YourNYC</b></a> are ongoing open source
                                           civic projects focused on making city data more
                                           accessible, interactive, and useful to regular people.
                                         </p>
                                         <p>
-                                          <b>localtake.app</b> is an early stage project that
+                                          <a
+                                            href="https://www.localtake.app"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          ><b>Local Take</b></a> is an early stage project that
                                           builds in depth city profiles from civic data, then
                                           helps people moving to a new city understand which
                                           neighborhoods might fit their life.
