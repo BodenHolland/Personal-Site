@@ -2046,7 +2046,18 @@ function App() {
   // lifts. `crtScreenPoweringOn` triggers the flash+line animation. Once
   // the animation finishes we set `crtScreenAwake=true`, which unmounts
   // the off-state and mounts the DOS boot screen underneath.
-  const [crtScreenAwake, setCrtScreenAwake] = useState(false);
+  // On page reload while retro is persisted, the Shift+P boot sequence
+  // never runs — there's no on-mount trigger for it. Without this seed,
+  // `crtScreenAwake` would stay `false` and the taskbar gate (which AND's
+  // on `crtScreenAwake`) would never open, leaving the user staring at a
+  // desktop with no Start button. Skip the BIOS theatre on reload and land
+  // straight on the awake desktop. The flag is reset to false inside the
+  // Shift+P handler whenever the user explicitly re-enters retro.
+  const [crtScreenAwake, setCrtScreenAwake] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    if (detectIsMobile()) return false;
+    return readSavedMode() === 'retro';
+  });
   const [crtScreenPoweringOn, setCrtScreenPoweringOn] = useState(false);
   const [isBootingUp, setIsBootingUp] = useState(false);
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
