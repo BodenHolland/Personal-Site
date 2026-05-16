@@ -2294,17 +2294,19 @@ function App() {
   const [showcaseSize, setShowcaseSize] = useState({ width: 760, height: 520 });
   const showcaseDragRef = React.useRef(null);
 
-  // Fresh-open defaults for the Portfolio window — sized as ~85% of the CRT
-  // desktop so the About-page portrait (Figure 2) has room to breathe.
-  // Clamped to sensible min/max and never overflows the desktop.
+  // Fresh-open defaults for the Portfolio window — 92% × 88% of the CRT
+  // desktop so a thin strip of "wallpaper" still shows around the chrome
+  // and the window reads as a draggable window, not a fullscreen takeover.
+  // No upper cap: on big monitors the window scales up with the screen.
+  // Floors (720×500) just keep it usable on tiny viewports.
   const computeShowcaseDefaults = React.useCallback(() => {
     const el = crtDesktopRef.current;
     if (!el) return { size: { width: 760, height: 520 }, pos: { top: 40, left: 40 } };
     const { width: dw, height: dh } = el.getBoundingClientRect();
-    const targetW = Math.round(dw * 0.85);
-    const targetH = Math.round(dh * 0.85);
-    const width = Math.min(1100, Math.min(Math.max(720, targetW), Math.max(420, dw - 16)));
-    const height = Math.min(720, Math.min(Math.max(500, targetH), Math.max(280, dh - 16)));
+    const targetW = Math.round(dw * 0.92);
+    const targetH = Math.round(dh * 0.88);
+    const width = Math.min(Math.max(720, targetW), Math.max(420, dw - 16));
+    const height = Math.min(Math.max(500, targetH), Math.max(280, dh - 16));
     const left = Math.max(8, Math.round((dw - width) / 2));
     const top = Math.max(8, Math.round((dh - height) / 2 - 12));
     return { size: { width, height }, pos: { top, left } };
